@@ -1,7 +1,17 @@
 import subprocess
-from typing import List
+from typing import List, Type, Dict, Any
 
-from geometry_structure import River, GeometryStructure, DataBlockValue
+from geometry_structure import (
+    River,
+    BreakLine,
+    CrossSection,
+    Foot,
+    Head,
+    LateralWeir,
+    StorageArea,
+    GeometryStructure,
+    DataBlockValue,
+)
 
 
 class Block(GeometryStructure):
@@ -15,6 +25,45 @@ class Block(GeometryStructure):
         super().__init__(lines)
 
 
+GEOMETRY_TESTS = [
+    {
+        "test_name": "River",
+        "file_path": "tests/river.g01",
+        "class": River,
+    },
+    {
+        "test_name": "BreakLine",
+        "file_path": "tests/breakline.g01",
+        "class": BreakLine,
+    },
+    {
+        "test_name": "CrossSection",
+        "file_path": "tests/cross_secion.g01",
+        "class": CrossSection,
+    },
+    {
+        "test_name": "Foot",
+        "file_path": "tests/foot.g01",
+        "class": Foot,
+    },
+    {
+        "test_name": "Head",
+        "file_path": "tests/head.g01",
+        "class": Head,
+    },
+    {
+        "test_name": "LateralWeir",
+        "file_path": "tests/lateral_weir.g01",
+        "class": LateralWeir,
+    },
+    {
+        "test_name": "StorageArea",
+        "file_path": "tests/storage_area.g01",
+        "class": StorageArea,
+    },
+]
+
+
 BLOCK_TESTS = [
     {
         "test_name": "ReachXY",
@@ -23,7 +72,6 @@ BLOCK_TESTS = [
         "value_width": 16,
         "values_per_line": 4,
         "items_per_value": 2,
-        "show_all_lines": True,
     },
     {
         "test_name": "StaElev",
@@ -32,7 +80,6 @@ BLOCK_TESTS = [
         "value_width": 8,
         "values_per_line": 10,
         "items_per_value": 2,
-        "show_all_lines": False,
     },
     {
         "test_name": "XSGisCutLine",
@@ -41,7 +88,6 @@ BLOCK_TESTS = [
         "value_width": 16,
         "values_per_line": 4,
         "items_per_value": 2,
-        "show_all_lines": True,
     },
     {
         "test_name": "StorageAreaSurfaceLine",
@@ -50,7 +96,6 @@ BLOCK_TESTS = [
         "value_width": 16,
         "values_per_line": 2,
         "items_per_value": 2,
-        "show_all_lines": True,
     },
     {
         "test_name": "StorageArea2DPoints",
@@ -59,16 +104,27 @@ BLOCK_TESTS = [
         "value_width": 16,
         "values_per_line": 4,
         "items_per_value": 2,
-        "show_all_lines": False,
     },
 ]
 
 
-def test_block(test_config):
-    print("\n" + "=" * 80)
-    print(f"Testing {test_config['test_name']} class")
-    print("=" * 80)
+def test_geometry(test_config: Dict[str, Any]) -> bool:
+    with open(test_config["file_path"], "r") as f:
+        lines = f.readlines()
 
+    geometry_class = test_config["class"]
+    geometry = geometry_class(lines)
+
+    generated_lines = geometry.generate()
+    output_file = test_config["file_path"].replace(".g01", ".output.g01")
+    with open(output_file, "w") as f:
+        f.writelines(generated_lines)
+
+    result = subprocess.run(["diff", "-q", test_config["file_path"], output_file], capture_output=True, text=True)
+    return result.returncode == 0
+
+
+def test_block(test_config: Dict[str, Any]) -> bool:
     with open(test_config["file_path"], "r") as f:
         lines = f.readlines()
 
@@ -80,109 +136,45 @@ def test_block(test_config):
         test_config["items_per_value"],
     )
 
-    print(f"Parsed {test_config['test_name']}:")
-    data_block = block[test_config["key"]]
-    if data_block:
-        print(f"  {test_config['key']} Count: {data_block.value}")
-        print(f"  Total data points: {len(data_block)}")
-    else:
-        print("  Has Data Block: False")
-
-    print("\nGenerated lines:")
     generated_lines = block.generate()
-    if test_config["show_all_lines"]:
-        for line in generated_lines:
-            print(f"  {line.rstrip()}")
-    else:
-        for i, line in enumerate(generated_lines[:5]):
-            print(f"  {line.rstrip()}")
-        print(f"  ... ({len(generated_lines)} total lines)")
-
     output_file = test_config["file_path"].replace(".g01", ".output.g01")
     with open(output_file, "w") as f:
         f.writelines(generated_lines)
 
     result = subprocess.run(["diff", "-q", test_config["file_path"], output_file], capture_output=True, text=True)
-
-    if result.returncode == 0:
-        print(f"\n✓ Generated file matches original: {output_file}")
-    else:
-        print(f"\n✗ Generated file differs from original: {output_file}")
-        print(result.stdout)
-
-    print(f"\n✓ {test_config['test_name']} test completed!")
-    return result.returncode == 0
-
-
-def test_river():
-    print("\n" + "=" * 80)
-    print("Testing River class")
-    print("=" * 80)
-
-    with open("tests/river.g01", "r") as f:
-        lines = f.readlines()
-
-    river = River(lines)
-
-    print("Parsed River:")
-    print(f"  River Reach: {river['River Reach'].value}")
-    print(f"  Rch Text X Y: {river['Rch Text X Y'].value}")
-    print(f"  Reverse River Text: {river['Reverse River Text'].value}")
-
-    data_block = river["Reach XY"]
-    if data_block:
-        print("  Has Data Block: True")
-        print(f"  Data Block Count: {data_block.value}")
-    else:
-        print("  Has Data Block: False")
-
-    print("\nGenerated lines:")
-    generated_lines = river.generate()
-    for line in generated_lines:
-        print(f"  {line}")
-
-    output_file = "tests/river.output.g01"
-    with open(output_file, "w") as f:
-        f.writelines(generated_lines)
-
-    result = subprocess.run(["diff", "-q", "tests/river.g01", output_file], capture_output=True, text=True)
-
-    if result.returncode == 0:
-        print(f"\n✓ Generated file matches original: {output_file}")
-    else:
-        print(f"\n✗ Generated file differs from original: {output_file}")
-        print(result.stdout)
-
-    print("\n✓ River test completed!")
     return result.returncode == 0
 
 
 def main():
-    print("=" * 80)
-    print("Running all tests for HEC-RAS 2D Geometry Parser")
-    print("=" * 80)
-
-    river_passed = test_river()
+    geometry_results = {}
+    for test_config in GEOMETRY_TESTS:
+        geometry_results[test_config["test_name"]] = test_geometry(test_config)
 
     block_results = {}
     for test_config in BLOCK_TESTS:
         block_results[test_config["test_name"]] = test_block(test_config)
 
-    print("\n" + "=" * 80)
+    print("=" * 80)
     print("Test Summary")
     print("=" * 80)
-    print(f"{'✓' if river_passed else '✗'} River test: {'PASSED' if river_passed else 'FAILED'}")
+    
+    all_passed = True
+    
+    for test_name, passed in geometry_results.items():
+        print(f"{'✓' if passed else '✗'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        all_passed = all_passed and passed
+    
     for test_name, passed in block_results.items():
         print(f"{'✓' if passed else '✗'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        all_passed = all_passed and passed
+    
     print("=" * 80)
-
-    all_passed = river_passed and all(block_results.values())
 
     if all_passed:
         print("\n🎉 All tests passed successfully!")
         return 0
     else:
-        print("\n❌ Some tests failed. Please review the output above.")
+        print("\n❌ Some tests failed.")
         return 1
 
 

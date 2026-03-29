@@ -253,3 +253,101 @@ class River(GeometryStructure):
             "Reverse River Text": IntValue,
         }
         super().__init__(lines)
+
+
+class BreakLine(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "BreakLine Name": StringValue,
+            "BreakLine CellSize Min": StringValue,
+            "BreakLine CellSize Max": StringValue,
+            "BreakLine Near Repeats": IntValue,
+            "BreakLine Protection Radius": IntValue,
+            "BreakLine Polyline": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+            "LCMann Time": StringValue,
+            "LCMann Region Time": StringValue,
+            "LCMann Table": IntValue,
+            "Chan Stop Cuts": IntValue,
+        }
+        super().__init__(lines)
+
+
+class CrossSection(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "Type RM Length L Ch R": (CommaSeparatedValue, {"element_type": StringValue}),
+            "XS GIS Cut Line": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+            "Node Last Edited Time": StringValue,
+            "#Sta/Elev": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
+            "#Mann": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Bank Sta": (CommaSeparatedValue, {"element_type": StringValue}),
+            "XS Rating Curve": (CommaSeparatedValue, {"element_type": StringValue}),
+            "XS HTab Starting El and Incr": (CommaSeparatedValue, {"element_type": StringValue}),
+            "XS HTab Horizontal Distribution": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Exp/Cntr(USF)": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Exp/Cntr": (CommaSeparatedValue, {"element_type": StringValue}),
+        }
+        super().__init__(lines)
+
+
+class Foot(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "Use User Specified Reach Order": IntValue,
+            "GIS Ratio Cuts To Invert": IntValue,
+            "GIS Limit At Bridges": IntValue,
+            "Composite Channel Slope": IntValue,
+        }
+        super().__init__(lines)
+
+
+class Head(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "Geom Title": StringValue,
+            "Program Version": StringValue,
+            "Viewing Rectangle": (CommaSeparatedValue, {"element_type": StringValue}),
+        }
+        super().__init__(lines)
+
+
+class LateralWeir(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "Type RM Length L Ch R": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Node Name": StringValue,
+            "Node Last Edited Time": StringValue,
+            "Lateral Weir Pos": IntValue,
+            "Lateral Weir End": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Lateral Weir Distance": IntValue,
+            "Lateral Weir TW Multiple XS": IntValue,
+            "Lateral Weir WD": IntValue,
+            "Lateral Weir Coef": FloatValue,
+            "LW OverFlow Method 2D": IntValue,
+            "LW OverFlow Use Velocity Into 2D": IntValue,
+            "Lateral Weir WSCriteria": IntValue,
+            "Lateral Weir Flap Gates": IntValue,
+            "Lateral Weir Hagers EQN": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Lateral Weir SS": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Lateral Weir Type": IntValue,
+            "Lateral Weir Connection Pos and Dist": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Lateral Weir SE": IntValue,
+            "Lateral Weir Centerline": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+            "LW Div RC": (CommaSeparatedValue, {"element_type": StringValue}),
+        }
+        super().__init__(lines)
+
+
+class StorageArea(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "Storage Area": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Storage Area Surface Line": (DataBlockValue, {"value_width": 16, "values_per_line": 2, "items_per_value": 2}),
+            "Storage Area Type": IntValue,
+            "Storage Area Area": StringValue,
+            "Storage Area Min Elev": StringValue,
+            "Storage Area Is2D": IntValue,
+            "Storage Area Point Generation Data": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Storage Area 2D Points": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+        }
+        super().__init__(lines)
