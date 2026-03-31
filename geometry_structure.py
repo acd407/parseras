@@ -115,17 +115,17 @@ class NumericTupleValue(Value):
 
 class DataBlockValue(Value):
     def __init__(self, value_str: str, value_width: int, values_per_line: int, items_per_value: int):
-        """
-        value_str: 包含header和多行数据的完整字符串
-        """
         lines = value_str.split("\n")
+        header_line = lines[0].strip()
         data_lines = lines[1:]
 
         self._value_width = value_width
         self._values_per_line = values_per_line
         self._items_per_value = items_per_value
 
-        self._count = int(lines[0].strip())
+        header_parts = [part.strip() for part in header_line.split(",")]
+        self._count = int(header_parts[0])
+        self._header_values = tuple(header_parts)
 
         result = []
         for line in data_lines:
@@ -144,11 +144,15 @@ class DataBlockValue(Value):
             line = "".join(str(v).rjust(self._value_width) for v in chunk)
             data_lines.append(line)
 
-        return "\n".join([str(self._count)] + data_lines)
+        return "\n".join([",".join(self._header_values)] + data_lines)
 
     @property
     def value(self) -> int:
         return self._count
+
+    @property
+    def header_values(self) -> Tuple[str, ...]:
+        return self._header_values
 
     def __len__(self) -> int:
         return len(self._data)
@@ -216,7 +220,8 @@ class GeometryStructure(ABC):
                     value_type, kwargs = value_type_info
 
                     if value_type == DataBlockValue:
-                        count = int(value_str.strip())
+                        header_parts = value_str.strip().split(",")
+                        count = int(header_parts[0].strip())
                         num_items_per_line = kwargs["values_per_line"] / kwargs["items_per_value"]
                         num_lines = math.ceil(count / num_items_per_line)
 
@@ -279,7 +284,7 @@ class CrossSection(GeometryStructure):
             "XS GIS Cut Line": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
             "Node Last Edited Time": StringValue,
             "#Sta/Elev": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
-            "#Mann": (CommaSeparatedValue, {"element_type": StringValue}),
+            "#Mann": (DataBlockValue, {"value_width": 8, "values_per_line": 9, "items_per_value": 3}),
             "Bank Sta": (CommaSeparatedValue, {"element_type": StringValue}),
             "XS Rating Curve": (CommaSeparatedValue, {"element_type": StringValue}),
             "XS HTab Starting El and Incr": (CommaSeparatedValue, {"element_type": StringValue}),
@@ -331,7 +336,7 @@ class LateralWeir(GeometryStructure):
             "Lateral Weir SS": (CommaSeparatedValue, {"element_type": StringValue}),
             "Lateral Weir Type": IntValue,
             "Lateral Weir Connection Pos and Dist": (CommaSeparatedValue, {"element_type": StringValue}),
-            "Lateral Weir SE": IntValue,
+            "Lateral Weir SE": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
             "Lateral Weir Centerline": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
             "LW Div RC": (CommaSeparatedValue, {"element_type": StringValue}),
         }
