@@ -108,6 +108,18 @@ BLOCK_TESTS = [
 ]
 
 
+FULL_FILE_TESTS = [
+    {
+        "test_name": "all.g01",
+        "file_path": "tests/all.g01",
+    },
+    {
+        "test_name": "leak.g01",
+        "file_path": "tests/leak.g01",
+    },
+]
+
+
 def test_geometry(test_config: Dict[str, Any]) -> bool:
     with open(test_config["file_path"], "r") as f:
         original_lines = f.readlines()
@@ -156,7 +168,9 @@ def main():
     for test_config in BLOCK_TESTS:
         block_results[test_config["test_name"]] = test_block(test_config)
 
-    full_file_result = test_full_file()
+    full_file_results = {}
+    for test_config in FULL_FILE_TESTS:
+        full_file_results[test_config["test_name"]] = test_full_file(test_config["file_path"])
 
     print("=" * 80)
     print("Test Summary")
@@ -165,19 +179,20 @@ def main():
     all_passed = True
 
     for test_name, passed in geometry_results.items():
-        print(f"{'✓' if passed else '✗'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
         all_passed = all_passed and passed
 
     print("=" * 60)
 
     for test_name, passed in block_results.items():
-        print(f"{'✓' if passed else '✗'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
         all_passed = all_passed and passed
 
     print("=" * 60)
 
-    print(f"{'✓' if full_file_result else '✗'} Full File test: {'PASSED' if full_file_result else 'FAILED'}")
-    all_passed = all_passed and full_file_result
+    for test_name, passed in full_file_results.items():
+        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        all_passed = all_passed and passed
 
     print("=" * 80)
 
@@ -189,8 +204,7 @@ def main():
         return 1
 
 
-def test_full_file() -> bool:
-    file_path = "tests/all.g01"
+def test_full_file(file_path: str) -> bool:
     with open(file_path, "r") as f:
         original_lines = f.readlines()
 

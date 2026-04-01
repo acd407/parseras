@@ -96,22 +96,24 @@ class DataValue:
 class DataBlockValue(Value):
     def __init__(self, value_str: str, value_width: int, values_per_line: int, items_per_value: int):
         lines = value_str.split("\n")
+
         header_line = lines[0].strip()
+        header_parts = [part.strip() for part in header_line.split(",")]
+        header_values = tuple(header_parts)
+        count = int(header_parts[0])
+
         data_lines = lines[1:]
 
         result = []
         for line in data_lines:
+            line = line.rstrip()
             pos = 0
             while pos < len(line):
-                chunk = line[pos : pos + value_width]
-                result.append(FloatValue(chunk.strip()))
+                chunk = line[pos : pos + value_width].lstrip()
+                result.append(FloatValue(chunk))
                 pos += value_width
 
         data = tuple(result)
-
-        header_parts = [part.strip() for part in header_line.split(",")]
-        header_values = tuple(header_parts)
-        count = int(header_parts[0])
 
         self._value = DataValue(data, value_width, values_per_line, items_per_value, header_values, count)
 
