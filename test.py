@@ -1,4 +1,4 @@
-from typing import List, Type, Dict, Any
+from typing import List, Dict, Any
 
 from parseras import (
     River,
@@ -8,12 +8,13 @@ from parseras import (
     Head,
     LateralWeir,
     StorageArea,
-    GeometryStructure,
+    RASStructure,
     DataBlockValue,
+    GeometryFile,
 )
 
 
-class Block(GeometryStructure):
+class Block(RASStructure):
     def __init__(self, lines: List[str], key: str, value_width: int, values_per_line: int, items_per_value: int):
         self._key_value_types = {
             key: (
@@ -155,20 +156,29 @@ def main():
     for test_config in BLOCK_TESTS:
         block_results[test_config["test_name"]] = test_block(test_config)
 
+    full_file_result = test_full_file()
+
     print("=" * 80)
     print("Test Summary")
     print("=" * 80)
-    
+
     all_passed = True
-    
+
     for test_name, passed in geometry_results.items():
         print(f"{'✓' if passed else '✗'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
         all_passed = all_passed and passed
-    
+
+    print("=" * 60)
+
     for test_name, passed in block_results.items():
         print(f"{'✓' if passed else '✗'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
         all_passed = all_passed and passed
-    
+
+    print("=" * 60)
+
+    print(f"{'✓' if full_file_result else '✗'} Full File test: {'PASSED' if full_file_result else 'FAILED'}")
+    all_passed = all_passed and full_file_result
+
     print("=" * 80)
 
     if all_passed:
@@ -177,6 +187,23 @@ def main():
     else:
         print("\n❌ Some tests failed.")
         return 1
+
+
+def test_full_file() -> bool:
+    file_path = "tests/all.g01"
+    with open(file_path, "r") as f:
+        original_lines = f.readlines()
+
+    geometry_file = GeometryFile(file_path=file_path)
+
+    generated_lines = geometry_file.generate()
+    output_file = file_path.replace(".g01", ".output.g01")
+    with open(output_file, "w") as f:
+        f.writelines(generated_lines)
+
+    generated_text = "".join(generated_lines)
+    original_text = "".join(original_lines)
+    return original_text == generated_text
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List, Tuple, Type, TypeVar
+from typing import Any, Dict, List, Tuple, Type
 
 
 class Value(ABC):
@@ -129,10 +129,7 @@ class DataBlockValue(Value):
         return self._value
 
 
-T = TypeVar("T", bound="GeometryStructure")
-
-
-class GeometryStructure(ABC):
+class RASStructure(ABC):
     _key_value_pairs: Dict[str, Value]
     _key_value_types: Dict[str, Any]
 
@@ -161,7 +158,7 @@ class GeometryStructure(ABC):
         return len(self._key_value_pairs)
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, GeometryStructure):
+        if not isinstance(other, RASStructure):
             return False
         return self._key_value_pairs == other._key_value_pairs
 
@@ -220,7 +217,7 @@ class GeometryStructure(ABC):
         return result
 
 
-class River(GeometryStructure):
+class River(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "River Reach": (CommaSeparatedValue, {"element_type": StringValue}),
@@ -231,7 +228,7 @@ class River(GeometryStructure):
         super().__init__(lines)
 
 
-class SingleBreakLine(GeometryStructure):
+class SingleBreakLine(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "BreakLine Name": StringValue,
@@ -244,7 +241,7 @@ class SingleBreakLine(GeometryStructure):
         super().__init__(lines)
 
 
-class BreakLineMeta(GeometryStructure):
+class BreakLineMeta(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "LCMann Time": StringValue,
@@ -286,7 +283,7 @@ class BreakLine:
         return self._value
 
 
-class CrossSection(GeometryStructure):
+class CrossSection(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "Type RM Length L Ch R": (CommaSeparatedValue, {"element_type": StringValue}),
@@ -304,7 +301,7 @@ class CrossSection(GeometryStructure):
         super().__init__(lines)
 
 
-class Foot(GeometryStructure):
+class Foot(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "Use User Specified Reach Order": IntValue,
@@ -315,7 +312,7 @@ class Foot(GeometryStructure):
         super().__init__(lines)
 
 
-class Head(GeometryStructure):
+class Head(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "Geom Title": StringValue,
@@ -325,7 +322,7 @@ class Head(GeometryStructure):
         super().__init__(lines)
 
 
-class LateralWeir(GeometryStructure):
+class LateralWeir(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "Type RM Length L Ch R": (CommaSeparatedValue, {"element_type": StringValue}),
@@ -355,7 +352,7 @@ class LateralWeir(GeometryStructure):
         super().__init__(lines)
 
 
-class StorageArea(GeometryStructure):
+class StorageArea(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "Storage Area": (CommaSeparatedValue, {"element_type": StringValue}),
@@ -382,3 +379,87 @@ class StorageArea(GeometryStructure):
             "2D Composite LC": FloatValue,
         }
         super().__init__(lines)
+
+
+class GeometryFile:
+    def __init__(self, file_path: str | None = None, lines: List[str] | None = None):
+        if file_path:
+            with open(file_path, "r") as f:
+                lines = f.readlines()
+        elif lines is None:
+            raise ValueError("Either file_path or lines must be provided")
+
+        self._blocks: List[RASStructure] = []
+        self._parse_lines(lines)
+
+    def _split_into_blocks(self, lines: List[str]) -> List[List[str]]:
+        blocks = []
+        current_block = []
+
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                if current_block:
+                    blocks.append(current_block)
+                    current_block = []
+            else:
+                current_block.append(line)
+
+        if current_block:
+            blocks.append(current_block)
+
+        return blocks
+
+    def _determine_block_type(self, block: List[str]) -> Type[RASStructure]:
+        if not block:
+            raise ValueError("Empty block")
+
+        first_line = block[0].strip()
+        if "=" not in first_line:
+            raise ValueError(f"Invalid block line: {first_line}")
+
+        key = first_line.split("=", 1)[0].strip()
+
+        block_type_map = {
+            "Geom Title": Head,
+            "River Reach": River,
+            "BreakLine Name": BreakLine,
+            "Storage Area": StorageArea,
+            "Use User Specified Reach Order": Foot,
+        }
+
+        if key in block_type_map:
+            return block_type_map[key]
+
+        if key == "Type RM Length L Ch R":
+            if len(block) > 1:
+                second_line = block[1].strip()
+                if second_line.startswith("Node Name"):
+                    return LateralWeir
+                elif second_line.startswith("XS GIS Cut Line"):
+                    return CrossSection
+
+        raise ValueError(f"Unknown block type for key: {key}")
+
+    def _parse_lines(self, lines: List[str]):
+        blocks = self._split_into_blocks(lines)
+
+        for block in blocks:
+            block_type = self._determine_block_type(block)
+            block_instance = block_type(block)
+            self._blocks.append(block_instance)
+
+    def generate(self) -> List[str]:
+        result = []
+        for i, block in enumerate(self._blocks):
+            block_lines = block.generate()
+            result.extend(block_lines)
+            if i < len(self._blocks) - 1:
+                result.append("\n")
+        return result
+
+    def get_blocks(self) -> List[RASStructure]:
+        return self._blocks
+
+    def get_blocks_by_type(self, block_type: Type[RASStructure]) -> List[RASStructure]:
+        return [block for block in self._blocks if isinstance(block, block_type)]
