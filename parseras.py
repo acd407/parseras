@@ -231,7 +231,7 @@ class River(GeometryStructure):
         super().__init__(lines)
 
 
-class BreakLine(GeometryStructure):
+class SingleBreakLine(GeometryStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "BreakLine Name": StringValue,
@@ -240,12 +240,44 @@ class BreakLine(GeometryStructure):
             "BreakLine Near Repeats": IntValue,
             "BreakLine Protection Radius": IntValue,
             "BreakLine Polyline": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+        }
+        super().__init__(lines)
+
+
+class BreakLineMeta(GeometryStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
             "LCMann Time": StringValue,
             "LCMann Region Time": StringValue,
             "LCMann Table": IntValue,
             "Chan Stop Cuts": IntValue,
         }
         super().__init__(lines)
+
+
+class BreakLine:
+    def __init__(self, lines: List[str]):
+        self._value = []
+        iterator = iter(lines)
+        current_block = []
+
+        for line in iterator:
+            stripped = line.strip()
+            if not stripped:
+                continue
+
+            if stripped.startswith("BreakLine Name"):
+                current_block and self._value.append(SingleBreakLine(current_block))
+                current_block = [line]
+            elif stripped.startswith("LCMann Time"):
+                current_block and self._value.append(SingleBreakLine(current_block))
+                self._value.append(BreakLineMeta([line] + list(iterator)))
+                break
+            else:
+                current_block.append(line)
+
+    def generate(self) -> List[str]:
+        return [line for item in self._value for line in item.generate()]
 
 
 class CrossSection(GeometryStructure):
@@ -331,5 +363,16 @@ class StorageArea(GeometryStructure):
             "Storage Area Is2D": IntValue,
             "Storage Area Point Generation Data": (CommaSeparatedValue, {"element_type": StringValue}),
             "Storage Area 2D Points": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+            "Storage Area 2D PointsPerimeterTime": StringValue,
+            "Storage Area Mannings": FloatValue,
+            "2D Cell Volume Filter Tolerance": FloatValue,
+            "2D Cell Minimum Area Fraction": FloatValue,
+            "2D Face Profile Filter Tolerance": FloatValue,
+            "2D Face Area Elevation Profile Filter Tolerance": FloatValue,
+            "2D Face Area Elevation Conveyance Ratio": FloatValue,
+            "2D Face Min Length Ratio": FloatValue,
+            "2D Face Area Laminar Depth": FloatValue,
+            "2D Multiple Face Mann n": IntValue,
+            "2D Composite LC": FloatValue,
         }
         super().__init__(lines)
