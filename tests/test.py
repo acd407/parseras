@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from typing import List, Dict, Any
 
 # 使用相对导入
-from core import (
+from parseras import (
     River,
     BreakLine,
     CrossSection,

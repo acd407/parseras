@@ -1,7 +1,7 @@
 import math
 from typing import List, Type
 
-from .structures import RASStructure, Head, River, BreakLine, StorageArea, Foot, LateralWeir, CrossSection
+from parseras.core.structures import RASStructure, Head, River, BreakLine, StorageArea, Foot, LateralWeir, CrossSection
 
 
 class GeometryFile:

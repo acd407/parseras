@@ -2,7 +2,7 @@ import math
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Tuple, Type
 
-from .values import Value, StringValue, IntValue, FloatValue, CommaSeparatedValue, LinesValue, DataBlockValue
+from parseras.core.values import Value, StringValue, IntValue, FloatValue, CommaSeparatedValue, LinesValue, DataBlockValue
 
 
 class RASStructure(ABC):
