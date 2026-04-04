@@ -35,37 +35,37 @@ class Block(RASStructure):
 GEOMETRY_TESTS = [
     {
         "test_name": "River",
-        "file_path": "tests/river.g01",
+        "file_path": "tests/data/river.g01",
         "class": River,
     },
     {
         "test_name": "BreakLine",
-        "file_path": "tests/breakline.g01",
+        "file_path": "tests/data/breakline.g01",
         "class": BreakLine,
     },
     {
         "test_name": "CrossSection",
-        "file_path": "tests/cross_secion.g01",
+        "file_path": "tests/data/cross_secion.g01",
         "class": CrossSection,
     },
     {
         "test_name": "Foot",
-        "file_path": "tests/foot.g01",
+        "file_path": "tests/data/foot.g01",
         "class": Foot,
     },
     {
         "test_name": "Head",
-        "file_path": "tests/head.g01",
+        "file_path": "tests/data/head.g01",
         "class": Head,
     },
     {
         "test_name": "LateralWeir",
-        "file_path": "tests/lateral_weir.g01",
+        "file_path": "tests/data/lateral_weir.g01",
         "class": LateralWeir,
     },
     {
         "test_name": "StorageArea",
-        "file_path": "tests/storage_area.g01",
+        "file_path": "tests/data/storage_area.g01",
         "class": StorageArea,
     },
 ]
@@ -74,7 +74,7 @@ GEOMETRY_TESTS = [
 BLOCK_TESTS = [
     {
         "test_name": "ReachXY",
-        "file_path": "tests/common_blocks/block1.g01",
+        "file_path": "tests/data/common_blocks/block1.g01",
         "key": "Reach XY",
         "value_width": 16,
         "values_per_line": 4,
@@ -82,7 +82,7 @@ BLOCK_TESTS = [
     },
     {
         "test_name": "StaElev",
-        "file_path": "tests/common_blocks/block2.g01",
+        "file_path": "tests/data/common_blocks/block2.g01",
         "key": "#Sta/Elev",
         "value_width": 8,
         "values_per_line": 10,
@@ -90,7 +90,7 @@ BLOCK_TESTS = [
     },
     {
         "test_name": "XSGisCutLine",
-        "file_path": "tests/common_blocks/block3.g01",
+        "file_path": "tests/data/common_blocks/block3.g01",
         "key": "XS GIS Cut Line",
         "value_width": 16,
         "values_per_line": 4,
@@ -98,7 +98,7 @@ BLOCK_TESTS = [
     },
     {
         "test_name": "StorageAreaSurfaceLine",
-        "file_path": "tests/common_blocks/block4.g01",
+        "file_path": "tests/data/common_blocks/block4.g01",
         "key": "Storage Area Surface Line",
         "value_width": 16,
         "values_per_line": 2,
@@ -106,7 +106,7 @@ BLOCK_TESTS = [
     },
     {
         "test_name": "StorageArea2DPoints",
-        "file_path": "tests/common_blocks/block5.g01",
+        "file_path": "tests/data/common_blocks/block5.g01",
         "key": "Storage Area 2D Points",
         "value_width": 16,
         "values_per_line": 4,
@@ -118,15 +118,15 @@ BLOCK_TESTS = [
 FULL_FILE_TESTS = [
     {
         "test_name": "all.g01",
-        "file_path": "tests/all.g01",
+        "file_path": "tests/data/all.g01",
     },
     {
         "test_name": "leak.g01",
-        "file_path": "tests/leak.g01",
+        "file_path": "tests/data/leak.g01",
     },
     {
         "test_name": "Muncie.g01",
-        "file_path": "tests/Muncie.g01",
+        "file_path": "tests/data/Muncie.g01",
     },
 ]
 
