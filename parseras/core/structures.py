@@ -28,6 +28,9 @@ class RASStructure(ABC):
         return value
 
     def __setitem__(self, key: str, value: Value) -> None:
+        # 如果传入的是原始 Python 值，自动包装成对应的 Value 类型
+        if not isinstance(value, Value):
+            value = self._wrap_value(value)
         self._key_value_pairs[key] = value
 
     def __delitem__(self, key: str) -> None:
@@ -54,6 +57,22 @@ class RASStructure(ABC):
 
     def _format_key_value_line(self, key: str, value: Value) -> str:
         return f"{key}={str(value)}\n"
+
+    def _wrap_value(self, value) -> Value:
+        """将原始 Python 值自动包装成 Value 类型"""
+        if isinstance(value, bool):
+            return IntValue(int(value))
+        elif isinstance(value, int):
+            return IntValue(value)
+        elif isinstance(value, float):
+            return FloatValue(value)
+        elif isinstance(value, str):
+            return StringValue(value)
+        elif isinstance(value, (list, tuple)):
+            # 尝试解析为逗号分隔值
+            return CommaSeparatedValue(",".join(str(v) for v in value))
+        else:
+            return StringValue(str(value))
 
     def _parse_lines(self, lines: List[str]):
         i = 0
