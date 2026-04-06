@@ -160,3 +160,77 @@ class CrossSectionModel:
             return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
         except Exception as e:
             return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+
+    def update_mann_values(self, input_json: str) -> str:
+        """更新特定断面的曼宁值
+
+        输入格式：
+        {
+            "XS Station": 5000,
+            "Station": [0, 25, ...],
+            "Manning": [0.3, 0.7, ...]
+        }
+
+        返回格式：
+        {
+            "status": "success",
+            "data": {},
+            "message": "Mann values updated successfully"
+        }
+        """
+        try:
+            # 解析输入JSON
+            input_data = json.loads(input_json)
+            xs_station = input_data.get("XS Station")
+            stations = input_data.get("Station", [])
+            mannings = input_data.get("Manning", [])
+
+            if xs_station is None or not stations or not mannings:
+                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+
+            if len(stations) != len(mannings):
+                return json.dumps(
+                    {"status": "error", "data": {}, "message": "Station and Manning lists must have the same length"},
+                    indent=2,
+                )
+
+            # 查找对应的断面
+            target_xs = None
+            for xs in self.cross_sections:
+                if "Type RM Length L Ch R" in xs:
+                    type_rm = xs["Type RM Length L Ch R"].value
+                    if len(type_rm) >= 2:
+                        current_station = float(type_rm[1].value)
+                        if current_station == xs_station:
+                            target_xs = xs
+                            break
+
+            if not target_xs:
+                return json.dumps(
+                    {"status": "error", "data": {}, "message": f"Cross section with station {xs_station} not found"},
+                    indent=2,
+                )
+
+            # 构建Mann数据
+            # Mann是3个数值一对，格式为 [station, left_manning, right_manning]
+            # 这里我们将right_manning设为0，因为用户只提供了一个Manning值
+            from parseras.core.values import FloatValue
+
+            mann_data = []
+            for station, manning in zip(stations, mannings):
+                mann_data.extend([FloatValue(str(station)), FloatValue(str(manning)), FloatValue("0")])
+
+            # 创建并更新DataBlockValue
+            from parseras.core.values import DataBlockValue, DataValue
+
+            count = len(stations)
+            mann_block = DataBlockValue(value_width=8, values_per_line=9, items_per_value=3)
+            mann_block_value = DataValue(tuple(mann_data), 8, 9, 3, (str(count), "-1", "0"), count)
+            mann_block.value = mann_block_value
+            target_xs["#Mann"] = mann_block
+
+            return json.dumps(
+                {"status": "success", "data": {}, "message": "Mann values updated successfully"}, indent=2
+            )
+        except Exception as e:
+            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
