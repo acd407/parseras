@@ -16,6 +16,7 @@ from parseras.core.values import (
 class RASStructure(ABC):
     _key_value_pairs: Dict[str, Value]
     _key_value_types: Dict[str, Any]
+    order = 100
 
     def __init__(self, lines: List[str]):
         self._key_value_pairs = {}
@@ -202,6 +203,17 @@ class CrossSection(RASStructure):
             "Exp/Cntr": (CommaSeparatedValue, {"element_type": StringValue}),
         }
         super().__init__(lines)
+        
+        # 根据station更新order
+        if "Type RM Length L Ch R" in self:
+            type_rm = self["Type RM Length L Ch R"].value
+            if len(type_rm) >= 2:
+                try:
+                    station = float(type_rm[1].value)
+                    if station > 0:
+                        self.order = 30 + 1 / station
+                except (ValueError, AttributeError):
+                    pass
 
 
 class Foot(RASStructure):
@@ -259,6 +271,17 @@ class LateralWeir(RASStructure):
             "LW Div RC": (CommaSeparatedValue, {"element_type": StringValue}),
         }
         super().__init__(lines)
+        
+        # 根据station更新order
+        if "Type RM Length L Ch R" in self:
+            type_rm = self["Type RM Length L Ch R"].value
+            if len(type_rm) >= 2:
+                try:
+                    station = float(type_rm[1].value)
+                    if station > 0:
+                        self.order = 30 + 1 / station
+                except (ValueError, AttributeError):
+                    pass
 
 
 class StorageArea(RASStructure):

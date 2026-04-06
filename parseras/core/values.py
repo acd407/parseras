@@ -172,7 +172,7 @@ class DataBlockValue(Value):
         data_lines = []
         for i in range(0, len(self._value.data), self._value.values_per_line):
             chunk = self._value.data[i : i + self._value.values_per_line]
-            line = "".join(str(v).rjust(self._value.value_width) for v in chunk)
+            line = "".join(str(v).rjust(self._value.value_width)[:self._value.value_width] for v in chunk)
             data_lines.append(line)
 
         return "\n".join([",".join(self._value.header_values)] + data_lines)
