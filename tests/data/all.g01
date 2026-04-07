@@ -17,7 +17,7 @@ Reach XY=20
 Rch Text X Y=,
 Reverse River Text=0
 
-Type RM Length L Ch R=1,10295,915.7,915.7,915.7
+Type RM Length L Ch R =1,10295,915.7,915.7,915.7
 XS GIS Cut Line=2
  404488.729686931802032.79323453404653.839763241 1801018.5456229
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -76,7 +76,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,9379,435.2,435.2,435.2
+Type RM Length L Ch R =1,9379,435.2,435.2,435.2
 XS GIS Cut Line=2
 405109.8580692441802465.22438677 405432.215837281802024.93084994
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -122,7 +122,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,8944,588.2,588.2,588.2
+Type RM Length L Ch R =1,8944,588.2,588.2,588.2
 XS GIS Cut Line=2
 405338.5391984411802541.76393165405847.2293615871802459.52061186
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -155,7 +155,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=6,8926,,,
+Type RM Length L Ch R =6,8926,,,
 Node Name=bank
 Node Last Edited Time=Feb/03/2026 19:15:02
 Lateral Weir Pos=0
@@ -253,7 +253,7 @@ Lateral Weir Centerline=9
 407777.9585863851804051.51847548
 LW Div RC=0,False,,
 
-Type RM Length L Ch R=1,8356,574.1,574.1,574.1
+Type RM Length L Ch R =1,8356,574.1,574.1,574.1
 XS GIS Cut Line=2
 405062.683761726 1802960.5546157 405558.013990661803047.04084615
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -295,7 +295,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,7782,804.4,804.4,804.4
+Type RM Length L Ch R =1,7782,804.4,804.4,804.4
 XS GIS Cut Line=2
 404889.7113008291803487.33438298405298.5552993141803573.82061343
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -324,7 +324,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,6978,768,768,768
+Type RM Length L Ch R =1,6978,768,768,768
 XS GIS Cut Line=2
 404630.2526094831804312.88476454405078.4085308991804297.15999537
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -362,7 +362,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,6210,794.1,794.1,794.1
+Type RM Length L Ch R =1,6210,794.1,794.1,794.1
 XS GIS Cut Line=2
  405054.821377141805177.74706903405212.0690688651804729.59114761
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -407,7 +407,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,5416,583.8,583.8,583.8
+Type RM Length L Ch R =1,5416,583.8,583.8,583.8
 XS GIS Cut Line=2
 405864.6469895241805382.16906827405927.5460662141804902.56360851
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -449,7 +449,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,4832,697.4,697.4,697.4
+Type RM Length L Ch R =1,4832,697.4,697.4,697.4
 XS GIS Cut Line=2
 406517.2249101831805350.71952992 406438.601064321804863.25168558
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -496,7 +496,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,4135,1011.2,1011.2,1011.2
+Type RM Length L Ch R =1,4135,1011.2,1011.2,1011.2
 XS GIS Cut Line=2
 407429.2615221881805067.67368482406918.2065240821804674.55445551
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -545,7 +545,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,3124,1192.9,1192.9,1192.9
+Type RM Length L Ch R =1,3124,1192.9,1192.9,1192.9
 XS GIS Cut Line=2
 408221.8570377721804757.44419851407790.7174035551804051.74312634
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -612,7 +612,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,1931,1297.8,1297.8,1297.8
+Type RM Length L Ch R =1,1931,1297.8,1297.8,1297.8
 XS GIS Cut Line=2
 409929.4998206161804650.96730175408506.408210505 1803133.5270766
 Node Last Edited Time=Feb/03/2026 19:07:57
@@ -719,7 +719,7 @@ XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr(USF)=0,0
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,633,,,
+Type RM Length L Ch R =1,633,,,
 XS GIS Cut Line=2
 409874.4631285121803109.93992284409803.7016672361802535.98584805
 Node Last Edited Time=Feb/03/2026 19:07:57

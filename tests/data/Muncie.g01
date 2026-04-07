@@ -51,7 +51,7 @@ Reach XY=87
 Rch Text X Y=125392.35,548815.4
 Reverse River Text=0
 
-Type RM Length L Ch R=1,15696.24,69.6956,64.2305,51.1576
+Type RM Length L Ch R =1,15696.24,69.6956,64.2305,51.1576
 XS GIS Cut Line=4
         126017.5       548620.97       126048.79       548693.98
        126053.66        548750.3       126084.25       548855.99
@@ -92,7 +92,7 @@ XS HTab Starting El and Incr=285.8994,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,15485.51,36.9509,35.0794,31.6352
+Type RM Length L Ch R =1,15485.51,36.9509,35.0794,31.6352
 XS GIS Cut Line=3
        125952.83       548641.83       126039.75       548858.77
        126040.45       548862.95
@@ -125,7 +125,7 @@ XS HTab Starting El and Incr=286.1402,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,15370.43,53.2821,50.3347,35.9115
+Type RM Length L Ch R =1,15370.43,53.2821,50.3347,35.9115
 XS GIS Cut Line=6
        125915.98       548693.98       125941.01       548718.32
        125956.31       548744.74       125977.87       548789.94
@@ -158,7 +158,7 @@ XS HTab Starting El and Incr=288.0847,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,15205.29,66.0075,58.549,48.4967
+Type RM Length L Ch R =1,15205.29,66.0075,58.549,48.4967
 XS GIS Cut Line=4
        125896.81       548751.59       125910.81       548770.08
        125935.47       548792.39       125983.57       548867.13
@@ -185,7 +185,7 @@ XS HTab Starting El and Incr=287.2405,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,15013.20,29.8887,29.212,25.6032
+Type RM Length L Ch R =1,15013.20,29.8887,29.212,25.6032
 XS GIS Cut Line=3
        125860.73       548813.44        125901.1       548831.05
        125945.78       548887.75
@@ -208,7 +208,7 @@ XS HTab Starting El and Incr=287.0393,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14917.36,18.3825,18.6294,15.5844
+Type RM Length L Ch R =1,14917.36,18.3825,18.6294,15.5844
 XS GIS Cut Line=3
        125845.26       548840.07       125886.07       548855.53
        125914.85       548883.45
@@ -230,7 +230,7 @@ XS HTab Starting El and Incr=287.1399,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14856.24,24.7406,20.9824,15.8405
+Type RM Length L Ch R =1,14856.24,24.7406,20.9824,15.8405
 XS GIS Cut Line=3
        125836.24       548855.96        125874.9       548871.43
        125906.26       548892.04
@@ -252,7 +252,7 @@ XS HTab Starting El and Incr=286.8717,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14787.40,27.0236,27.4869,22.5034
+Type RM Length L Ch R =1,14787.40,27.0236,27.4869,22.5034
 XS GIS Cut Line=3
        125825.94       548882.59       125865.88       548888.61
        125899.39       548902.78
@@ -274,7 +274,7 @@ XS HTab Starting El and Incr=286.1402,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14697.22,49.3593,49.2618,47.1434
+Type RM Length L Ch R =1,14697.22,49.3593,49.2618,47.1434
 XS GIS Cut Line=2
        125819.92       548908.37       125898.96       548922.54
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -295,7 +295,7 @@ XS HTab Starting El and Incr=286.4754,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14535.60,28.2336,28.0081,29.7972
+Type RM Length L Ch R =1,14535.60,28.2336,28.0081,29.7972
 XS GIS Cut Line=3
        125815.63       548958.19       125866.31       548965.92
        125899.39       548966.78
@@ -318,7 +318,7 @@ XS HTab Starting El and Incr=286.4419,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14443.72,36.4602,42.1325,46.482
+Type RM Length L Ch R =1,14443.72,36.4602,42.1325,46.482
 XS GIS Cut Line=4
        125804.89       548983.11       125837.53       548990.84
        125863.44       548992.35       125889.08       548999.86
@@ -342,7 +342,7 @@ XS HTab Starting El and Incr=286.3871,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14305.48,39.0967,42.4983,45.8053
+Type RM Length L Ch R =1,14305.48,39.0967,42.4983,45.8053
 XS GIS Cut Line=2
        125798.02       549016.18       125865.02       549041.95
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -362,7 +362,7 @@ XS HTab Starting El and Incr=286.4724,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14166.05,35.1312,38.5328,43.9278
+Type RM Length L Ch R =1,14166.05,35.1312,38.5328,43.9278
 XS GIS Cut Line=2
        125783.41       549049.25       125846.55       549086.19
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -382,7 +382,7 @@ XS HTab Starting El and Incr=285.5244,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,14039.64,62.1701,55.0469,54.5714
+Type RM Length L Ch R =1,14039.64,62.1701,55.0469,54.5714
 XS GIS Cut Line=2
        125761.65       549073.94       125824.36       549126.35
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -404,7 +404,7 @@ XS HTab Starting El and Incr=286.1645,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,13859.04,107.122,112.3401,115.7021
+Type RM Length L Ch R =1,13859.04,107.122,112.3401,115.7021
 XS GIS Cut Line=6
        125652.71       549014.82       125660.25       549063.84
        125731.87       549122.27       125775.99       549155.71
@@ -458,7 +458,7 @@ XS HTab Starting El and Incr=285.1739,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,13490.47,83.2988,84.0212,80.9762
+Type RM Length L Ch R =1,13490.47,83.2988,84.0212,80.9762
 XS GIS Cut Line=4
        125572.65        549077.6        125636.8       549164.08
        125689.49        549235.1       125892.23       549389.73
@@ -507,7 +507,7 @@ XS HTab Starting El and Incr=284.9453,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,13214.80,134.9106,121.1397,86.3956
+Type RM Length L Ch R =1,13214.80,134.9106,121.1397,86.3956
 XS GIS Cut Line=4
        125518.24        549140.6       125564.63       549204.75
        125618.47       549271.75       125844.12       549498.55
@@ -550,7 +550,7 @@ XS HTab Starting El and Incr=286.7101,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=6,13214,,,
+Type RM Length L Ch R =6,13214,,,
 Node Last Edited Time=Dec/26/2019 14:42:56
 Lateral Weir Pos=0
 Lateral Weir End=,,,2D Interior Area
@@ -607,7 +607,7 @@ Lateral Weir TW RS Station=3160,300.7797
 Lateral Weir TW RS Station=3043,316.0258
 LW Div RC=0,False,,
 
-Type RM Length L Ch R=1,12817.36,104.6531,99.1636,76.453
+Type RM Length L Ch R =1,12817.36,104.6531,99.1636,76.453
 XS GIS Cut Line=3
        125457.54       549286.64       125544.59       549332.46
        125769.67       549508.86
@@ -652,7 +652,7 @@ XS HTab Starting El and Incr=285.2867,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,12492.03,82.5429,80.5708,78.3184
+Type RM Length L Ch R =1,12492.03,82.5429,80.5708,78.3184
 XS GIS Cut Line=4
        125442.65        549396.6       125511.95       549410.35
        125678.83       549508.54        125768.7       549514.61
@@ -694,7 +694,7 @@ XS HTab Starting El and Incr=284.9453,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,12227.69,31.9827,33.6926,29.0932
+Type RM Length L Ch R =1,12227.69,31.9827,33.6926,29.0932
 XS GIS Cut Line=4
        125429.47       549480.22       125481.02       549483.08
        125538.68       549511.91       125766.88       549519.47
@@ -743,7 +743,7 @@ XS HTab Starting El and Incr=285.5458,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,12117.14,44.9031,48.4723,55.8058
+Type RM Length L Ch R =1,12117.14,44.9031,48.4723,55.8058
 XS GIS Cut Line=3
        125423.17         549510.       125524.54       549524.59
         125768.7       549526.75
@@ -796,7 +796,7 @@ XS HTab Starting El and Incr=285.4482,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,11958.11,53.596,53.7698,54.3885
+Type RM Length L Ch R =1,11958.11,53.596,53.7698,54.3885
 XS GIS Cut Line=3
        125413.58       549547.85       125672.15       549657.32
        125716.94       549665.08
@@ -841,7 +841,7 @@ XS HTab Starting El and Incr=284.5735,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,11781.69,36.4632,46.6466,65.6143
+Type RM Length L Ch R =1,11781.69,36.4632,46.6466,65.6143
 XS GIS Cut Line=2
        125401.05       549599.76       125635.51       549704.46
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -881,7 +881,7 @@ XS HTab Starting El and Incr=285.2684,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,11628.65,66.8701,76.4316,94.4209
+Type RM Length L Ch R =1,11628.65,66.8701,76.4316,94.4209
 XS GIS Cut Line=3
        125386.74       549624.81       125439.56       549711.97
        125448.67       549733.84
@@ -906,7 +906,7 @@ XS HTab Starting El and Incr=284.9636,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,11377.89,46.5308,57.8297,72.4845
+Type RM Length L Ch R =1,11377.89,46.5308,57.8297,72.4845
 XS GIS Cut Line=2
        125328.57       549640.03       125340.57       549750.84
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -928,7 +928,7 @@ XS HTab Starting El and Incr=285.2501,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,11188.16,151.2326,157.097,166.0855
+Type RM Length L Ch R =1,11188.16,151.2326,157.097,166.0855
 XS GIS Cut Line=2
        125290.99       549635.55       125248.03       549736.67
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -950,7 +950,7 @@ XS HTab Starting El and Incr=284.6527,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,10672.75,142.3965,139.1351,135.3403
+Type RM Length L Ch R =1,10672.75,142.3965,139.1351,135.3403
 XS GIS Cut Line=2
        125162.12       549564.86       125101.27       549653.45
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -973,7 +973,7 @@ XS HTab Starting El and Incr=284.2504,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,10216.27,119.4664,110.3071,102.7816
+Type RM Length L Ch R =1,10216.27,119.4664,110.3071,102.7816
 XS GIS Cut Line=2
        125036.84       549492.37       124986.73       549586.33
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -994,7 +994,7 @@ XS HTab Starting El and Incr=284.4515,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,9854.381,114.3152,93.1255,67.1749
+Type RM Length L Ch R =1,9854.381,114.3152,93.1255,67.1749
 XS GIS Cut Line=2
        124920.51       549441.37       124900.82       549546.06
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1017,7 +1017,7 @@ XS HTab Starting El and Incr=284.7502,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,9548.851,76.9498,65.2181,34.3632
+Type RM Length L Ch R =1,9548.851,76.9498,65.2181,34.3632
 XS GIS Cut Line=2
        124785.39       549438.68       124851.61       549563.07
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1043,7 +1043,7 @@ XS HTab Starting El and Incr=284.1529,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,9334.877,80.6318,77.3217,71.439
+Type RM Length L Ch R =1,9334.877,80.6318,77.3217,71.439
 XS GIS Cut Line=2
        124699.48       549480.74        124835.5       549576.49
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1070,7 +1070,7 @@ XS HTab Starting El and Incr=283.3512,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,9081.195,96.7466,98.6912,101.1601
+Type RM Length L Ch R =1,9081.195,96.7466,98.6912,101.1601
 XS GIS Cut Line=2
        124648.47       549544.27        124888.3       549689.24
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1108,7 +1108,7 @@ XS HTab Starting El and Incr=283.4518,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,8757.405,96.6155,98.4717,96.3138
+Type RM Length L Ch R =1,8757.405,96.6155,98.4717,96.3138
 XS GIS Cut Line=3
        124592.99       549621.23       124721.85       549707.14
        124906.19       549765.31
@@ -1153,7 +1153,7 @@ XS HTab Starting El and Incr=283.3543,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,8434.332,97.3044,98.7034,101.6325
+Type RM Length L Ch R =1,8434.332,97.3044,98.7034,101.6325
 XS GIS Cut Line=2
        124516.03       549682.98       124912.46       549952.33
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1192,7 +1192,7 @@ XS HTab Starting El and Incr=283.9547,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,8110.505,75.758,74.9869,87.7794
+Type RM Length L Ch R =1,8110.505,75.758,74.9869,87.7794
 XS GIS Cut Line=3
         124451.6       549750.99       124616.26       549872.69
        124704.85       550025.71
@@ -1231,7 +1231,7 @@ XS HTab Starting El and Incr=283.5555,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,7864.487,98.49,113.8885,146.7002
+Type RM Length L Ch R =1,7864.487,98.49,113.8885,146.7002
 XS GIS Cut Line=3
        124408.65       549812.73       124494.56       549874.48
        124667.26       550159.94
@@ -1278,7 +1278,7 @@ XS HTab Starting El and Incr=282.4521,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,7490.833,104.4062,101.1723,97.9048
+Type RM Length L Ch R =1,7490.833,104.4062,101.1723,97.9048
 XS GIS Cut Line=3
        124336.17       549861.06       124383.92       549983.74
        124397.46       550186.87
@@ -1319,7 +1319,7 @@ XS HTab Starting El and Incr=281.9248,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=6,7300,,,
+Type RM Length L Ch R =6,7300,,,
 Node Last Edited Time=Dec/26/2019 14:44:23
 Lateral Weir Pos=0
 Lateral Weir End=,,,2D Interior Area
@@ -1501,7 +1501,7 @@ Lateral Weir TW RS Station=4323,1854.863
 Lateral Weir TW RS Station=4437,1870.103
 LW Div RC=0,False,,
 
-Type RM Length L Ch R=1,7158.903,82.9178,88.5627,103.8819
+Type RM Length L Ch R =1,7158.903,82.9178,88.5627,103.8819
 XS GIS Cut Line=4
        124256.52       549937.12       124299.48       550006.02
        124339.67       550043.03       124370.53       550176.64
@@ -1534,7 +1534,7 @@ XS HTab Starting El and Incr=281.4584,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,6868.344,75.3588,73.6976,71.2257
+Type RM Length L Ch R =1,6868.344,75.3588,73.6976,71.2257
 XS GIS Cut Line=2
        124201.04       549997.08       124292.32       550214.53
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1569,7 +1569,7 @@ XS HTab Starting El and Incr=281.6291,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,6626.553,102.428,101.0443,96.3381
+Type RM Length L Ch R =1,6626.553,102.428,101.0443,96.3381
 XS GIS Cut Line=2
        124143.77        550044.5       124224.31       550233.32
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1602,7 +1602,7 @@ XS HTab Starting El and Incr=280.9586,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,6295.048,109.6457,112.5901,119.6797
+Type RM Length L Ch R =1,6295.048,109.6457,112.5901,119.6797
 XS GIS Cut Line=3
        124060.55       550107.14       124158.98       550299.54
        124167.04       550301.33
@@ -1636,7 +1636,7 @@ XS HTab Starting El and Incr=280.7604,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,5925.654,68.5068,72.1614,78.2117
+Type RM Length L Ch R =1,5925.654,68.5068,72.1614,78.2117
 XS GIS Cut Line=2
        123958.53       550142.94       124029.23        550358.6
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1670,7 +1670,7 @@ XS HTab Starting El and Incr=280.2606,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,5688.906,87.7519,93.3877,101.3582
+Type RM Length L Ch R =1,5688.906,87.7519,93.3877,101.3582
 XS GIS Cut Line=2
        123893.21       550157.26       123935.27       550380.97
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1709,7 +1709,7 @@ XS HTab Starting El and Incr=283.0038,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,5382.517,74.7644,78.4982,80.7872
+Type RM Length L Ch R =1,5382.517,74.7644,78.4982,80.7872
 XS GIS Cut Line=2
         123810.1        550163.3       123802.83       550304.01
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1738,7 +1738,7 @@ XS HTab Starting El and Incr=280.6629,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,5124.979,81.6437,83.567,86.6485
+Type RM Length L Ch R =1,5124.979,81.6437,83.567,86.6485
 XS GIS Cut Line=2
         123738.4       550166.21       123711.55       550299.54
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1767,7 +1767,7 @@ XS HTab Starting El and Incr=281.7632,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,4850.811,82.9544,85.3989,87.4105
+Type RM Length L Ch R =1,4850.811,82.9544,85.3989,87.4105
 XS GIS Cut Line=2
        123659.65       550156.36       123618.48       550300.44
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1795,7 +1795,7 @@ XS HTab Starting El and Incr=281.6626,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,4570.628,106.296,117.3206,124.0719
+Type RM Length L Ch R =1,4570.628,106.296,117.3206,124.0719
 XS GIS Cut Line=2
        123581.79       550136.67       123520.94       550290.59
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1826,7 +1826,7 @@ XS HTab Starting El and Incr=282.3637,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,4185.719,65.7545,71.1129,75.5142
+Type RM Length L Ch R =1,4185.719,65.7545,71.1129,75.5142
 XS GIS Cut Line=2
        123487.83       550103.56       123344.66        550253.9
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1855,7 +1855,7 @@ XS HTab Starting El and Incr=281.6626,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,3952.406,66.4982,79.7357,91.0742
+Type RM Length L Ch R =1,3952.406,66.4982,79.7357,91.0742
 XS GIS Cut Line=3
        123452.04       550054.35       123364.34        550114.3
        123202.37       550150.99
@@ -1897,7 +1897,7 @@ XS HTab Starting El and Incr=281.5651,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,3690.809,114.0927,128.7871,142.11
+Type RM Length L Ch R =1,3690.809,114.0927,128.7871,142.11
 XS GIS Cut Line=2
        123438.62       549995.29       123351.81       550013.18
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1920,7 +1920,7 @@ XS HTab Starting El and Incr=281.4035,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,3268.276,104.1044,106.0216,108.6825
+Type RM Length L Ch R =1,3268.276,104.1044,106.0216,108.6825
 XS GIS Cut Line=2
        123456.51       549890.59       123376.87       549864.64
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1943,7 +1943,7 @@ XS HTab Starting El and Incr=281.0622,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,2920.440,99.4745,102.867,105.3358
+Type RM Length L Ch R =1,2920.440,99.4745,102.867,105.3358
 XS GIS Cut Line=2
        123499.47       549796.63        123424.3       549765.31
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1966,7 +1966,7 @@ XS HTab Starting El and Incr=281.2603,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,2582.948,90.6414,89.2241,87.5629
+Type RM Length L Ch R =1,2582.948,90.6414,89.2241,87.5629
 XS GIS Cut Line=2
        123539.74       549707.14       123472.62       549668.66
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -1987,7 +1987,7 @@ XS HTab Starting El and Incr=282.0345,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,2290.221,89.3826,94.3204,99.4319
+Type RM Length L Ch R =1,2290.221,89.3826,94.3204,99.4319
 XS GIS Cut Line=2
        123588.06       549629.29       123512.89        549592.6
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -2010,7 +2010,7 @@ XS HTab Starting El and Incr=281.9308,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,1980.776,92.967,72.4418,52.3982
+Type RM Length L Ch R =1,1980.776,92.967,72.4418,52.3982
 XS GIS Cut Line=2
        123639.07       549559.49       123574.64       549509.38
 Node Last Edited Time=Dec/10/2015 15:50:50
@@ -2031,7 +2031,7 @@ XS HTab Starting El and Incr=280.6446,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,1743.103,103.1596,83.4573,66.2818
+Type RM Length L Ch R =1,1743.103,103.1596,83.4573,66.2818
 XS GIS Cut Line=3
        123687.42       549495.47       123645.33       549478.05
        123605.06       549478.05
@@ -2056,7 +2056,7 @@ XS HTab Starting El and Incr=280.4709,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,1469.294,99.5965,89.9404,89.4679
+Type RM Length L Ch R =1,1469.294,99.5965,89.9404,89.4679
 XS GIS Cut Line=3
        123737.43       549365.15       123659.13       549373.24
        123578.32       549427.79
@@ -2082,7 +2082,7 @@ XS HTab Starting El and Incr=280.6568,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,1174.213,109.5268,94.0826,91.5497
+Type RM Length L Ch R =1,1174.213,109.5268,94.0826,91.5497
 XS GIS Cut Line=3
        123760.77       549241.81       123625.64       549271.34
        123537.95       549356.35
@@ -2113,7 +2113,7 @@ XS HTab Starting El and Incr=279.0596,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,865.5413,98.5144,90.044,88.3463
+Type RM Length L Ch R =1,865.5413,98.5144,90.044,88.3463
 XS GIS Cut Line=3
        123758.98       549106.69         123563.       549187.22
        123463.67       549305.35
@@ -2151,7 +2151,7 @@ XS HTab Starting El and Incr=278.7762,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,570.1187,116.967,101.3369,98.1121
+Type RM Length L Ch R =1,570.1187,116.967,101.3369,98.1121
 XS GIS Cut Line=3
        123800.14       549005.57       123486.04       549125.48
        123392.98       549255.23
@@ -2197,7 +2197,7 @@ XS HTab Starting El and Incr=280.5898,0.1524,100
 XS HTab Horizontal Distribution=5,5,5
 Exp/Cntr=0.3,0.1
 
-Type RM Length L Ch R=1,237.6455,20.4429,72.4357,78.6049
+Type RM Length L Ch R =1,237.6455,20.4429,72.4357,78.6049
 XS GIS Cut Line=3
        123690.07       548838.23       123394.77       549052.99
        123310.65       549206.02
