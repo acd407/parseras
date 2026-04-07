@@ -56,6 +56,8 @@ class RASStructure(ABC):
     def _format_key_value_line(self, key: str, value: Value) -> str:
         return f"{key}={str(value)}\n"
 
+    
+
     def _parse_lines(self, lines: List[str]):
         i = 0
         while i < len(lines):
