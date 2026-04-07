@@ -88,7 +88,6 @@ def test_cross_section_read_write():
             # 添加tif_path参数，测试Sta/Elev生成功能
             tif_path = os.path.join(os.path.dirname(__file__), "data", "leak.tif")
             result = cross_section_model.update_or_create_cross_section(input_json, tif_path)
-            print(result)
             # 静默模式，不打印详细信息
 
             # 更新Mann数据
@@ -101,7 +100,6 @@ def test_cross_section_read_write():
                     }
                 )
                 mann_result = cross_section_model.update_mann_values(mann_input)
-                print(mann_result)
                 # 静默模式，不打印详细信息
 
             # 更新Bank Sta数据
@@ -113,7 +111,6 @@ def test_cross_section_read_write():
                     }
                 )
                 bank_sta_result = cross_section_model.update_bank_stations(bank_sta_input)
-                print(bank_sta_result)
                 # 静默模式，不打印详细信息
 
         # 4. 生成更新后的文件
