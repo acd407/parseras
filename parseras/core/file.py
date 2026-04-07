@@ -5,10 +5,7 @@ from parseras.core.structures import RASStructure, Head, River, BreakLine, Stora
 
 class GeometryFile:
     def __init__(self, file_path: str | None = None, lines: List[str] | None = None):
-<<<<<<< HEAD
-        # 如果 file_path=None 且 lines=None，创建空 GeometryFile
-=======
->>>>>>> temp-save
+
         self._blocks: List[RASStructure] = []
 
         if file_path:
@@ -17,10 +14,7 @@ class GeometryFile:
             self._parse_lines(lines)
         elif lines is not None:
             self._parse_lines(lines)
-<<<<<<< HEAD
-=======
-        # 如果 file_path=None 且 lines=None，创建空 GeometryFile
->>>>>>> temp-save
+
 
     def _split_into_blocks(self, lines: List[str]) -> List[List[str]]:
         blocks = []
@@ -95,12 +89,5 @@ class GeometryFile:
         return self._blocks
 
     def get_blocks_by_type(self, block_type: Type[RASStructure]) -> List[RASStructure]:
-<<<<<<< HEAD
-        return [block for block in self._blocks if isinstance(block, block_type)]
-=======
         return [block for block in self._blocks if isinstance(block, block_type)]
 
-    def add_block(self, block: RASStructure) -> None:
-        """添加一个 block 到几何文件"""
-        self._blocks.append(block)
->>>>>>> temp-save
