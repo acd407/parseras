@@ -63,8 +63,8 @@ def test_cross_section_read_write():
         # 2. 删除{station}断面
         # 找到并删除{station}断面
         for i, block in enumerate(geometry_file.get_blocks()):
-            if hasattr(block, "_key_value_pairs") and "Type RM Length L Ch R" in block._key_value_pairs:
-                type_rm = block["Type RM Length L Ch R"].value
+            if hasattr(block, "_key_value_pairs") and "Type RM Length L Ch R " in block._key_value_pairs:
+                type_rm = block["Type RM Length L Ch R "].value
                 if len(type_rm) >= 2:
                     try:
                         current_station = float(type_rm[1].value)
@@ -88,6 +88,7 @@ def test_cross_section_read_write():
             # 添加tif_path参数，测试Sta/Elev生成功能
             tif_path = os.path.join(os.path.dirname(__file__), "data", "leak.tif")
             result = cross_section_model.update_or_create_cross_section(input_json, tif_path)
+            print(result)
             # 静默模式，不打印详细信息
 
             # 更新Mann数据
@@ -100,17 +101,19 @@ def test_cross_section_read_write():
                     }
                 )
                 mann_result = cross_section_model.update_mann_values(mann_input)
+                print(mann_result)
                 # 静默模式，不打印详细信息
 
             # 更新Bank Sta数据
             if bank_sta:
                 bank_sta_input = json.dumps(
                     {
-                        "XS Station": station,  # 修正拼写错误
+                        "XS Station": station,
                         "Bank Sta": bank_sta,
                     }
                 )
                 bank_sta_result = cross_section_model.update_bank_stations(bank_sta_input)
+                print(bank_sta_result)
                 # 静默模式，不打印详细信息
 
         # 4. 生成更新后的文件

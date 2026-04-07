@@ -26,9 +26,9 @@ class CrossSectionModel:
         try:
             result = {}
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs and "XS GIS Cut Line" in xs:
+                if "Type RM Length L Ch R " in xs and "XS GIS Cut Line" in xs:
                     # 提取断面在河流上的Station
-                    type_rm = xs["Type RM Length L Ch R"].value
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         station = float(type_rm[1].value)
                         # 提取折线点
@@ -60,9 +60,9 @@ class CrossSectionModel:
         """
         try:
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs and "#Sta/Elev" in xs:
+                if "Type RM Length L Ch R " in xs and "#Sta/Elev" in xs:
                     # 提取断面在河流上的Station
-                    type_rm = xs["Type RM Length L Ch R"].value
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         xs_station = float(type_rm[1].value)
                         if xs_station == station:
@@ -111,9 +111,9 @@ class CrossSectionModel:
         try:
             result = {}
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs and "#Mann" in xs:
+                if "Type RM Length L Ch R " in xs and "#Mann" in xs:
                     # 提取断面在河流上的Station
-                    type_rm = xs["Type RM Length L Ch R"].value
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         station = float(type_rm[1].value)
                         # 提取曼宁值
@@ -149,9 +149,9 @@ class CrossSectionModel:
         try:
             result = {}
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs and "Bank Sta" in xs:
+                if "Type RM Length L Ch R " in xs and "Bank Sta" in xs:
                     # 提取断面在河流上的Station
-                    type_rm = xs["Type RM Length L Ch R"].value
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         station = float(type_rm[1].value)
                         # 提取Bank Sta值
@@ -204,8 +204,8 @@ class CrossSectionModel:
             # 查找对应的断面
             target_xs = None
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs:
-                    type_rm = xs["Type RM Length L Ch R"].value
+                if "Type RM Length L Ch R " in xs:
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         current_station = float(type_rm[1].value)
                         if current_station == xs_station:
@@ -275,8 +275,8 @@ class CrossSectionModel:
             # 查找对应的断面
             target_xs = None
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs:
-                    type_rm = xs["Type RM Length L Ch R"].value
+                if "Type RM Length L Ch R " in xs:
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         current_station = float(type_rm[1].value)
                         if current_station == xs_station:
@@ -334,8 +334,8 @@ class CrossSectionModel:
             # 查找对应的断面
             target_xs = None
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R" in xs:
-                    type_rm = xs["Type RM Length L Ch R"].value
+                if "Type RM Length L Ch R " in xs:
+                    type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
                         current_station = float(type_rm[1].value)
                         if current_station == station:
@@ -478,7 +478,7 @@ class CrossSectionModel:
 
             type_rm_str = f"1,{station},{distance},{distance},{distance}"
             type_rm_value = CommaSeparatedValue(type_rm_str, element_type=StringValue)
-            target_xs["Type RM Length L Ch R"] = type_rm_value
+            target_xs["Type RM Length L Ch R "] = type_rm_value
 
             # 手动更新order属性
             try:
