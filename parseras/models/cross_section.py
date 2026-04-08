@@ -2,6 +2,13 @@ import json
 from parseras.core.file import GeometryFile
 from parseras.core.structures import CrossSection
 from typing import Optional
+from parseras.utils import (
+    calculate_centroid,
+    calculate_distance,
+    calculate_total_length,
+    get_point_at_distance,
+    get_elevation_from_tif,
+)
 
 
 class CrossSectionModel:
@@ -353,90 +360,6 @@ class CrossSectionModel:
             else:
                 message = "Cross section updated successfully"
 
-            # 计算几何中心的函数
-            def calculate_centroid(points):
-                if not points:
-                    return (0, 0)
-                x_coords = [p[0] for p in points]
-                y_coords = [p[1] for p in points]
-                centroid_x = sum(x_coords) / len(x_coords)
-                centroid_y = sum(y_coords) / len(y_coords)
-                return (centroid_x, centroid_y)
-
-            # 计算两点之间的距离
-            def calculate_distance(p1, p2):
-                import math
-
-                return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
-
-            # 计算折线的总长度
-            def calculate_total_length(points):
-                total_length = 0
-                for i in range(1, len(points)):
-                    total_length += calculate_distance(points[i - 1], points[i])
-                return total_length
-
-            # 在折线上根据距离获取点
-            def get_point_at_distance(points, distance):
-                if not points:
-                    return (0, 0)
-                if len(points) == 1:
-                    return points[0]
-
-                total_length = 0
-                for i in range(1, len(points)):
-                    segment_length = calculate_distance(points[i - 1], points[i])
-                    if total_length + segment_length >= distance:
-                        # 在当前线段上插值
-                        ratio = (distance - total_length) / segment_length
-                        x = points[i - 1][0] + ratio * (points[i][0] - points[i - 1][0])
-                        y = points[i - 1][1] + ratio * (points[i][1] - points[i - 1][1])
-                        return (x, y)
-                    total_length += segment_length
-                # 如果距离超过总长度，返回最后一个点
-                return points[-1]
-
-            # 从tif获取高程（支持批量处理）
-            def get_elevation_from_tif(xs, ys, tif_path):
-                try:
-                    import rasterio
-                    import numpy as np
-                    from rasterio.transform import rowcol
-
-                    with rasterio.open(tif_path) as src:
-                        # 计算像素坐标
-                        rows, cols = rowcol(src.transform, xs, ys)
-                        rows = np.array(rows)
-                        cols = np.array(cols)
-
-                        # 过滤有效像素
-                        valid = (rows >= 0) & (rows < src.height) & (cols >= 0) & (cols < src.width)
-
-                        elevations = np.full_like(xs, 0.0, dtype=np.float32)
-
-                        if not np.any(valid):
-                            return elevations.tolist()
-
-                        # 计算包围窗口
-                        row_min, row_max = rows[valid].min(), rows[valid].max()
-                        col_min, col_max = cols[valid].min(), cols[valid].max()
-
-                        # 读取窗口
-                        window = ((row_min, row_max + 1), (col_min, col_max + 1))
-                        data = src.read(1, window=window)
-
-                        # 提取值
-                        local_rows = rows[valid] - row_min
-                        local_cols = cols[valid] - col_min
-                        elevations[valid] = data[local_rows, local_cols]
-
-                        # 处理可能的空值
-                        elevations = np.nan_to_num(elevations, nan=0.0)
-
-                        return elevations.tolist()
-                except Exception:
-                    return [0.0] * len(xs)
-
             # 计算当前断面的几何中心
             current_centroid = calculate_centroid(xs_gis_cut_line)
 
@@ -484,7 +407,7 @@ class CrossSectionModel:
             try:
                 if station > 0:
                     target_xs.order = 30 + 1 / station
-            except (ValueError, AttributeError):
+            except ValueError, AttributeError:
                 pass
 
             # 更新XS GIS Cut Line

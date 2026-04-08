@@ -5,6 +5,7 @@ from .core.project_file import ProjectFile
 from .core.structures import RASStructure, Head, River, BreakLine, StorageArea, Foot, LateralWeir, CrossSection
 from .core.flow_structures import FlowHead, FlowProfile, ObservedWS, DSSImport
 from .core.values import Value, StringValue, IntValue, FloatValue, CommaSeparatedValue, SpaceSeparatedValue, LinesValue, DataBlockValue
+from . import utils
 from .models.cross_section import CrossSectionModel
 from .models.river import RiverModel
 
@@ -42,5 +43,7 @@ __all__ = [
     'DataBlockValue',
     # Models
     'CrossSectionModel',
-    'RiverModel'
+    'RiverModel',
+    # Utils
+    'utils'
 ]
