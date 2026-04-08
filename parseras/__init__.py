@@ -45,6 +45,7 @@ __all__ = [
     # Models
     'CrossSectionModel',
     'RiverModel',
+    'LateralWeirModel',
     'BreakLineModel',
     # Utils
     'utils'
