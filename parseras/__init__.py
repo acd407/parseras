@@ -8,6 +8,7 @@ from .core.values import Value, StringValue, IntValue, FloatValue, CommaSeparate
 from . import utils
 from .models.cross_section import CrossSectionModel
 from .models.river import RiverModel
+from .models.breakline import BreakLineModel
 
 __all__ = [
     # Geometry files
@@ -44,6 +45,7 @@ __all__ = [
     # Models
     'CrossSectionModel',
     'RiverModel',
+    'BreakLineModel',
     # Utils
     'utils'
 ]

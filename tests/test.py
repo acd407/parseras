@@ -11,6 +11,7 @@ from tests.test_full_file import run_full_file_tests
 from tests.test_river_modification import test_river_modification
 from tests.test_cross_section import test_cross_section_read_write
 from tests.test_lateral_weir import test_lateral_weir_read_write
+from tests.test_breakline import test_breakline_modification
 
 
 def main():
@@ -33,6 +34,9 @@ def main():
 
     # 运行侧堰修改测试
     lateral_weir_modification_result = test_lateral_weir_read_write()
+
+    # 运行断线修改测试
+    breakline_modification_result = test_breakline_modification()
 
     print("=" * 80)
     print("Test Summary")
@@ -82,6 +86,14 @@ def main():
         f"{'✅' if lateral_weir_modification_result else '❌'} Lateral Weir Modification test: {'PASSED' if lateral_weir_modification_result else 'FAILED'}"
     )
     all_passed = all_passed and lateral_weir_modification_result
+
+    print("=" * 60)
+
+    # 打印断线修改测试结果
+    print(
+        f"{'✅' if breakline_modification_result else '❌'} BreakLine Modification test: {'PASSED' if breakline_modification_result else 'FAILED'}"
+    )
+    all_passed = all_passed and breakline_modification_result
 
     print("=" * 80)
 
