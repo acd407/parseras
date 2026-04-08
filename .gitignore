@@ -1,6 +1,7 @@
 /__pycache__
 /.marscode
 *.output.g01
+*.tif
 
 # Virtual environments
 venv/
@@ -54,3 +55,4 @@ pytest_cache/
 *.temp
 .tmp/
 .temp/
+/uv.lock
