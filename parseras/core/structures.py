@@ -289,7 +289,7 @@ class CrossSection(RASStructure):
                     station = float(type_rm[1].value)
                     if station > 0:
                         self.order = 30 + 1 / station
-                except ValueError, AttributeError:
+                except (ValueError, AttributeError):
                     pass
 
 
@@ -357,7 +357,7 @@ class LateralWeir(RASStructure):
                     station = float(type_rm[1].value)
                     if station > 0:
                         self.order = 30 + 1 / station
-                except ValueError, AttributeError:
+                except (ValueError, AttributeError):
                     pass
 
 
