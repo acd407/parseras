@@ -1,6 +1,6 @@
 from typing import List, Type
 
-from parseras.core.structures import RASStructure, Head, River, BreakLine, StorageArea, Foot, LateralWeir, CrossSection
+from parseras.core.structures import RASStructure, Head, River, BreakLine, StorageArea, Foot, LateralWeir, CrossSection, BCLine
 
 
 class GeometryFile:
@@ -48,6 +48,7 @@ class GeometryFile:
             "Geom Title": Head,
             "River Reach": River,
             "BreakLine Name": BreakLine,
+            "BC Line Name": BCLine,
             "Storage Area": StorageArea,
             "Use User Specified Reach Order": Foot,
             "Geom Raster": Foot,

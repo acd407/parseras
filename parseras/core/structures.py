@@ -131,6 +131,46 @@ class River(RASStructure):
         super().__init__(lines)
 
 
+class BCLineItem(RASStructure):
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "BC Line Name": StringValue,
+            "BC Line Storage Area": StringValue,
+            "BC Line Arc": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+        }
+        super().__init__(lines)
+
+
+class BCLine:
+    order = 160.0
+
+    def __init__(self, lines: List[str]):
+        self._value = []
+
+        current_bc_item = None
+
+        for line in lines:
+            stripped = line.strip()
+
+            if stripped.startswith("BC Line Name="):
+                if current_bc_item is not None:
+                    self._value.append(BCLineItem(current_bc_item))
+
+                current_bc_item = [line]
+            elif current_bc_item is not None:
+                current_bc_item.append(line)
+
+        if current_bc_item is not None:
+            self._value.append(BCLineItem(current_bc_item))
+
+    def generate(self) -> List[str]:
+        return [line for item in self._value for line in item.generate()]
+
+    @property
+    def value(self) -> List[BCLineItem]:
+        return self._value
+
+
 class SingleBreakLine(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {

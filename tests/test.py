@@ -12,6 +12,7 @@ from tests.test_river_modification import test_river_modification
 from tests.test_cross_section import test_cross_section_read_write
 from tests.test_lateral_weir import test_lateral_weir_read_write
 from tests.test_breakline import test_breakline_modification
+from tests.test_bcline import run_bcline_tests
 
 
 def main():
@@ -37,6 +38,9 @@ def main():
 
     # 运行断线修改测试
     breakline_modification_result = test_breakline_modification()
+
+    # 运行BCLine测试
+    bcline_result = run_bcline_tests()
 
     print("=" * 80)
     print("Test Summary")
@@ -94,6 +98,14 @@ def main():
         f"{'✅' if breakline_modification_result else '❌'} BreakLine Modification test: {'PASSED' if breakline_modification_result else 'FAILED'}"
     )
     all_passed = all_passed and breakline_modification_result
+
+    print("=" * 60)
+
+    # 打印BCLine测试结果
+    print(
+        f"{'✅' if bcline_result else '❌'} BCLine test: {'PASSED' if bcline_result else 'FAILED'}"
+    )
+    all_passed = all_passed and bcline_result
 
     print("=" * 80)
 
