@@ -47,6 +47,11 @@ GEOMETRY_TESTS = [
         "file_path": "tests/data/storage_area.g01",
         "class": StorageArea,
     },
+    {
+        "test_name": "StorageArea-1",
+        "file_path": "tests/data/storage_area1.g01",
+        "class": StorageArea,
+    },
 ]
 
 
