@@ -10,6 +10,7 @@ from .models.cross_section import CrossSectionModel
 from .models.river import RiverModel
 from .models.lateral_weir import LateralWeirModel
 from .models.breakline import BreakLineModel
+from .models.bcline import BCLineModel
 
 __all__ = [
     # Geometry files
@@ -49,6 +50,7 @@ __all__ = [
     'RiverModel',
     'LateralWeirModel',
     'BreakLineModel',
+    'BCLineModel',
     # Utils
     'utils'
 ]
