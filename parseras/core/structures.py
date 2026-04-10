@@ -371,12 +371,13 @@ class StorageArea(RASStructure):
                 DataBlockValue,
                 {"value_width": 16, "values_per_line": 2, "items_per_value": 2},
             ),
-            "Storage Area Type": IntValue,
+            "Storage Area Mannings": FloatValue,
             "Storage Area Is2D": IntValue,
+            # 2D Flow Area
             "Storage Area Point Generation Data": (CommaSeparatedValue, {"element_type": StringValue}),
             "Storage Area 2D Points": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
+            # StorageArea
             "Storage Area Vol Elev": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
-            "Storage Area Mannings": FloatValue,
         }
         super().__init__(lines)
 

@@ -13,6 +13,7 @@ from tests.test_cross_section import test_cross_section_read_write
 from tests.test_lateral_weir import test_lateral_weir_read_write
 from tests.test_breakline import test_breakline_modification
 from tests.test_bcline import run_bcline_tests
+from tests.test_storage_area import run_storage_area_tests
 
 
 def main():
@@ -41,6 +42,9 @@ def main():
 
     # 运行BCLine测试
     bcline_result = run_bcline_tests()
+
+    # 运行StorageArea测试
+    storage_area_results = run_storage_area_tests()
 
     print("=" * 80)
     print("Test Summary")
@@ -106,6 +110,11 @@ def main():
         f"{'✅' if bcline_result else '❌'} BCLine test: {'PASSED' if bcline_result else 'FAILED'}"
     )
     all_passed = all_passed and bcline_result
+
+    # 打印StorageArea测试结果
+    for test_name, passed in storage_area_results.items():
+        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        all_passed = all_passed and passed
 
     print("=" * 80)
 

@@ -11,6 +11,7 @@ from .models.river import RiverModel
 from .models.lateral_weir import LateralWeirModel
 from .models.breakline import BreakLineModel
 from .models.bcline import BCLineModel
+from .models.storage_area import StorageAreaModel
 
 __all__ = [
     # Geometry files
@@ -54,6 +55,7 @@ __all__ = [
     'LateralWeirModel',
     'BreakLineModel',
     'BCLineModel',
+    'StorageAreaModel',
     # Utils
     'utils'
 ]
