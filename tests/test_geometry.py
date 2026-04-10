@@ -5,7 +5,6 @@ from parseras import (
     SingleBreakLine,
     BreakLine,
     CrossSection,
-    Foot,
     Head,
     LateralWeir,
     StorageArea,
@@ -28,11 +27,6 @@ GEOMETRY_TESTS = [
         "test_name": "CrossSection",
         "file_path": "tests/data/cross_secion.g01",
         "class": CrossSection,
-    },
-    {
-        "test_name": "Foot",
-        "file_path": "tests/data/foot.g01",
-        "class": Foot,
     },
     {
         "test_name": "Head",

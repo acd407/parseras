@@ -1,7 +1,6 @@
 Type RM Length L Ch R =1,10295,915.7,915.7,915.7
 XS GIS Cut Line=2
  404488.729686931802032.79323453404653.839763241 1801018.5456229
-Node Last Edited Time=Feb/03/2026 19:07:57
 #Sta/Elev=225
        0  928.71     2.9  929.03     6.2  929.25     7.3  929.36    11.9  929.66
       17  930.31    18.3  930.44    20.4  930.69      22  930.84    27.1  931.11
@@ -51,8 +50,3 @@ Node Last Edited Time=Feb/03/2026 19:07:57
 #Mann=1,-1,0
        0     0.3       0
 Bank Sta=223.5,415.6
-XS Rating Curve=0,0
-XS HTab Starting El and Incr=912.27,0.3,100
-XS HTab Horizontal Distribution=5,5,5
-Exp/Cntr(USF)=0,0
-Exp/Cntr=0.3,0.1

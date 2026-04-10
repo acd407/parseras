@@ -6,7 +6,6 @@ from parseras.core.structures import (
     River,
     BreakLine,
     StorageArea,
-    Foot,
     LateralWeir,
     CrossSection,
     BCLine,
@@ -22,7 +21,6 @@ class GeometryFile:
         "BC Line Name=",
         "Storage Area=",
         "Connection=",
-        "Geom Raster=",
         "Type RM Length L Ch R =",
     ]
 
@@ -75,9 +73,6 @@ class GeometryFile:
             "BreakLine Name": BreakLine,
             "BC Line Name": BCLine,
             "Storage Area": StorageArea,
-            "Use User Specified Reach Order": Foot,
-            "Geom Raster": Foot,
-            "GIS Ratio Cuts To Invert": Foot,
             "Connection": Connection,
         }
 

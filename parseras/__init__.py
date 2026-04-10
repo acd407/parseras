@@ -2,7 +2,7 @@ from .core.file import GeometryFile
 from .core.flow_file import FlowFile
 from .core.plan_file import PlanFile
 from .core.project_file import ProjectFile
-from .core.structures import RASStructure, Head, River, SingleBreakLine, BreakLine, StorageArea, Foot, LateralWeir, CrossSection, BCLine, SingleBCLine, Connection
+from .core.structures import RASStructure, Head, River, SingleBreakLine, BreakLine, StorageArea, LateralWeir, CrossSection, BCLine, SingleBCLine, Connection
 from .core.flow_structures import FlowHead, FlowProfile, ObservedWS, DSSImport
 from .core.values import Value, StringValue, IntValue, FloatValue, CommaSeparatedValue, SpaceSeparatedValue, LinesValue, DataBlockValue
 from . import utils

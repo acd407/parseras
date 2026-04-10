@@ -109,8 +109,6 @@ class RASStructure(ABC):
                     self[matched_key] = value
                     i += 1
             else:
-                if line.startswith("Permanent Ineff"):
-                    i += 1
                 i += 1
 
         return self
@@ -272,16 +270,9 @@ class CrossSection(RASStructure):
         self._key_value_types = {
             "Type RM Length L Ch R ": (CommaSeparatedValue, {"element_type": StringValue}),
             "XS GIS Cut Line": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
-            "Node Last Edited Time": StringValue,
             "#Sta/Elev": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
             "#Mann": (DataBlockValue, {"value_width": 8, "values_per_line": 9, "items_per_value": 3}),
-            "#XS Ineff": (DataBlockValue, {"value_width": 8, "values_per_line": 9, "items_per_value": 3}),
             "Bank Sta": (CommaSeparatedValue, {"element_type": StringValue}),
-            "XS Rating Curve": (CommaSeparatedValue, {"element_type": StringValue}),
-            "XS HTab Starting El and Incr": (CommaSeparatedValue, {"element_type": StringValue}),
-            "XS HTab Horizontal Distribution": (CommaSeparatedValue, {"element_type": StringValue}),
-            "Exp/Cntr(USF)": (CommaSeparatedValue, {"element_type": StringValue}),
-            "Exp/Cntr": (CommaSeparatedValue, {"element_type": StringValue}),
         }
         super().__init__(lines)
 
@@ -296,28 +287,12 @@ class CrossSection(RASStructure):
                 except (ValueError, AttributeError):
                     pass
 
-
-class Foot(RASStructure):
-    order = 200.0
-
-    def __init__(self, lines: List[str]):
-        self._key_value_types = {
-            "Use User Specified Reach Order": IntValue,
-            "GIS Ratio Cuts To Invert": IntValue,
-            "GIS Limit At Bridges": IntValue,
-            "Composite Channel Slope": IntValue,
-        }
-        super().__init__(lines)
-
-
 class Head(RASStructure):
     order = 0.0
 
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "Geom Title": StringValue,
-            "Program Version": StringValue,
-            "Viewing Rectangle": (CommaSeparatedValue, {"element_type": StringValue}),
         }
         super().__init__(lines)
 
