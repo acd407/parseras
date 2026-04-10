@@ -15,6 +15,17 @@ from parseras.core.structures import (
 
 
 class GeometryFile:
+    BLOCK_STARTS = [
+        "Geom Title=",
+        "River Reach=",
+        "BreakLine Name=",
+        "BC Line Name=",
+        "Storage Area=",
+        "Connection=",
+        "Geom Raster=",
+        "Type RM Length L Ch R =",
+    ]
+
     def __init__(self, file_path: str | None = None, lines: List[str] | None = None):
 
         self._blocks: List[RASStructure] = []
@@ -31,13 +42,17 @@ class GeometryFile:
         current_block = []
 
         for line in lines:
-            stripped = line.strip()
-            if not stripped:
-                if current_block:
-                    blocks.append(current_block)
-                    current_block = []
-            else:
-                current_block.append(line)
+            is_block_start = False
+
+            for prefix in self.BLOCK_STARTS:
+                if line.startswith(prefix):
+                    if current_block:
+                        blocks.append(current_block)
+                        current_block = []
+                    is_block_start = True
+                    break
+
+            current_block.append(line)
 
         if current_block:
             blocks.append(current_block)

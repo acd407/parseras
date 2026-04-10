@@ -1,6 +1,4 @@
 Geom Title=New Geometry
-Program Version=6.60
-Viewing Rectangle=404119.978699145,417111.442290977,1805642.79837737,1797924.2526062
 
 Storage Area=Perimeter 1,408818.7653747,1803257.0655808
 Storage Area Surface Line=16
@@ -20,9 +18,6 @@ Storage Area Surface Line=16
 404710.4997715011804846.74759274
 406509.0424180821805273.32501533
 408226.8812279581804143.47130145
-Storage Area Type=1
-Storage Area Area=
-Storage Area Min Elev=
 Storage Area Is2D=-1
 Storage Area Point Generation Data=,,200,200
 Storage Area 2D Points=480
@@ -266,17 +261,6 @@ Storage Area 2D Points=480
 412410.4997715011801573.32501533411410.4997715011801373.32501533
 411610.4997715011801373.32501533411810.4997715011801373.32501533
 412010.4997715011801373.32501533412210.4997715011801373.32501533
-Storage Area 2D PointsPerimeterTime=10Apr2026 14:02:17
-Storage Area Mannings=0.06
-2D Cell Volume Filter Tolerance=0.003
-2D Cell Minimum Area Fraction=0.01
-2D Face Profile Filter Tolerance=0.003
-2D Face Area Elevation Profile Filter Tolerance=0.003
-2D Face Area Elevation Conveyance Ratio=0.02
-2D Face Min Length Ratio=0.05
-2D Face Area Laminar Depth=0.06
-2D Multiple Face Mann n=0
-2D Composite LC=0
 
 Storage Area=Storage Area 1,414530.2985725,1800306.8411726
 Storage Area Surface Line=9
@@ -289,9 +273,6 @@ Storage Area Surface Line=9
 415082.0565011131799836.66378627
 414756.7935222141800230.00506307
 413675.1050109941800003.07740338
-Storage Area Type=1
-Storage Area Area=
-Storage Area Min Elev=
 Storage Area Vol Elev=65
 935.0082       0935.1559 0.00757935.3712.2459891935.5029.4534731935.6396.8052924
 935.80581.314038935.87261.605359936.03512.432568936.18773.371258 936.4685.591886
@@ -307,83 +288,22 @@ Storage Area Vol Elev=65
 951.195625756.41952.370231299.04 954.02839292.02955.354745801.38 956.78252930.69
 959.385866272.61965.1794 96409.8970.1792122667.3975.1869149178.5976.1869154491.9
 Storage Area Is2D=0
-Storage Area Point Generation Data=0,0,,
-Storage Area 2D Points=0
-Storage Area 2D PointsPerimeterTime=10Apr2026 14:07:20
-Storage Area Mannings=0.06
-2D Cell Volume Filter Tolerance=0.003
-2D Cell Minimum Area Fraction=0.01
-2D Face Profile Filter Tolerance=0.003
-2D Face Area Elevation Profile Filter Tolerance=0.003
-2D Face Area Elevation Conveyance Ratio=0.02
-2D Face Min Length Ratio=0.05
-2D Face Area Laminar Depth=0.06
-2D Multiple Face Mann n=0
-2D Composite LC=0
 
 Connection=Storage Area 1 T,412717.4732846,1801601.3004452
-Connection Desc=
 Connection Line=2
  413276.635581821802137.40450334412158.3109874721801065.19638711
-Connection Centerline Profile=0
-Connection Last Edited Time=Apr/10/2026 16:44:44
-Conn Near Repeats=1
 Connection Up SA=Perimeter 1
 Connection Dn SA=Storage Area 1
-Conn Routing Type=1
-Conn Use RC Family=False
-Conn OverFlow Method 2D=False
-Conn Weir WD=10
-Conn Weir Coef=1.66
-Conn Weir Is Ogee=0
-Conn Simple Spill Pos Coef=0.05
-Conn Simple Spill Neg Coef=0.05
 Conn Weir SE=2
        0     952  1549.3     952
 
-Conn Outlet Rating Curve=0,False,,
-Conn BR: Bridge=-1,0,-1,-1,0,0.3,0.5
-Conn BR: Pressure-Weir=0.08,,0.25,,0.016
-Conn BR: Deck Dist Width WeirC Skew NumUp NumDn MinLoCord MaxHiCord MaxSubmerge Is_Ogee
-,10,1.66,0,0,0,,,0.98,0,0,0,,
-Conn BR: BR SE=1,0
-Conn BR: BR Bank Stations=1,,
-Conn BR: BR Mann=1,0
-Conn BR: BR SE=2,0
-Conn BR: BR Bank Stations=2,,
-Conn BR: BR Mann=2,0
-Conn BR: BR Coef=-1,0,0,,,0.8,-1,,0,
-Conn BR: BR Skew=0
-Conn BR: XS SE=1,0
-Conn BR: XS Bank Stations=1,,
-Conn BR: XS Mann=1,0
-Conn BR: XS SE=2,0
-Conn BR: XS Bank Stations=2,,
-Conn BR: XS Mann=2,0
 BC Line Name=BC Line 1
 BC Line Storage Area=Storage Area 1
-BC Line Start Position=416520.921218621,1799644.75499589
-BC Line Middle Position=416188.882576176,1798959.92529585
-BC Line End Position=415856.84393373,1798275.0955958
 BC Line Arc=2
 416520.9212186211799644.75499589 415856.84393373 1798275.0955958
-BC Line Text Position=416188.882576176,1798959.92529585
+
 BC Line Name=BC Line 2
 BC Line Storage Area=Perimeter 1
-BC Line Start Position=408477.710745489,1805291.95538777
-BC Line Middle Position=408678.490362093,1805161.21517231
-BC Line End Position=408879.269978697,1805030.47495684
 BC Line Arc=2
 408477.7107454891805291.95538777408879.2699786971805030.47495684
 BC Line Text Position=408678.490362093,1805161.21517231
-LCMann Time=Dec/30/1899 00:00:00
-LCMann Region Time=Dec/30/1899 00:00:00
-LCMann Table=0
-Chan Stop Cuts=-1
-
-
-
-Use User Specified Reach Order=0
-GIS Ratio Cuts To Invert=-1
-GIS Limit At Bridges=0
-Composite Channel Slope=5

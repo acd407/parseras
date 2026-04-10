@@ -64,6 +64,10 @@ class RASStructure(ABC):
                 i += 1
                 continue
 
+            if "=" not in line:
+                i += 1
+                continue
+
             key, value_str = self._parse_key_value_line(line)
 
             # 查找匹配的键（比较去除尾随空格的版本）
