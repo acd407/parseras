@@ -131,7 +131,7 @@ class River(RASStructure):
         super().__init__(lines)
 
 
-class BCLineItem(RASStructure):
+class SingleBCLine(RASStructure):
     def __init__(self, lines: List[str]):
         self._key_value_types = {
             "BC Line Name": StringValue,
@@ -154,20 +154,20 @@ class BCLine:
 
             if stripped.startswith("BC Line Name="):
                 if current_bc_item is not None:
-                    self._value.append(BCLineItem(current_bc_item))
+                    self._value.append(SingleBCLine(current_bc_item))
 
                 current_bc_item = [line]
             elif current_bc_item is not None:
                 current_bc_item.append(line)
 
         if current_bc_item is not None:
-            self._value.append(BCLineItem(current_bc_item))
+            self._value.append(SingleBCLine(current_bc_item))
 
     def generate(self) -> List[str]:
         return [line for item in self._value for line in item.generate()]
 
     @property
-    def value(self) -> List[BCLineItem]:
+    def value(self) -> List[SingleBCLine]:
         return self._value
 
 
@@ -289,7 +289,7 @@ class CrossSection(RASStructure):
                     station = float(type_rm[1].value)
                     if station > 0:
                         self.order = 30 + 1 / station
-                except (ValueError, AttributeError):
+                except ValueError, AttributeError:
                     pass
 
 
@@ -357,7 +357,7 @@ class LateralWeir(RASStructure):
                     station = float(type_rm[1].value)
                     if station > 0:
                         self.order = 30 + 1 / station
-                except (ValueError, AttributeError):
+                except ValueError, AttributeError:
                     pass
 
 
@@ -389,5 +389,23 @@ class StorageArea(RASStructure):
             "2D Face Area Laminar Depth": FloatValue,
             "2D Multiple Face Mann n": IntValue,
             "2D Composite LC": FloatValue,
+        }
+        super().__init__(lines)
+
+
+class Connection(RASStructure):
+    order = 110.0
+
+    def __init__(self, lines: List[str]):
+        self._key_value_types = {
+            "Connection": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Connection Line": (
+                DataBlockValue,
+                {"value_width": 16, "values_per_line": 4, "items_per_value": 2},
+            ),
+            "Connection Up SA": StringValue,
+            "Connection Dn SA": StringValue,
+            "Conn Weir WD": IntValue,
+            "Conn Weir SE": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
         }
         super().__init__(lines)

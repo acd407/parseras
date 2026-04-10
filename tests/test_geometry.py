@@ -2,12 +2,14 @@ from typing import Dict, Any
 
 from parseras import (
     River,
+    SingleBreakLine,
     BreakLine,
     CrossSection,
     Foot,
     Head,
     LateralWeir,
     StorageArea,
+    Connection
 )
 
 
@@ -43,14 +45,24 @@ GEOMETRY_TESTS = [
         "class": LateralWeir,
     },
     {
-        "test_name": "StorageArea",
+        "test_name": "SingleBreakLine",
+        "file_path": "tests/data/singlebreakline.g01",
+        "class": SingleBreakLine,
+    },
+    {
+        "test_name": "2D Flow Areas",
         "file_path": "tests/data/storage_area.g01",
         "class": StorageArea,
     },
     {
-        "test_name": "StorageArea-1",
+        "test_name": "StorageArea",
         "file_path": "tests/data/storage_area1.g01",
         "class": StorageArea,
+    },
+    {
+        "test_name": "Connection",
+        "file_path": "tests/data/conn.g01",
+        "class": Connection,
     },
 ]
 

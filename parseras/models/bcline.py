@@ -5,7 +5,7 @@ BCLineModel 类 - 提供BC Line的业务逻辑封装
 import json
 from typing import List
 from parseras.core.file import GeometryFile
-from parseras.core.structures import BCLine, BCLineItem
+from parseras.core.structures import BCLine, SingleBCLine
 from parseras.core.values import (
     DataBlockValue,
     DataValue,
@@ -19,11 +19,11 @@ class BCLineModel:
         self.geometry_file = geometry_file
         self.bc_lines = geometry_file.get_blocks_by_type(BCLine)
 
-    def _get_all_items(self) -> List[BCLineItem]:
+    def _get_all_items(self) -> List[SingleBCLine]:
         result = []
         for bl in self.bc_lines:
             for item in bl._value:
-                if isinstance(item, BCLineItem):
+                if isinstance(item, SingleBCLine):
                     result.append(item)
         return result
 
@@ -142,7 +142,7 @@ class BCLineModel:
             target_bc_line = None
             for bc_line in self.bc_lines:
                 for item in bc_line._value:
-                    if isinstance(item, BCLineItem):
+                    if isinstance(item, SingleBCLine):
                         if "BC Line Name" in item and item["BC Line Name"].value == name:
                             target_item = item
                             target_bc_line = bc_line
@@ -154,7 +154,7 @@ class BCLineModel:
                         {"status": "error", "data": {}, "message": "BC Line Storage Area and BC Line Arc are required for creation"},
                         indent=2,
                     )
-                target_item = BCLineItem([])
+                target_item = SingleBCLine([])
                 if target_bc_line is None:
                     target_bc_line = BCLine([])
                     self.bc_lines.append(target_bc_line)
@@ -202,7 +202,7 @@ class BCLineModel:
 
             for bc_line in self.bc_lines:
                 for i, item in enumerate(bc_line._value):
-                    if isinstance(item, BCLineItem):
+                    if isinstance(item, SingleBCLine):
                         if "BC Line Name" in item and item["BC Line Name"].value == name:
                             target_item = item
                             target_bc_line = bc_line

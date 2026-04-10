@@ -20,7 +20,8 @@ from .structures import (
     Foot,
     Head,
     LateralWeir,
-    StorageArea
+    StorageArea,
+    Connection
 )
 
 from .file import GeometryFile
@@ -47,6 +48,7 @@ __all__ = [
     "Head",
     "LateralWeir",
     "StorageArea",
+    "Connection",
     # File
     "GeometryFile"
 ]

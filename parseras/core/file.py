@@ -1,6 +1,17 @@
 from typing import List, Type
 
-from parseras.core.structures import RASStructure, Head, River, BreakLine, StorageArea, Foot, LateralWeir, CrossSection, BCLine
+from parseras.core.structures import (
+    RASStructure,
+    Head,
+    River,
+    BreakLine,
+    StorageArea,
+    Foot,
+    LateralWeir,
+    CrossSection,
+    BCLine,
+    Connection,
+)
 
 
 class GeometryFile:
@@ -14,7 +25,6 @@ class GeometryFile:
             self._parse_lines(lines)
         elif lines is not None:
             self._parse_lines(lines)
-
 
     def _split_into_blocks(self, lines: List[str]) -> List[List[str]]:
         blocks = []
@@ -53,6 +63,7 @@ class GeometryFile:
             "Use User Specified Reach Order": Foot,
             "Geom Raster": Foot,
             "GIS Ratio Cuts To Invert": Foot,
+            "Connection": Connection,
         }
 
         if key in block_type_map:
@@ -91,4 +102,3 @@ class GeometryFile:
 
     def get_blocks_by_type(self, block_type: Type[RASStructure]) -> List[RASStructure]:
         return [block for block in self._blocks if isinstance(block, block_type)]
-

@@ -7,6 +7,10 @@ FULL_FILE_TESTS = [
         "file_path": "tests/data/all.g01",
     },
     {
+        "test_name": "dam.g01",
+        "file_path": "tests/data/dam.g01",
+    },
+    {
         "test_name": "leak.g01",
         "file_path": "tests/data/leak.g01",
     },

@@ -1,7 +1,7 @@
 import json
 import os
 
-from parseras import GeometryFile, BCLine, BCLineItem
+from parseras import GeometryFile, BCLine
 
 
 def test_bcline_read_write():
