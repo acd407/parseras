@@ -14,7 +14,7 @@ Storage Area Surface Line=9
 414756.7935222141800230.00506307
 413675.1050109941800003.07740338
 Storage Area Vol Elev=65
-935.0082       0935.1559 0.00757935.3712.2459891935.5029.4534731935.6396.8052924
+935.0082       0935.1559 0.00757935.37120.245989935.50290.453473935.63960.805292
 935.80581.314038935.87261.605359936.03512.432568936.18773.371258 936.4685.591886
  936.6747.932903 936.83410.14036937.076114.44245937.206717.68597937.378422.88892
 937.466125.98283937.595431.58239 937.80242.02135 938.09261.17934938.399288.16483
@@ -49,8 +49,6 @@ Storage Area Surface Line=16
 406509.0424180821805273.32501533
 408226.8812279581804143.47130145
 Storage Area Type=1
-Storage Area Area=
-Storage Area Min Elev=
 Storage Area Is2D=-1
 Storage Area Point Generation Data=,,200,200
 Storage Area 2D Points=480
@@ -294,36 +292,14 @@ Storage Area 2D Points=480
 412410.4997715011801573.32501533411410.4997715011801373.32501533
 411610.4997715011801373.32501533411810.4997715011801373.32501533
 412010.4997715011801373.32501533412210.4997715011801373.32501533
-Storage Area 2D PointsPerimeterTime=10Apr2026 00:18:28
 Storage Area Mannings=0.06
-2D Cell Volume Filter Tolerance=0.003
-2D Cell Minimum Area Fraction=0.01
-2D Face Profile Filter Tolerance=0.003
-2D Face Area Elevation Profile Filter Tolerance=0.003
-2D Face Area Elevation Conveyance Ratio=0.02
-2D Face Min Length Ratio=0.05
-2D Face Area Laminar Depth=0.06
-2D Multiple Face Mann n=0
-2D Composite LC=0
 
 Connection=Storage Area 1 T,0,0
-Connection Desc=
 Connection Line=2
  413276.635581821802137.40450334412158.3109874721801065.19638711
-Connection Centerline Profile=0
-Connection Last Edited Time=Apr/09/2026 23:42:17
-Conn Near Repeats=0
-Conn Protection Radius=-1
 Connection Up SA=Perimeter 1
 Connection Dn SA=Storage Area 1
-Conn Routing Type=1
-Conn Use RC Family=False
-Conn OverFlow Method 2D=False
 Conn Weir WD=200
-Conn Weir Coef=1.66
-Conn Weir Is Ogee=0
-Conn Simple Spill Pos Coef=0.05
-Conn Simple Spill Neg Coef=0.05
 Conn Weir SE=450
        0  952.97     1.9  952.88     8.7   952.9    12.5   952.8      16  952.88
     22.6  952.61    29.5  952.62    33.7   952.5    36.4  952.56    40.8   952.5
@@ -420,7 +396,6 @@ BC Line Name=BC Line 1
 BC Line Storage Area=Storage Area 1
 BC Line Arc=2
 416520.9212186211799644.75499589 415856.84393373 1798275.0955958
-BC Line Text Position=1.79769313486232E+308,1.79769313486232E+308
 BC Line Name=BC Line 2
 BC Line Storage Area=Perimeter 1
 BC Line Arc=2

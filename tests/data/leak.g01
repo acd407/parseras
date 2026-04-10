@@ -595,8 +595,6 @@ Storage Area Surface Line=12
 408086.8583898781803880.26431601
 408248.5317986641802000.85992187
 Storage Area Type=1
-Storage Area Area=
-Storage Area Min Elev=
 Storage Area Is2D=-1
 Storage Area Point Generation Data=,,100,100
 Storage Area 2D Points=836
@@ -1018,17 +1016,7 @@ Storage Area 2D Points=836
 407377.0933540421802811.61559476407393.5458478441802945.64072547
 407501.3453845861803060.47526929407590.5848535961803105.59634913
 407679.8243226071803150.71742896407769.063791617 1803195.8385088
-Storage Area 2D PointsPerimeterTime=01Apr2026 19:21:21
 Storage Area Mannings=0.06
-2D Cell Volume Filter Tolerance=0.003
-2D Cell Minimum Area Fraction=0.01
-2D Face Profile Filter Tolerance=0.003
-2D Face Area Elevation Profile Filter Tolerance=0.003
-2D Face Area Elevation Conveyance Ratio=0.02
-2D Face Min Length Ratio=0.05
-2D Face Area Laminar Depth=0.06
-2D Multiple Face Mann n=0
-2D Composite LC=0
 
 BreakLine Name=Breakline 1
 BreakLine CellSize Min=

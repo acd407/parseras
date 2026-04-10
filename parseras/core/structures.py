@@ -372,23 +372,11 @@ class StorageArea(RASStructure):
                 {"value_width": 16, "values_per_line": 2, "items_per_value": 2},
             ),
             "Storage Area Type": IntValue,
-            "Storage Area Area": StringValue,
-            "Storage Area Min Elev": StringValue,
             "Storage Area Is2D": IntValue,
             "Storage Area Point Generation Data": (CommaSeparatedValue, {"element_type": StringValue}),
             "Storage Area 2D Points": (DataBlockValue, {"value_width": 16, "values_per_line": 4, "items_per_value": 2}),
             "Storage Area Vol Elev": (DataBlockValue, {"value_width": 8, "values_per_line": 10, "items_per_value": 2}),
-            "Storage Area 2D PointsPerimeterTime": StringValue,
             "Storage Area Mannings": FloatValue,
-            "2D Cell Volume Filter Tolerance": FloatValue,
-            "2D Cell Minimum Area Fraction": FloatValue,
-            "2D Face Profile Filter Tolerance": FloatValue,
-            "2D Face Area Elevation Profile Filter Tolerance": FloatValue,
-            "2D Face Area Elevation Conveyance Ratio": FloatValue,
-            "2D Face Min Length Ratio": FloatValue,
-            "2D Face Area Laminar Depth": FloatValue,
-            "2D Multiple Face Mann n": IntValue,
-            "2D Composite LC": FloatValue,
         }
         super().__init__(lines)
 

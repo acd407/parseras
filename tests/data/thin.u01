@@ -1,0 +1,21 @@
+Flow Title=un
+Initial Storage Elev=Storage Area 1,950,0
+Boundary Location=,,,,,Storage Area 1,,BC Line 1,
+Interval=1HOUR
+Flow Hydrograph=54
+     100     100     100     100     100     100     100     100     100     100
+     100     100     100     100     100     100     100     100     100     100
+     100     100     100     100     100     100     100     100     100     100
+     100     100     100     100     100     100     100     100     100     100
+     100     100     100     100     100     100     100     100     100     100
+     100     100     100     100
+Stage Hydrograph TW Check=0
+Boundary Location=,,,,,Perimeter 1,,BC Line 2,
+Interval=1HOUR
+Flow Hydrograph=45
+      50      50      50      50      50      50      50      50      50      50
+      50      50      50      50      50      50      50      50      50      50
+      50      50      50      50      50      50      50      50      50      50
+      50      50      50      50      50      50      50      50      50      50
+      50      50      50      50      50
+Flow Hydrograph Slope=0
