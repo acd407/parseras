@@ -14,6 +14,7 @@ from tests.test_lateral_weir import test_lateral_weir_read_write
 from tests.test_breakline import test_breakline_modification
 from tests.test_bcline import run_bcline_tests
 from tests.test_storage_area import run_storage_area_tests
+from tests.test_connection import run_connection_tests
 
 
 def main():
@@ -45,6 +46,9 @@ def main():
 
     # 运行StorageArea测试
     storage_area_results = run_storage_area_tests()
+
+    # 运行Connection测试
+    connection_results = run_connection_tests()
 
     print("=" * 80)
     print("Test Summary")
@@ -113,6 +117,11 @@ def main():
 
     # 打印StorageArea测试结果
     for test_name, passed in storage_area_results.items():
+        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        all_passed = all_passed and passed
+
+    # 打印Connection测试结果
+    for test_name, passed in connection_results.items():
         print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
         all_passed = all_passed and passed
 
