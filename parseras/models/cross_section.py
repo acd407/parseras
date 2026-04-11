@@ -520,3 +520,52 @@ class CrossSectionModel:
             return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
         except Exception as e:
             return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+
+    def delete_cross_section(self, input_json: str) -> str:
+        """删除指定断面的Station
+
+        输入格式：
+        {
+            "Station": 1.0
+        }
+
+        返回格式：
+        {
+            "status": "success",
+            "data": {},
+            "message": "Cross section deleted successfully"
+        }
+        """
+        try:
+            input_data = json.loads(input_json)
+            station = input_data.get("Station")
+
+            if station is None:
+                return json.dumps({"status": "error", "data": {}, "message": "Missing required field 'Station'"}, indent=2)
+
+            station = float(station)
+
+            xs_index = None
+            for i, xs in enumerate(self.geometry_file._blocks):
+                if isinstance(xs, CrossSection) and "Type RM Length L Ch R " in xs:
+                    type_rm = xs["Type RM Length L Ch R "].value
+                    if len(type_rm) >= 2:
+                        xs_station = float(type_rm[1].value)
+                        if xs_station == station:
+                            xs_index = i
+                            break
+
+            if xs_index is None:
+                return json.dumps(
+                    {"status": "error", "data": {}, "message": f"Cross section at station {station} not found"},
+                    indent=2,
+                )
+
+            del self.geometry_file._blocks[xs_index]
+            self.cross_sections = self.geometry_file.get_blocks_by_type(CrossSection)
+
+            return json.dumps(
+                {"status": "success", "data": {}, "message": "Cross section deleted successfully"}, indent=2
+            )
+        except Exception as e:
+            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
