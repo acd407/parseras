@@ -133,3 +133,51 @@ class RiverModel:
             )
         except Exception as e:
             return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+
+    def delete_river_reach(self, input_json: str) -> str:
+        """删除河段
+
+        输入格式：
+        {
+            "River": "name1",
+            "Reach": "name2"
+        }
+
+        返回格式：
+        {
+            "status": "success",
+            "data": {},
+            "message": "River reach deleted successfully"
+        }
+        """
+        try:
+            input_data = json.loads(input_json)
+            river_name = input_data.get("River")
+            reach_name = input_data.get("Reach")
+
+            if not river_name or not reach_name:
+                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+
+            river_index = None
+            for i, block in enumerate(self.geometry_file._blocks):
+                if isinstance(block, River) and "River Reach" in block:
+                    river_reach = block["River Reach"].value
+                    if len(river_reach) >= 2:
+                        if river_reach[0].value == river_name and river_reach[1].value == reach_name:
+                            river_index = i
+                            break
+
+            if river_index is None:
+                return json.dumps(
+                    {"status": "error", "data": {}, "message": f"River reach {river_name}/{reach_name} not found"},
+                    indent=2,
+                )
+
+            del self.geometry_file._blocks[river_index]
+            self.rivers = self.geometry_file.get_blocks_by_type(River)
+
+            return json.dumps(
+                {"status": "success", "data": {}, "message": "River reach deleted successfully"}, indent=2
+            )
+        except Exception as e:
+            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
