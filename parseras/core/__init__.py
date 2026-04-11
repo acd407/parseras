@@ -20,10 +20,16 @@ from .structures import (
     Head,
     LateralWeir,
     StorageArea,
-    Connection
+    Connection,
 )
 
 from .file import GeometryFile
+from .unsteady_flow_file import (
+    UnsteadyFlowFile,
+    UnsteadyFlowHead,
+    InitialStorageElev,
+    BoundaryCondition,
+)
 
 __all__ = [
     # Values
@@ -47,6 +53,10 @@ __all__ = [
     "LateralWeir",
     "StorageArea",
     "Connection",
+    "UnsteadyFlowHead",
+    "InitialStorageElev",
+    "BoundaryCondition",
     # File
-    "GeometryFile"
+    "GeometryFile",
+    "UnsteadyFlowFile",
 ]
