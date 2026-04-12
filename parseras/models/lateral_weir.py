@@ -167,12 +167,12 @@ class LateralWeirModel:
 
         输入格式：
         {
-            "Node Name": "bank",
-            "Station": 8926,                       // 用于Type RM的第二个值
-            "Lateral Weir End Parameter": "Perimeter 1",  // 用于Lateral Weir End的第四个值
-            "Lateral Weir Distance": 0,
-            "Lateral Weir WD": 100,
-            "Lateral Weir Centerline": [[x1, y1], [x2, y2], ...]
+            "Node Name": "bank",           // 必需，用于定位
+            "Station": 8926,               // 可选，用于Type RM
+            "Lateral Weir End Parameter": "Perimeter 1",  // 可选，用于Lateral Weir End
+            "Lateral Weir Distance": 0,    // 可选
+            "Lateral Weir WD": 100,        // 可选
+            "Lateral Weir Centerline": [[x1, y1], [x2, y2], ...]  // 可选
         }
 
         参数：
@@ -187,116 +187,58 @@ class LateralWeirModel:
         }
         """
         try:
-            # 解析输入JSON
             input_data = json.loads(input_json)
             node_name = input_data.get("Node Name")
+
+            if not node_name:
+                return json.dumps(
+                    {"status": "error", "data": {}, "message": "Missing required field 'Node Name'"},
+                    indent=2,
+                )
+
             station = input_data.get("Station")
             lw_end_param = input_data.get("Lateral Weir End Parameter")
             lw_distance = input_data.get("Lateral Weir Distance")
             lw_wd = input_data.get("Lateral Weir WD")
-            lw_centerline = input_data.get("Lateral Weir Centerline", [])
+            lw_centerline = input_data.get("Lateral Weir Centerline")
 
-            # 验证必需参数
-            required_fields = {
-                "Node Name": node_name,
-                "Station": station,
-                "Lateral Weir End Parameter": lw_end_param,
-                "Lateral Weir Distance": lw_distance,
-                "Lateral Weir WD": lw_wd,
-                "Lateral Weir Centerline": lw_centerline,
-            }
+            old_lw_index = None
+            old_lw = None
+            for i, block in enumerate(self.geometry_file._blocks):
+                if isinstance(block, LateralWeir) and "Node Name" in block:
+                    if block["Node Name"].value == node_name:
+                        old_lw_index = i
+                        old_lw = block
+                        break
 
-            missing_fields = [field for field, value in required_fields.items() if value is None]
-            if missing_fields:
-                return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Missing required fields: {missing_fields}"},
-                    indent=2,
-                )
+            if old_lw_index is not None:
+                del self.geometry_file._blocks[old_lw_index]
+                self.lateral_weirs = self.geometry_file.get_blocks_by_type(LateralWeir)
 
-            if not lw_centerline:
-                return json.dumps(
-                    {"status": "error", "data": {}, "message": "Lateral Weir Centerline cannot be empty"}, indent=2
-                )
+            target_lw = LateralWeir([])
+            self.lateral_weirs.append(target_lw)
+            self.geometry_file._blocks.append(target_lw)
 
-            # 查找现有的侧堰
-            target_lw = None
-            for lw in self.lateral_weirs:
-                if "Node Name" in lw and lw["Node Name"].value == node_name:
-                    target_lw = lw
-                    break
-
-            # 判断是创建还是更新
-            is_create = False
-            if target_lw is None:
-                # 创建新的侧堰
-                target_lw = LateralWeir([])
-                self.lateral_weirs.append(target_lw)
-                self.geometry_file._blocks.append(target_lw)
-                is_create = True
-                message = "Lateral weir created successfully"
-            else:
-                # 检查是否更新了Station（意味着创建新的而不是更新）
-                if "Type RM Length L Ch R " in target_lw:
-                    type_rm = target_lw["Type RM Length L Ch R "].value
-                    if len(type_rm) >= 2:
-                        existing_station = float(type_rm[1].value)
-                        if existing_station != station:
-                            # Station改变，视为创建新的
-                            # 删除旧的，创建新的
-                            self.lateral_weirs.remove(target_lw)
-                            self.geometry_file._blocks.remove(target_lw)
-                            target_lw = LateralWeir([])
-                            self.lateral_weirs.append(target_lw)
-                            self.geometry_file._blocks.append(target_lw)
-                            is_create = True
-                            message = "Lateral weir created successfully (station changed)"
-                        else:
-                            message = "Lateral weir updated successfully"
-                else:
-                    message = "Lateral weir updated successfully"
-
-            # 如果是创建，需要设置所有必需键
-            # 如果是更新，只更新提供的键
-
-            # 1. 更新Type RM Length L Ch R
-            if is_create or "Type RM Length L Ch R " not in target_lw or input_data.get("Station") is not None:
-                # 第一个值固定为6，第二个值是station，后面三个值暂时留空
+            if station is not None:
                 type_rm_str = f"6,{station},,,"
-                type_rm_value = CommaSeparatedValue(type_rm_str, element_type=StringValue)
-                target_lw["Type RM Length L Ch R "] = type_rm_value
+                target_lw["Type RM Length L Ch R "] = CommaSeparatedValue(type_rm_str, element_type=StringValue)
+                if station > 0:
+                    target_lw.order = 30 + 1 / station
 
-            # 2. 更新Node Name
-            if is_create or "Node Name" not in target_lw or input_data.get("Node Name") is not None:
+            if node_name is not None:
                 target_lw["Node Name"] = StringValue(node_name)
 
-            # 3. 更新Lateral Weir End
-            if (
-                is_create
-                or "Lateral Weir End" not in target_lw
-                or input_data.get("Lateral Weir End Parameter") is not None
-            ):
+            if lw_end_param is not None:
                 lw_end_str = f",,,{lw_end_param}"
-                lw_end_value = CommaSeparatedValue(lw_end_str, element_type=StringValue)
-                target_lw["Lateral Weir End"] = lw_end_value
+                target_lw["Lateral Weir End"] = CommaSeparatedValue(lw_end_str, element_type=StringValue)
 
-            # 4. 更新Lateral Weir Distance
-            if (
-                is_create
-                or "Lateral Weir Distance" not in target_lw
-                or input_data.get("Lateral Weir Distance") is not None
-            ):
+            if lw_distance is not None:
                 target_lw["Lateral Weir Distance"] = FloatValue(str(lw_distance))
 
-            # 5. 更新Lateral Weir WD
-            if is_create or "Lateral Weir WD" not in target_lw or input_data.get("Lateral Weir WD") is not None:
+            if lw_wd is not None:
                 target_lw["Lateral Weir WD"] = FloatValue(str(lw_wd))
 
-            # 6. 更新Lateral Weir Centerline
-            if (
-                is_create
-                or "Lateral Weir Centerline" not in target_lw
-                or input_data.get("Lateral Weir Centerline") is not None
-            ):
+            if lw_centerline:
                 centerline_data = []
                 for point in lw_centerline:
                     centerline_data.extend([FloatValue(str(point[0])), FloatValue(str(point[1]))])
@@ -307,41 +249,19 @@ class LateralWeirModel:
                 centerline_block.value = centerline_value
                 target_lw["Lateral Weir Centerline"] = centerline_block
 
-                # 如果更新了Centerline，需要重新生成SE表
-                if tif_path or (is_create and tif_path is None):
-                    # 生成SE表
-                    se_table = generate_se_from_centerline(lw_centerline, tif_path)
+                se_table = generate_se_from_centerline(lw_centerline, tif_path)
+                se_data = []
+                for dist, elev in se_table:
+                    se_data.extend([FloatValue(str(dist)), FloatValue(str(elev))])
 
-                    se_data = []
-                    for dist, elev in se_table:
-                        se_data.extend([FloatValue(str(dist)), FloatValue(str(elev + 0.01))])
+                count = len(se_table)
+                se_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
+                se_value = DataValue(tuple(se_data), 8, 10, 2, (str(count),), count)
+                se_block.value = se_value
+                target_lw["Lateral Weir SE"] = se_block
 
-                    count = len(se_table)
-                    se_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
-                    se_value = DataValue(tuple(se_data), 8, 10, 2, (str(count),), count)
-                    se_block.value = se_value
-                    target_lw["Lateral Weir SE"] = se_block
-                elif is_create and tif_path is None:
-                    # 创建时没有tif，生成全0高程的SE表
-                    se_table = generate_se_from_centerline(lw_centerline, None)
-
-                    se_data = []
-                    for dist, elev in se_table:
-                        se_data.extend([FloatValue(str(dist)), FloatValue(str(elev))])
-
-                    count = len(se_table)
-                    se_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
-                    se_value = DataValue(tuple(se_data), 8, 10, 2, (str(count),), count)
-                    se_block.value = se_value
-                    target_lw["Lateral Weir SE"] = se_block
-
-            # 7. 更新order属性（基于station）
-            if station > 0:
-                target_lw.order = 30 + 1 / station
-
-            return json.dumps(
-                {"status": "success", "data": {}, "message": "Lateral weir updated/created successfully"}, indent=2
-            )
+            message = "Lateral weir created successfully" if old_lw is None else "Lateral weir updated successfully"
+            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
 
         except Exception as e:
             return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
