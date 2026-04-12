@@ -279,3 +279,42 @@ class LateralWeirModel:
 
         except Exception as e:
             return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+
+    def delete_lateral_weir(self, node_name: str) -> str:
+        """删除侧堰
+
+        返回格式：
+        {
+            "status": "success",
+            "data": {},
+            "message": "Lateral weir deleted successfully"
+        }
+        """
+        try:
+            target_index = None
+            for i, lw in enumerate(self.lateral_weirs):
+                if "Node Name" in lw and lw["Node Name"].value == node_name:
+                    target_index = i
+                    break
+
+            if target_index is None:
+                return json.dumps(
+                    {"status": "error", "data": {}, "message": f"Lateral weir with node name '{node_name}' not found"},
+                    indent=2,
+                )
+
+            self.lateral_weirs.pop(target_index)
+
+            block_index = None
+            for i, block in enumerate(self.geometry_file._blocks):
+                if isinstance(block, LateralWeir) and "Node Name" in block:
+                    if block["Node Name"].value == node_name:
+                        block_index = i
+                        break
+
+            if block_index is not None:
+                self.geometry_file._blocks.pop(block_index)
+
+            return json.dumps({"status": "success", "data": {}, "message": "Lateral weir deleted successfully"}, indent=2)
+        except Exception as e:
+            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
