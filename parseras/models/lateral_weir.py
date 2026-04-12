@@ -168,11 +168,11 @@ class LateralWeirModel:
         输入格式：
         {
             "Node Name": "bank",           // 必需，用于定位
-            "Station": 8926,               // 可选，用于Type RM
-            "Lateral Weir End Parameter": "Perimeter 1",  // 可选，用于Lateral Weir End
-            "Lateral Weir Distance": 0,    // 可选
-            "Lateral Weir WD": 100,        // 可选
-            "Lateral Weir Centerline": [[x1, y1], [x2, y2], ...]  // 可选
+            "Station": 8926,               // 必需（创建时）
+            "Lateral Weir End Parameter": "Perimeter 1",  // 必需（创建时）
+            "Lateral Weir Distance": 0,    // 必需（创建时）
+            "Lateral Weir WD": 100,        // 必需（创建时）
+            "Lateral Weir Centerline": [[x1, y1], [x2, y2], ...]  // 必需（创建时）
         }
 
         参数：
@@ -196,28 +196,42 @@ class LateralWeirModel:
                     indent=2,
                 )
 
+            target_lw = None
+            for lw in self.lateral_weirs:
+                if "Node Name" in lw and lw["Node Name"].value == node_name:
+                    target_lw = lw
+                    break
+
+            is_create = target_lw is None
+
             station = input_data.get("Station")
             lw_end_param = input_data.get("Lateral Weir End Parameter")
             lw_distance = input_data.get("Lateral Weir Distance")
             lw_wd = input_data.get("Lateral Weir WD")
             lw_centerline = input_data.get("Lateral Weir Centerline")
 
-            old_lw_index = None
-            old_lw = None
-            for i, block in enumerate(self.geometry_file._blocks):
-                if isinstance(block, LateralWeir) and "Node Name" in block:
-                    if block["Node Name"].value == node_name:
-                        old_lw_index = i
-                        old_lw = block
-                        break
+            if is_create:
+                missing_fields = []
+                if station is None:
+                    missing_fields.append("Station")
+                if lw_end_param is None:
+                    missing_fields.append("Lateral Weir End Parameter")
+                if lw_distance is None:
+                    missing_fields.append("Lateral Weir Distance")
+                if lw_wd is None:
+                    missing_fields.append("Lateral Weir WD")
+                if not lw_centerline:
+                    missing_fields.append("Lateral Weir Centerline")
 
-            if old_lw_index is not None:
-                del self.geometry_file._blocks[old_lw_index]
-                self.lateral_weirs = self.geometry_file.get_blocks_by_type(LateralWeir)
+                if missing_fields:
+                    return json.dumps(
+                        {"status": "error", "data": {}, "message": f"Missing required fields for create: {missing_fields}"},
+                        indent=2,
+                    )
 
-            target_lw = LateralWeir([])
-            self.lateral_weirs.append(target_lw)
-            self.geometry_file._blocks.append(target_lw)
+                target_lw = LateralWeir([])
+                self.lateral_weirs.append(target_lw)
+                self.geometry_file._blocks.append(target_lw)
 
             if station is not None:
                 type_rm_str = f"6,{station},,,"
@@ -260,7 +274,7 @@ class LateralWeirModel:
                 se_block.value = se_value
                 target_lw["Lateral Weir SE"] = se_block
 
-            message = "Lateral weir created successfully" if old_lw is None else "Lateral weir updated successfully"
+            message = "Lateral weir created successfully" if is_create else "Lateral weir updated successfully"
             return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
 
         except Exception as e:
