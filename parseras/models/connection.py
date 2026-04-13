@@ -101,7 +101,6 @@ class ConnectionModel:
             "status": "success",
             "data": {
                 "Connection Name": "Connection1",
-                "Parameters": ["Storage Area 1 T", "0", "0"],
                 "Connection Line": [[x1, y1], [x2, y2], ...],
                 "Connection Up SA": "Storage Area 1",
                 "Connection Dn SA": "Storage Area 2",
@@ -126,10 +125,6 @@ class ConnectionModel:
 
             result = {}
             result["Connection Name"] = self._get_connection_name(target_conn)
-
-            if "Connection" in target_conn:
-                params = target_conn["Connection"].value
-                result["Parameters"] = [p.value if hasattr(p, 'value') else p for p in params]
 
             if "Connection Line" in target_conn:
                 line_points = self._parse_connection_line(target_conn)
@@ -158,14 +153,13 @@ class ConnectionModel:
         输入格式：
         {
             "Connection Name": "Connection1",
-            "Parameters": ["Storage Area 1 T", "0", "0"],  // optional
             "Connection Line": [[x1, y1], [x2, y2], ...],
             "Connection Up SA": "Storage Area 1",
             "Connection Dn SA": "Storage Area 2",
             "Conn Weir WD": 200
         }
 
-        create时必需：Connection Line, Connection Up SA, Connection Dn SA, Conn Weir WD
+        create时必需：Connection Name, Connection Line, Connection Up SA, Connection Dn SA, Conn Weir WD
 
         注意：Conn Weir SE 通过 tif_path 自动更新，不通过输入设置
 
@@ -222,10 +216,7 @@ class ConnectionModel:
                 conn_line = input_data.get("Connection Line")
                 message = "Connection updated successfully"
 
-            if "Parameters" in input_data:
-                params = input_data["Parameters"]
-                params_str = ",".join(str(p) for p in params)
-                target_conn["Connection"] = CommaSeparatedValue(params_str, element_type=StringValue)
+            target_conn["Connection"] = CommaSeparatedValue(f"{name},0,0", element_type=StringValue)
 
             if conn_line:
                 cl_data = []
