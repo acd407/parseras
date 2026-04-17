@@ -562,10 +562,12 @@ class PlanFile:
             self._blocks.sort(key=lambda b: getattr(b, "order", 100.0))
 
     def delete(self, key: str):
-        """删除字段（从首个对应 block 中移除）"""
+        """删除字段（从首个对应 block 中移除）。key 不存在时安全忽略。"""
         bt = self._key_block_type(key)
         blocks = self.get_blocks_by_type(bt)
         if not blocks:
+            return
+        if key not in blocks[0]:
             return
         del blocks[0][key]
 
