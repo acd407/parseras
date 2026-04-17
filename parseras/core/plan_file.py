@@ -2,12 +2,11 @@
 PlanFile 类 - 用于解析和生成 HEC-RAS 计划文件 (p01)
 
 采用 block 分割解析，参考 GeometryFile 的设计：
-  - PlanHead: Plan Title / Short Identifier / Simulation Date
-  - PlanFileRef: Geom File / Flow File
+  - PlanHead: Plan Title / Short Identifier / Simulation Date / Geom File / Flow File
   - PlanTimeInterval: Computation / Output / Instantaneous / Mapping Interval
   - PlanRunOptions: Run HTab / Run UNet / Run PostProcess / DSS File
   - PlanBreach: 溃坝结构（Breach Loc / Breach Geom / Breach Start 等）
-  - PlanMisc: 其余所有 key=value（保持原样解析和输出）
+  - 其余所有 key=value 直接丢弃
 """
 
 from typing import Dict, List, Optional, Tuple, Type
@@ -25,10 +24,12 @@ from parseras.core.values import (
 
 
 class PlanHead:
-    """Plan 头信息：Plan Title / Short Identifier / Simulation Date"""
+    """Plan 头信息：Plan Title / Short Identifier / Simulation Date / Geom File / Flow File"""
 
     order = 0.0
-    HEAD_KEYS = frozenset(("Plan Title", "Short Identifier", "Simulation Date"))
+    KEYS = frozenset(
+        ("Plan Title", "Short Identifier", "Simulation Date", "Geom File", "Flow File")
+    )
 
     def __init__(self, lines: List[str] | None = None):
         self._kv: Dict[str, Value] = {}
@@ -42,12 +43,12 @@ class PlanHead:
                 continue
             key, value = line.split("=", 1)
             key, value = key.strip(), value.strip()
-            if key in self.HEAD_KEYS:
+            if key in self.KEYS:
                 self._kv[key] = StringValue(value)
 
     def generate(self) -> List[str]:
         result = []
-        for key in ("Plan Title", "Short Identifier", "Simulation Date"):
+        for key in ("Plan Title", "Short Identifier", "Simulation Date", "Geom File", "Flow File"):
             if key in self._kv:
                 result.append(f"{key}={self._kv[key].value}")
         return result
@@ -62,8 +63,6 @@ class PlanHead:
         return key in self._kv
 
     def __delitem__(self, key: str) -> None:
-        if key not in self._kv:
-            raise KeyError(f"Key '{key}' not found")
         del self._kv[key]
 
     @property
@@ -77,49 +76,6 @@ class PlanHead:
     @property
     def simulation_date(self) -> Optional[str]:
         return self._kv["Simulation Date"].value if "Simulation Date" in self._kv else None
-
-
-class PlanFileRef:
-    """文件引用：Geom File / Flow File（可能在一行或多行）"""
-
-    order = 5.0
-    REFS_KEYS = frozenset(("Geom File", "Flow File"))
-
-    def __init__(self, lines: List[str] | None = None):
-        self._kv: Dict[str, Value] = {}
-        if lines:
-            self._parse_lines(lines)
-
-    def _parse_lines(self, lines: List[str]):
-        for line in lines:
-            line = line.rstrip("\n")
-            if "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            key, value = key.strip(), value.strip()
-            if key in self.REFS_KEYS:
-                self._kv[key] = StringValue(value)
-
-    def generate(self) -> List[str]:
-        result = []
-        for key in ("Geom File", "Flow File"):
-            if key in self._kv:
-                result.append(f"{key}={self._kv[key].value}")
-        return result
-
-    def __getitem__(self, key: str) -> Value:
-        return self._kv[key]
-
-    def __setitem__(self, key: str, value: Value):
-        self._kv[key] = value
-
-    def __contains__(self, key: str) -> bool:
-        return key in self._kv
-
-    def __delitem__(self, key: str) -> None:
-        if key not in self._kv:
-            raise KeyError(f"Key '{key}' not found")
-        del self._kv[key]
 
     @property
     def geom_file(self) -> Optional[str]:
@@ -175,8 +131,6 @@ class PlanTimeInterval:
         return key in self._kv
 
     def __delitem__(self, key: str) -> None:
-        if key not in self._kv:
-            raise KeyError(f"Key '{key}' not found")
         del self._kv[key]
 
 
@@ -225,8 +179,6 @@ class PlanRunOptions:
         return key in self._kv
 
     def __delitem__(self, key: str) -> None:
-        if key not in self._kv:
-            raise KeyError(f"Key '{key}' not found")
         del self._kv[key]
 
 
@@ -395,10 +347,8 @@ class PlanFile:
 
         # key -> block type name
         ALL_KEYS: Dict[str, str] = {}
-        for k in PlanHead.HEAD_KEYS:
+        for k in PlanHead.KEYS:
             ALL_KEYS[k] = "PlanHead"
-        for k in PlanFileRef.REFS_KEYS:
-            ALL_KEYS[k] = "PlanFileRef"
         for k in PlanTimeInterval.KEYS:
             ALL_KEYS[k] = "PlanTimeInterval"
         for k in PlanRunOptions.KEYS:
@@ -432,7 +382,6 @@ class PlanFile:
 
             bt = _block_type(line)
             if bt is None:
-                # 未知键：丢弃
                 continue
 
             if bt != current_type:
@@ -450,17 +399,15 @@ class PlanFile:
         key = first.split("=", 1)[0].strip()
 
         type_map: Dict[str, Type] = {}
-        for k in PlanHead.HEAD_KEYS:
+        for k in PlanHead.KEYS:
             type_map[k] = PlanHead
-        for k in PlanFileRef.REFS_KEYS:
-            type_map[k] = PlanFileRef
         for k in PlanTimeInterval.KEYS:
             type_map[k] = PlanTimeInterval
         for k in PlanRunOptions.KEYS:
             type_map[k] = PlanRunOptions
         type_map["Breach Loc"] = PlanBreach
 
-        return type_map.get(key, PlanHead)  # _split_into_blocks 已过滤，只会有已知块走到这里
+        return type_map.get(key, PlanHead)
 
     # -------------------------------------------------------------------------
     # 解析与生成
@@ -498,11 +445,6 @@ class PlanFile:
         return blocks[0] if blocks else None
 
     @property
-    def file_ref(self) -> Optional[PlanFileRef]:
-        blocks = self.get_blocks_by_type(PlanFileRef)
-        return blocks[0] if blocks else None
-
-    @property
     def time_interval(self) -> Optional[PlanTimeInterval]:
         blocks = self.get_blocks_by_type(PlanTimeInterval)
         return blocks[0] if blocks else None
@@ -522,7 +464,6 @@ class PlanFile:
         return None
 
     def get_breach(self, river: str = "", reach: str = "", station: str = "") -> Optional[PlanBreach]:
-        """按 river/reach/station 匹配溃坝块（忽略大小写和空格）"""
         target_river = river.strip().lower()
         target_reach = reach.strip().lower()
         target_station = station.strip()
@@ -536,33 +477,29 @@ class PlanFile:
     # -------------------------------------------------------------------------
 
     def get(self, key: str) -> Optional[str]:
-        """读取字段值（从首个对应 block）"""
         for block in self._blocks:
             if key in block:
                 return str(block[key].value)
         return None
 
     def set(self, key: str, value: str):
-        """设置字段值，自动路由到对应 block（不存在则创建）。空字符串删除该键。"""
-        if value == '':
+        """设置字段值，空字符串删除该键"""
+        if value == "":
             self.delete(key)
             return
         bt = self._key_block_type(key)
         if bt == PlanBreach:
             raise ValueError("Breach 块请使用 add_breach() 新增，或通过 get_breaches()[n] 直接修改")
-
         blocks = self.get_blocks_by_type(bt)
         if blocks:
             blocks[0][key] = StringValue(value)
         else:
-            # 创建新 block 并插入排序后的位置
             new_block = bt()
             new_block[key] = StringValue(value)
             self._blocks.append(new_block)
             self._blocks.sort(key=lambda b: getattr(b, "order", 100.0))
 
     def delete(self, key: str):
-        """删除字段（从首个对应 block 中移除）。key 不存在时安全忽略。"""
         bt = self._key_block_type(key)
         blocks = self.get_blocks_by_type(bt)
         if not blocks:
@@ -572,14 +509,11 @@ class PlanFile:
         del blocks[0][key]
 
     def add_breach(self, breach: PlanBreach):
-        """追加一个 PlanBreach 块"""
         self._blocks.append(breach)
 
     def _key_block_type(self, key: str) -> Type:
-        if key in PlanHead.HEAD_KEYS:
+        if key in PlanHead.KEYS:
             return PlanHead
-        if key in PlanFileRef.REFS_KEYS:
-            return PlanFileRef
         if key in PlanTimeInterval.KEYS:
             return PlanTimeInterval
         if key in PlanRunOptions.KEYS:
@@ -592,13 +526,13 @@ class PlanFile:
 
     @property
     def geom_file(self) -> Optional[str]:
-        fr = self.file_ref
-        return fr.geom_file if fr else None
+        h = self.head
+        return h.geom_file if h else None
 
     @property
     def flow_file(self) -> Optional[str]:
-        fr = self.file_ref
-        return fr.flow_file if fr else None
+        h = self.head
+        return h.flow_file if h else None
 
     @property
     def plan_title(self) -> Optional[str]:

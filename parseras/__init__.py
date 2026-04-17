@@ -1,6 +1,6 @@
 from .core.file import GeometryFile
 from .core.flow_file import FlowFile
-from .core.plan_file import PlanFile, PlanHead, PlanFileRef, PlanTimeInterval, PlanRunOptions, PlanBreach
+from .core.plan_file import PlanFile, PlanHead, PlanTimeInterval, PlanRunOptions, PlanBreach
 from .core.project_file import ProjectFile
 from .core.unsteady_flow_file import UnsteadyFlowFile, UnsteadyFlowHead, InitialStorageElev, BoundaryCondition
 from .core.structures import RASStructure, Head, River, SingleBreakLine, BreakLine, StorageArea, LateralWeir, CrossSection, BCLine, SingleBCLine, Connection
@@ -23,7 +23,6 @@ __all__ = [
     # Plan files
     'PlanFile',
     'PlanHead',
-    'PlanFileRef',
     'PlanTimeInterval',
     'PlanRunOptions',
     'PlanBreach',
