@@ -512,6 +512,48 @@ class PlanFile:
         return None
 
     # -------------------------------------------------------------------------
+    # 读写 key=value
+    # -------------------------------------------------------------------------
+
+    def get(self, key: str) -> Optional[str]:
+        """读取字段值（从首个对应 block）"""
+        for block in self._blocks:
+            if key in block:
+                return str(block[key].value)
+        return None
+
+    def set(self, key: str, value: str):
+        """设置字段值，自动路由到对应 block（不存在则创建）"""
+        bt = self._key_block_type(key)
+        if bt == PlanBreach:
+            raise ValueError("Breach 块请使用 add_breach() 新增，或通过 get_breaches()[n] 直接修改")
+
+        blocks = self.get_blocks_by_type(bt)
+        if blocks:
+            blocks[0][key] = StringValue(value)
+        else:
+            # 创建新 block 并插入排序后的位置
+            new_block = bt()
+            new_block[key] = StringValue(value)
+            self._blocks.append(new_block)
+            self._blocks.sort(key=lambda b: getattr(b, "order", 100.0))
+
+    def add_breach(self, breach: PlanBreach):
+        """追加一个 PlanBreach 块"""
+        self._blocks.append(breach)
+
+    def _key_block_type(self, key: str) -> Type:
+        if key in PlanHead.HEAD_KEYS:
+            return PlanHead
+        if key in PlanFileRef.REFS_KEYS:
+            return PlanFileRef
+        if key in PlanTimeInterval.KEYS:
+            return PlanTimeInterval
+        if key in PlanRunOptions.KEYS:
+            return PlanRunOptions
+        raise KeyError(f"未知字段: {key}")
+
+    # -------------------------------------------------------------------------
     # 属性快捷访问
     # -------------------------------------------------------------------------
 
