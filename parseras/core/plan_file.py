@@ -61,6 +61,11 @@ class PlanHead:
     def __contains__(self, key: str) -> bool:
         return key in self._kv
 
+    def __delitem__(self, key: str) -> None:
+        if key not in self._kv:
+            raise KeyError(f"Key '{key}' not found")
+        del self._kv[key]
+
     @property
     def plan_title(self) -> Optional[str]:
         return self._kv["Plan Title"].value if "Plan Title" in self._kv else None
@@ -110,6 +115,11 @@ class PlanFileRef:
 
     def __contains__(self, key: str) -> bool:
         return key in self._kv
+
+    def __delitem__(self, key: str) -> None:
+        if key not in self._kv:
+            raise KeyError(f"Key '{key}' not found")
+        del self._kv[key]
 
     @property
     def geom_file(self) -> Optional[str]:
@@ -164,6 +174,11 @@ class PlanTimeInterval:
     def __contains__(self, key: str) -> bool:
         return key in self._kv
 
+    def __delitem__(self, key: str) -> None:
+        if key not in self._kv:
+            raise KeyError(f"Key '{key}' not found")
+        del self._kv[key]
+
 
 class PlanRunOptions:
     """运行选项：Run HTab / Run UNet / Run PostProcess / DSS File"""
@@ -208,6 +223,11 @@ class PlanRunOptions:
 
     def __contains__(self, key: str) -> bool:
         return key in self._kv
+
+    def __delitem__(self, key: str) -> None:
+        if key not in self._kv:
+            raise KeyError(f"Key '{key}' not found")
+        del self._kv[key]
 
 
 class PlanBreach:
@@ -523,7 +543,10 @@ class PlanFile:
         return None
 
     def set(self, key: str, value: str):
-        """设置字段值，自动路由到对应 block（不存在则创建）"""
+        """设置字段值，自动路由到对应 block（不存在则创建）。空字符串删除该键。"""
+        if value == '':
+            self.delete(key)
+            return
         bt = self._key_block_type(key)
         if bt == PlanBreach:
             raise ValueError("Breach 块请使用 add_breach() 新增，或通过 get_breaches()[n] 直接修改")
@@ -537,6 +560,14 @@ class PlanFile:
             new_block[key] = StringValue(value)
             self._blocks.append(new_block)
             self._blocks.sort(key=lambda b: getattr(b, "order", 100.0))
+
+    def delete(self, key: str):
+        """删除字段（从首个对应 block 中移除）"""
+        bt = self._key_block_type(key)
+        blocks = self.get_blocks_by_type(bt)
+        if not blocks:
+            return
+        del blocks[0][key]
 
     def add_breach(self, breach: PlanBreach):
         """追加一个 PlanBreach 块"""
