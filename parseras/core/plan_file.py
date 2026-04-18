@@ -293,6 +293,177 @@ class PlanBreach:
     def set_start(self, values: Tuple):
         self._start = CommaSeparatedValue(",".join(str(v) if v is not None else "" for v in values))
 
+    def apply_geom(self, gv: "BreachGeomValue") -> None:
+        """用 BreachGeomValue 设置 Breach Geom（自动生成 CSV）"""
+        from parseras.core.values import BreachGeomFieldValue
+
+        field = BreachGeomFieldValue()
+        field.value = gv
+        self._geom = CommaSeparatedValue(str(field))
+
+    def apply_start(self, sv: "BreachStartValue") -> None:
+        """用 BreachStartValue 设置 Breach Start（自动生成 CSV）"""
+        from parseras.core.values import BreachStartFieldValue
+
+        field = BreachStartFieldValue()
+        field.value = sv
+        self._start = CommaSeparatedValue(str(field))
+
+
+# ---------------------------------------------------------------------------
+# 校验函数（供 API 层使用）
+# ---------------------------------------------------------------------------
+
+
+class BreachValidationError(ValueError):
+    """校验失败时抛出"""
+    pass
+
+
+REQUIRED_GEOM_FIELDS = frozenset(
+    (
+        "centerline",
+        "final_bottom_width",
+        "final_bottom_elev",
+        "left_slope",
+        "right_slope",
+        "failure_mode",
+        "formation_time",
+        "breach_weir_coef",
+    )
+)
+OPTIONAL_GEOM_FIELDS = frozenset(("piping_coef", "initial_piping_elev"))
+
+
+def validate_breach_geom(data: dict):
+    """校验 breach_geom 字典，强校验模式字段组合
+
+    规则：
+      - failure_mode == "piping" 时：必须有 piping_coef 和 initial_piping_elev
+      - failure_mode == "overtopping" 时：不得有 piping_coef / initial_piping_elev
+      - 不得传入未定义字段
+
+    Returns:
+        BreachGeomValue on success
+
+    Raises:
+        BreachValidationError: 校验失败
+    """
+    keys = frozenset(data.keys())
+    extra = keys - (REQUIRED_GEOM_FIELDS | OPTIONAL_GEOM_FIELDS)
+    if extra:
+        raise BreachValidationError(f"breach_geom 不支持字段: {sorted(extra)}")
+
+    missing = REQUIRED_GEOM_FIELDS - keys
+    if missing:
+        raise BreachValidationError(f"breach_geom 缺少必填字段: {sorted(missing)}")
+
+    failure_mode = data["failure_mode"]
+    if failure_mode not in ("overtopping", "piping"):
+        raise BreachValidationError(f"failure_mode 必须是 'overtopping' 或 'piping'，得到 '{failure_mode}'")
+
+    if failure_mode == "piping":
+        if "piping_coef" not in data or data["piping_coef"] is None:
+            raise BreachValidationError("failure_mode='piping' 时必须提供 piping_coef")
+        if "initial_piping_elev" not in data or data["initial_piping_elev"] is None:
+            raise BreachValidationError("failure_mode='piping' 时必须提供 initial_piping_elev")
+    else:
+        if "piping_coef" in data and data["piping_coef"] is not None:
+            raise BreachValidationError("failure_mode='overtopping' 时不得提供 piping_coef")
+        if "initial_piping_elev" in data and data["initial_piping_elev"] is not None:
+            raise BreachValidationError("failure_mode='overtopping' 时不得提供 initial_piping_elev")
+
+    from parseras.core.values import BreachGeomValue
+
+    return BreachGeomValue(
+        centerline=float(data["centerline"]),
+        final_bottom_width=float(data["final_bottom_width"]),
+        final_bottom_elev=float(data["final_bottom_elev"]),
+        left_slope=float(data["left_slope"]),
+        right_slope=float(data["right_slope"]),
+        failure_mode=failure_mode,
+        piping_coef=float(data["piping_coef"]) if failure_mode == "piping" else None,
+        initial_piping_elev=float(data["initial_piping_elev"]) if failure_mode == "piping" else None,
+        formation_time=float(data["formation_time"]),
+        breach_weir_coef=float(data["breach_weir_coef"]),
+    )
+
+
+def validate_breach_start(data: dict):
+    """校验 breach_start 字典，强校验 mode 字段组合
+
+    mode 规则：
+      - mode == "elevation_only"：必填 elevation，不得有 water_level/duration/accumulated/day/time
+      - mode == "water_level_duration"：必填 elevation/water_level/duration_hours/accumulated，不得有 day/time
+      - mode == "specific_time"：必填 day/time，不得有 elevation/water_level/duration/accumulated
+
+    Returns:
+        BreachStartValue on success
+
+    Raises:
+        BreachValidationError: 校验失败
+    """
+    if "mode" not in data:
+        raise BreachValidationError("breach_start 缺少必填字段: mode")
+
+    mode = data["mode"]
+    if mode not in ("elevation_only", "water_level_duration", "specific_time"):
+        raise BreachValidationError(
+            f"mode 必须是 'elevation_only' / 'water_level_duration' / 'specific_time'，得到 '{mode}'"
+        )
+
+    from parseras.core.values import BreachStartValue
+
+    if mode == "elevation_only":
+        if "elevation" not in data or data["elevation"] is None:
+            raise BreachValidationError("mode='elevation_only' 时必须提供 elevation")
+        bad = frozenset(k for k in ("water_level", "duration_hours", "accumulated", "day", "time") if data.get(k) is not None)
+        if bad:
+            raise BreachValidationError(f"mode='elevation_only' 时不得提供字段: {sorted(bad)}")
+        return BreachStartValue(
+            mode=mode,
+            elevation=float(data["elevation"]),
+            water_level=None,
+            duration_hours=None,
+            accumulated=None,
+            day=None,
+            time=None,
+        )
+
+    elif mode == "water_level_duration":
+        for f in ("elevation", "water_level", "duration_hours", "accumulated"):
+            if f not in data or data[f] is None:
+                raise BreachValidationError(f"mode='water_level_duration' 时必须提供 {f}")
+        bad = frozenset(k for k in ("day", "time") if data.get(k) is not None)
+        if bad:
+            raise BreachValidationError(f"mode='water_level_duration' 时不得提供字段: {sorted(bad)}")
+        return BreachStartValue(
+            mode=mode,
+            elevation=float(data["elevation"]),
+            water_level=float(data["water_level"]),
+            duration_hours=float(data["duration_hours"]),
+            accumulated=bool(data["accumulated"]),
+            day=None,
+            time=None,
+        )
+
+    else:
+        for f in ("day", "time"):
+            if f not in data or data[f] is None:
+                raise BreachValidationError(f"mode='specific_time' 时必须提供 {f}")
+        bad = frozenset(k for k in ("elevation", "water_level", "duration_hours", "accumulated") if data.get(k) is not None)
+        if bad:
+            raise BreachValidationError(f"mode='specific_time' 时不得提供字段: {sorted(bad)}")
+        return BreachStartValue(
+            mode=mode,
+            elevation=None,
+            water_level=None,
+            duration_hours=None,
+            accumulated=None,
+            day=int(data["day"]),
+            time=str(data["time"]),
+        )
+
 
 # ---------------------------------------------------------------------------
 # PlanFile 主类
