@@ -2,6 +2,8 @@ from typing import List, Type
 
 from parseras.core.values import (
     StringValue,
+    IntValue,
+    FloatValue,
     CommaSeparatedValue,
     DataBlockValue,
 )
@@ -40,6 +42,20 @@ class BoundaryCondition(RASStructure):
                 {"value_width": 8, "values_per_line": 10, "items_per_value": 1},
             ),
             "Flow Hydrograph Slope": StringValue,
+            "Stage Hydrograph": (
+                DataBlockValue,
+                {"value_width": 8, "values_per_line": 10, "items_per_value": 1},
+            ),
+            "Stage Hydrograph Use Initial Stage": IntValue,
+            "Stage and Flow Hydrograph": (
+                DataBlockValue,
+                {"value_width": 8, "values_per_line": 10, "items_per_value": 2},
+            ),
+            "Rating Curve": (
+                DataBlockValue,
+                {"value_width": 8, "values_per_line": 10, "items_per_value": 2},
+            ),
+            "Friction Slope": (CommaSeparatedValue, {"element_type": FloatValue}),
         }
         super().__init__(lines)
 
