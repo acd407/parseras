@@ -253,35 +253,53 @@ class LateralWeirModel:
                 idx_y = i
                 break
 
-        if idx_x is None or idx_y is None or idx_x == idx_y:
-            raise ValueError(f"X or Y not on perimeter edge, or same edge (idx_x={idx_x}, idx_y={idx_y})")
+        if idx_x is None or idx_y is None:
+            raise ValueError(f"X or Y not on perimeter edge (idx_x={idx_x}, idx_y={idx_y})")
 
         # 构建路径：将 X、Y 作为插值端点插入到顶点列表中
         # 处理闭合折线的去重（末尾=首点）
         unique_coords = perimeter_coords[:-1] if closed else perimeter_coords
         n_u = len(unique_coords)
 
-        def build_path(i_x, i_y):
-            """从边 i_x 到边 i_y 的路径（含 X 和 Y）"""
-            seg_x_s, seg_x_e = unique_coords[i_x], unique_coords[(i_x + 1) % n_u]
-            seg_y_s, seg_y_e = unique_coords[i_y], unique_coords[(i_y + 1) % n_u]
-            t_x = proj_t(pt_x, seg_x_s, seg_x_e)
-            t_y = proj_t(pt_y, seg_y_s, seg_y_e)
-            x_interp = (seg_x_s[0] + t_x * (seg_x_e[0] - seg_x_s[0]),
-                         seg_x_s[1] + t_x * (seg_x_e[1] - seg_x_s[1]))
-            y_interp = (seg_y_s[0] + t_y * (seg_y_e[0] - seg_y_s[0]),
-                         seg_y_s[1] + t_y * (seg_y_e[1] - seg_y_s[1]))
-            path = [x_interp]
-            # 沿折线方向从 i_x 到 i_y
-            i = (i_x + 1) % n_u
-            while i != (i_y + 1) % n_u:
+        seg_x_s, seg_x_e = unique_coords[idx_x], unique_coords[(idx_x + 1) % n_u]
+        seg_y_s, seg_y_e = unique_coords[idx_y], unique_coords[(idx_y + 1) % n_u]
+        tx = proj_t(pt_x, seg_x_s, seg_x_e)
+        ty = proj_t(pt_y, seg_y_s, seg_y_e)
+        x_interp = (seg_x_s[0] + tx * (seg_x_e[0] - seg_x_s[0]),
+                     seg_x_s[1] + tx * (seg_x_e[1] - seg_x_s[1]))
+        y_interp = (seg_y_s[0] + ty * (seg_y_e[0] - seg_y_s[0]),
+                     seg_y_s[1] + ty * (seg_y_e[1] - seg_y_s[1]))
+
+        def build_path(start_i, end_i, start_pt, end_pt):
+            """沿折线从 start_i 边前进到 end_i 边（含两端插值点）。"""
+            path = [start_pt]
+            i = (start_i + 1) % n_u
+            # 当 start_i == end_i 时，走完整一圈回到同一条边
+            while True:
                 path.append(unique_coords[i])
+                if i == end_i:
+                    break
                 i = (i + 1) % n_u
-            path.append(y_interp)
+            path.append(end_pt)
             return path
 
-        path1 = build_path(idx_x, idx_y)
-        path2 = build_path(idx_y, idx_x)
+        if idx_x == idx_y:
+            # 同一条边：X→Y 沿该边的短路径 vs 绕 perimeter 的长路径
+            t1, t2 = min(tx, ty), max(tx, ty)
+            pt1 = (seg_x_s[0] + t1 * (seg_x_e[0] - seg_x_s[0]),
+                   seg_x_s[1] + t1 * (seg_x_e[1] - seg_x_s[1]))
+            pt2 = (seg_x_s[0] + t2 * (seg_x_e[0] - seg_x_s[0]),
+                   seg_x_s[1] + t2 * (seg_x_e[1] - seg_x_s[1]))
+            # 短路径：同一边上 X↔Y 直连（保证以 X 为起点）
+            if x_interp == pt1:
+                path1 = [pt1, pt2]
+            else:
+                path1 = [pt2, pt1]
+            # 长路径：从另一个端点沿折线绕一圈回来
+            path2 = build_path(idx_x, idx_x, path1[1], path1[0])
+        else:
+            path1 = build_path(idx_x, idx_y, x_interp, y_interp)
+            path2 = build_path(idx_y, idx_x, y_interp, x_interp)
 
         # 用 centerline 计算平均距离选路径
         cl_line = LineString(centerline)

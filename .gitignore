@@ -56,3 +56,4 @@ pytest_cache/
 .tmp/
 .temp/
 /uv.lock
+*.lnk
