@@ -419,9 +419,14 @@ class CrossSectionModel:
                 )
 
             # 更新Type RM Length L Ch R
+            # 注意：桩号为整数时避免写入 "10500.0" 导致后续字符串比较失败
             from parseras.core.values import CommaSeparatedValue, StringValue
 
-            type_rm_str = f"1,{station},{distance},{distance},{distance}"
+            if isinstance(station, float) and station == int(station):
+                station_fmt = str(int(station))
+            else:
+                station_fmt = str(station)
+            type_rm_str = f"1,{station_fmt},{distance},{distance},{distance}"
             type_rm_value = CommaSeparatedValue(type_rm_str, element_type=StringValue)
             target_xs["Type RM Length L Ch R "] = type_rm_value
 
