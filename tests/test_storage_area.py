@@ -7,7 +7,9 @@ from parseras import GeometryFile, StorageAreaModel
 def test_storage_area_read_write():
     """测试StorageArea的读写功能"""
     test_file = os.path.join(os.path.dirname(__file__), "data", "storage_area.g01")
-    output_file = os.path.join(os.path.dirname(__file__), "data", "storage_area.model.output.g01")
+    output_file = os.path.join(
+        os.path.dirname(__file__), "data", "storage_area.model.output.g01"
+    )
 
     if not os.path.exists(test_file):
         print(f"测试文件不存在: {test_file}")
@@ -63,32 +65,44 @@ def test_storage_area_create_validation():
     geometry_file = GeometryFile()
     storage_model = StorageAreaModel(geometry_file)
 
-    input_missing_surface_line = json.dumps({
-        "Storage Area Name": "Test Area",
-        "Is2D": 0,
-        "Vol Elev": [[100, 1000], [110, 2000]]
-    })
-    result = json.loads(storage_model.update_or_create_storage_area(input_missing_surface_line))
+    input_missing_surface_line = json.dumps(
+        {
+            "Storage Area Name": "Test Area",
+            "Is2D": 0,
+            "Vol Elev": [[100, 1000], [110, 2000]],
+        }
+    )
+    result = json.loads(
+        storage_model.update_or_create_storage_area(input_missing_surface_line)
+    )
     if result["status"] != "error" or "Surface Line" not in result["message"]:
         print("应该检测到缺少Surface Line")
         return False
 
-    input_missing_vol_elev = json.dumps({
-        "Storage Area Name": "Test Area",
-        "Is2D": 0,
-        "Surface Line": [[0, 0], [100, 100]]
-    })
-    result = json.loads(storage_model.update_or_create_storage_area(input_missing_vol_elev))
+    input_missing_vol_elev = json.dumps(
+        {
+            "Storage Area Name": "Test Area",
+            "Is2D": 0,
+            "Surface Line": [[0, 0], [100, 100]],
+        }
+    )
+    result = json.loads(
+        storage_model.update_or_create_storage_area(input_missing_vol_elev)
+    )
     if result["status"] != "error" or "Vol Elev" not in result["message"]:
         print("应该检测到缺少Vol Elev")
         return False
 
-    input_missing_pg_data = json.dumps({
-        "Storage Area Name": "Test Area 2D",
-        "Is2D": -1,
-        "Surface Line": [[0, 0], [100, 100]]
-    })
-    result = json.loads(storage_model.update_or_create_storage_area(input_missing_pg_data))
+    input_missing_pg_data = json.dumps(
+        {
+            "Storage Area Name": "Test Area 2D",
+            "Is2D": -1,
+            "Surface Line": [[0, 0], [100, 100]],
+        }
+    )
+    result = json.loads(
+        storage_model.update_or_create_storage_area(input_missing_pg_data)
+    )
     if result["status"] != "error" or "Point Generation Data" not in result["message"]:
         print("应该检测到缺少Point Generation Data")
         return False
@@ -113,10 +127,7 @@ def test_storage_area_update():
         print("原始Mannings值不正确")
         return False
 
-    update_input = json.dumps({
-        "Storage Area Name": "Storage Area 1",
-        "Mannings": 0.03
-    })
+    update_input = json.dumps({"Storage Area Name": "Storage Area 1", "Mannings": 0.03})
     result = json.loads(storage_model.update_or_create_storage_area(update_input))
     if result["status"] != "success":
         print(f"更新失败: {result['message']}")

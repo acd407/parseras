@@ -18,7 +18,9 @@ def test_breakline_modification() -> bool:
     all_breaklines = bl_model.get_all_breaklines()
     all_breaklines_data = json.loads(all_breaklines)
 
-    if all_breaklines_data.get("status") != "success" or not all_breaklines_data.get("data"):
+    if all_breaklines_data.get("status") != "success" or not all_breaklines_data.get(
+        "data"
+    ):
         print("Failed to get breaklines")
         return False
 

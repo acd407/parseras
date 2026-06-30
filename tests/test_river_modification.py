@@ -23,7 +23,11 @@ def test_river_modification() -> bool:
                     modified_points.append([x + 10, y - 10])
 
                 # 更新河段
-                update_data = {"River": river_name, "Reach": reach_name, "Reach XY": modified_points}
+                update_data = {
+                    "River": river_name,
+                    "Reach": reach_name,
+                    "Reach XY": modified_points,
+                }
                 river_model.update_or_create_river_reach(json.dumps(update_data))
 
     # 生成新的g01文件

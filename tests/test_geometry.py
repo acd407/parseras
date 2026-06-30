@@ -8,9 +8,8 @@ from parseras import (
     Head,
     LateralWeir,
     StorageArea,
-    Connection
+    Connection,
 )
-
 
 GEOMETRY_TESTS = [
     {

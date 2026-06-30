@@ -17,7 +17,6 @@ from parseras.core.values import (
     CommaSeparatedValue,
 )
 
-
 # ---------------------------------------------------------------------------
 # Plan 文件中的 block 类型
 # ---------------------------------------------------------------------------
@@ -28,7 +27,14 @@ class PlanHead:
 
     order = 0.0
     KEYS = frozenset(
-        ("Plan Title", "Short Identifier", "Simulation Date", "Geom File", "Flow File", "Program Version")
+        (
+            "Plan Title",
+            "Short Identifier",
+            "Simulation Date",
+            "Geom File",
+            "Flow File",
+            "Program Version",
+        )
     )
 
     def __init__(self, lines: List[str] | None = None):
@@ -48,7 +54,13 @@ class PlanHead:
 
     def generate(self) -> List[str]:
         result = []
-        for key in ("Plan Title", "Short Identifier", "Simulation Date", "Geom File", "Flow File"):
+        for key in (
+            "Plan Title",
+            "Short Identifier",
+            "Simulation Date",
+            "Geom File",
+            "Flow File",
+        ):
             if key in self._kv:
                 result.append(f"{key}={self._kv[key].value}")
         return result
@@ -71,11 +83,17 @@ class PlanHead:
 
     @property
     def short_identifier(self) -> Optional[str]:
-        return self._kv["Short Identifier"].value if "Short Identifier" in self._kv else None
+        return (
+            self._kv["Short Identifier"].value
+            if "Short Identifier" in self._kv
+            else None
+        )
 
     @property
     def simulation_date(self) -> Optional[str]:
-        return self._kv["Simulation Date"].value if "Simulation Date" in self._kv else None
+        return (
+            self._kv["Simulation Date"].value if "Simulation Date" in self._kv else None
+        )
 
     @property
     def geom_file(self) -> Optional[str]:
@@ -238,21 +256,29 @@ class PlanBreach:
         if self._loc is None:
             return ""
         parts = self._loc.value
-        return parts[self.LOC_RIVER].value.strip() if len(parts) > self.LOC_RIVER else ""
+        return (
+            parts[self.LOC_RIVER].value.strip() if len(parts) > self.LOC_RIVER else ""
+        )
 
     @property
     def reach(self) -> str:
         if self._loc is None:
             return ""
         parts = self._loc.value
-        return parts[self.LOC_REACH].value.strip() if len(parts) > self.LOC_REACH else ""
+        return (
+            parts[self.LOC_REACH].value.strip() if len(parts) > self.LOC_REACH else ""
+        )
 
     @property
     def station(self) -> str:
         if self._loc is None:
             return ""
         parts = self._loc.value
-        return parts[self.LOC_STATION].value.strip() if len(parts) > self.LOC_STATION else ""
+        return (
+            parts[self.LOC_STATION].value.strip()
+            if len(parts) > self.LOC_STATION
+            else ""
+        )
 
     @property
     def is_active(self) -> bool:
@@ -268,7 +294,11 @@ class PlanBreach:
         if self._loc is None:
             return ""
         parts = self._loc.value
-        return parts[self.LOC_STRUCTURE].value.strip() if len(parts) > self.LOC_STRUCTURE else ""
+        return (
+            parts[self.LOC_STRUCTURE].value.strip()
+            if len(parts) > self.LOC_STRUCTURE
+            else ""
+        )
 
     @property
     def loc(self) -> Optional[CommaSeparatedValue]:
@@ -283,15 +313,26 @@ class PlanBreach:
         return self._start
 
     def set_loc(
-        self, river: str = "", reach: str = "", station: str = "", is_active: bool = True, structure: str = ""
+        self,
+        river: str = "",
+        reach: str = "",
+        station: str = "",
+        is_active: bool = True,
+        structure: str = "",
     ):
-        self._loc = CommaSeparatedValue(f"{river},{reach},{station},{is_active},{structure}")
+        self._loc = CommaSeparatedValue(
+            f"{river},{reach},{station},{is_active},{structure}"
+        )
 
     def set_geom(self, values: Tuple):
-        self._geom = CommaSeparatedValue(",".join(str(v) if v is not None else "" for v in values))
+        self._geom = CommaSeparatedValue(
+            ",".join(str(v) if v is not None else "" for v in values)
+        )
 
     def set_start(self, values: Tuple):
-        self._start = CommaSeparatedValue(",".join(str(v) if v is not None else "" for v in values))
+        self._start = CommaSeparatedValue(
+            ",".join(str(v) if v is not None else "" for v in values)
+        )
 
     def apply_geom(self, gv: "BreachGeomValue") -> None:
         """用 BreachGeomValue 设置 Breach Geom（自动生成 CSV）"""
@@ -317,6 +358,7 @@ class PlanBreach:
 
 class BreachValidationError(ValueError):
     """校验失败时抛出"""
+
     pass
 
 
@@ -360,18 +402,26 @@ def validate_breach_geom(data: dict):
 
     failure_mode = data["failure_mode"]
     if failure_mode not in ("overtopping", "piping"):
-        raise BreachValidationError(f"failure_mode 必须是 'overtopping' 或 'piping'，得到 '{failure_mode}'")
+        raise BreachValidationError(
+            f"failure_mode 必须是 'overtopping' 或 'piping'，得到 '{failure_mode}'"
+        )
 
     if failure_mode == "piping":
         if "piping_coef" not in data or data["piping_coef"] is None:
             raise BreachValidationError("failure_mode='piping' 时必须提供 piping_coef")
         if "initial_piping_elev" not in data or data["initial_piping_elev"] is None:
-            raise BreachValidationError("failure_mode='piping' 时必须提供 initial_piping_elev")
+            raise BreachValidationError(
+                "failure_mode='piping' 时必须提供 initial_piping_elev"
+            )
     else:
         if "piping_coef" in data and data["piping_coef"] is not None:
-            raise BreachValidationError("failure_mode='overtopping' 时不得提供 piping_coef")
+            raise BreachValidationError(
+                "failure_mode='overtopping' 时不得提供 piping_coef"
+            )
         if "initial_piping_elev" in data and data["initial_piping_elev"] is not None:
-            raise BreachValidationError("failure_mode='overtopping' 时不得提供 initial_piping_elev")
+            raise BreachValidationError(
+                "failure_mode='overtopping' 时不得提供 initial_piping_elev"
+            )
 
     from parseras.core.values import BreachGeomValue
 
@@ -383,7 +433,9 @@ def validate_breach_geom(data: dict):
         right_slope=float(data["right_slope"]),
         failure_mode=failure_mode,
         piping_coef=float(data["piping_coef"]) if failure_mode == "piping" else None,
-        initial_piping_elev=float(data["initial_piping_elev"]) if failure_mode == "piping" else None,
+        initial_piping_elev=(
+            float(data["initial_piping_elev"]) if failure_mode == "piping" else None
+        ),
         formation_time=float(data["formation_time"]),
         breach_weir_coef=float(data["breach_weir_coef"]),
     )
@@ -417,9 +469,15 @@ def validate_breach_start(data: dict):
     if mode == "elevation_only":
         if "elevation" not in data or data["elevation"] is None:
             raise BreachValidationError("mode='elevation_only' 时必须提供 elevation")
-        bad = frozenset(k for k in ("water_level", "duration_hours", "accumulated", "day", "time") if data.get(k) is not None)
+        bad = frozenset(
+            k
+            for k in ("water_level", "duration_hours", "accumulated", "day", "time")
+            if data.get(k) is not None
+        )
         if bad:
-            raise BreachValidationError(f"mode='elevation_only' 时不得提供字段: {sorted(bad)}")
+            raise BreachValidationError(
+                f"mode='elevation_only' 时不得提供字段: {sorted(bad)}"
+            )
         return BreachStartValue(
             mode=mode,
             elevation=float(data["elevation"]),
@@ -433,10 +491,14 @@ def validate_breach_start(data: dict):
     elif mode == "water_level_duration":
         for f in ("elevation", "water_level", "duration_hours", "accumulated"):
             if f not in data or data[f] is None:
-                raise BreachValidationError(f"mode='water_level_duration' 时必须提供 {f}")
+                raise BreachValidationError(
+                    f"mode='water_level_duration' 时必须提供 {f}"
+                )
         bad = frozenset(k for k in ("day", "time") if data.get(k) is not None)
         if bad:
-            raise BreachValidationError(f"mode='water_level_duration' 时不得提供字段: {sorted(bad)}")
+            raise BreachValidationError(
+                f"mode='water_level_duration' 时不得提供字段: {sorted(bad)}"
+            )
         return BreachStartValue(
             mode=mode,
             elevation=float(data["elevation"]),
@@ -451,9 +513,15 @@ def validate_breach_start(data: dict):
         for f in ("day", "time"):
             if f not in data or data[f] is None:
                 raise BreachValidationError(f"mode='specific_time' 时必须提供 {f}")
-        bad = frozenset(k for k in ("elevation", "water_level", "duration_hours", "accumulated") if data.get(k) is not None)
+        bad = frozenset(
+            k
+            for k in ("elevation", "water_level", "duration_hours", "accumulated")
+            if data.get(k) is not None
+        )
         if bad:
-            raise BreachValidationError(f"mode='specific_time' 时不得提供字段: {sorted(bad)}")
+            raise BreachValidationError(
+                f"mode='specific_time' 时不得提供字段: {sorted(bad)}"
+            )
         return BreachStartValue(
             mode=mode,
             elevation=None,
@@ -634,12 +702,18 @@ class PlanFile:
                 return b
         return None
 
-    def get_breach(self, river: str = "", reach: str = "", station: str = "") -> Optional[PlanBreach]:
+    def get_breach(
+        self, river: str = "", reach: str = "", station: str = ""
+    ) -> Optional[PlanBreach]:
         target_river = river.strip().lower()
         target_reach = reach.strip().lower()
         target_station = station.strip()
         for b in self.get_breaches():
-            if b.river.lower() == target_river and b.reach.lower() == target_reach and b.station == target_station:
+            if (
+                b.river.lower() == target_river
+                and b.reach.lower() == target_reach
+                and b.station == target_station
+            ):
                 return b
         return None
 
@@ -660,7 +734,9 @@ class PlanFile:
             return
         bt = self._key_block_type(key)
         if bt == PlanBreach:
-            raise ValueError("Breach 块请使用 add_breach() 新增，或通过 get_breaches()[n] 直接修改")
+            raise ValueError(
+                "Breach 块请使用 add_breach() 新增，或通过 get_breaches()[n] 直接修改"
+            )
         blocks = self.get_blocks_by_type(bt)
         if blocks:
             blocks[0][key] = StringValue(value)

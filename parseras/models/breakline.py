@@ -54,9 +54,13 @@ class BreakLineModel:
                             y = data[i + 1].value
                             points.append([x, y])
                     result[name] = points
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def get_single_breakline_info(self, name: str) -> str:
         """返回特定断线的所有属性信息
@@ -84,7 +88,11 @@ class BreakLineModel:
 
             if not target_sbl:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"BreakLine with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"BreakLine with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -115,14 +123,22 @@ class BreakLineModel:
                     result["BreakLine CellSize Max"] = val
 
             if "BreakLine Near Repeats" in target_sbl:
-                result["BreakLine Near Repeats"] = target_sbl["BreakLine Near Repeats"].value
+                result["BreakLine Near Repeats"] = target_sbl[
+                    "BreakLine Near Repeats"
+                ].value
 
             if "BreakLine Protection Radius" in target_sbl:
-                result["BreakLine Protection Radius"] = target_sbl["BreakLine Protection Radius"].value
+                result["BreakLine Protection Radius"] = target_sbl[
+                    "BreakLine Protection Radius"
+                ].value
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def get_breakline_meta(self) -> str:
         """返回LCMann元数据
@@ -162,9 +178,13 @@ class BreakLineModel:
                         if "Chan Stop Cuts" in item:
                             result["Chan Stop Cuts"] = item["Chan Stop Cuts"].value
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def update_or_create_single_breakline(self, input_json: str) -> str:
         """更新或创建单个断线
@@ -193,7 +213,11 @@ class BreakLineModel:
 
             if not name or not polyline:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "BreakLine Name and BreakLine Polyline are required"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "BreakLine Name and BreakLine Polyline are required",
+                    },
                     indent=2,
                 )
 
@@ -202,7 +226,10 @@ class BreakLineModel:
             for bl in self.breaklines:
                 for item in bl._value:
                     if isinstance(item, SingleBreakLine):
-                        if "BreakLine Name" in item and item["BreakLine Name"].value == name:
+                        if (
+                            "BreakLine Name" in item
+                            and item["BreakLine Name"].value == name
+                        ):
                             target_sbl = item
                             target_bl = bl
                             break
@@ -222,10 +249,14 @@ class BreakLineModel:
 
             polyline_data = []
             for point in polyline:
-                polyline_data.extend([StringValue(str(point[0])), StringValue(str(point[1]))])
+                polyline_data.extend(
+                    [StringValue(str(point[0])), StringValue(str(point[1]))]
+                )
 
             count = len(polyline)
-            polyline_block = DataBlockValue(value_width=16, values_per_line=4, items_per_value=2)
+            polyline_block = DataBlockValue(
+                value_width=16, values_per_line=4, items_per_value=2
+            )
             polyline_value = DataValue(
                 tuple(polyline_data), 16, 4, 2, (str(count),), count
             )
@@ -243,14 +274,22 @@ class BreakLineModel:
                 target_sbl["BreakLine CellSize Max"] = StringValue(val if val else "")
 
             if "BreakLine Near Repeats" in input_data:
-                target_sbl["BreakLine Near Repeats"] = IntValue(str(input_data["BreakLine Near Repeats"]))
+                target_sbl["BreakLine Near Repeats"] = IntValue(
+                    str(input_data["BreakLine Near Repeats"])
+                )
 
             if "BreakLine Protection Radius" in input_data:
-                target_sbl["BreakLine Protection Radius"] = IntValue(str(input_data["BreakLine Protection Radius"]))
+                target_sbl["BreakLine Protection Radius"] = IntValue(
+                    str(input_data["BreakLine Protection Radius"])
+                )
 
-            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": {}, "message": message}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def delete_single_breakline(self, name: str) -> str:
         """删除单个断线
@@ -270,24 +309,42 @@ class BreakLineModel:
             for bl in self.breaklines:
                 for item in bl._value:
                     if isinstance(item, SingleBreakLine):
-                        if "BreakLine Name" in item and item["BreakLine Name"].value == name:
+                        if (
+                            "BreakLine Name" in item
+                            and item["BreakLine Name"].value == name
+                        ):
                             target_sbl = item
                             target_bl = bl
                             break
 
             if target_sbl is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"BreakLine with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"BreakLine with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
             target_bl._value.remove(target_sbl)
 
-            remaining_items = [item for item in target_bl._value if isinstance(item, SingleBreakLine)]
+            remaining_items = [
+                item for item in target_bl._value if isinstance(item, SingleBreakLine)
+            ]
             if not remaining_items:
                 self.breaklines.remove(target_bl)
                 self.geometry_file._blocks.remove(target_bl)
 
-            return json.dumps({"status": "success", "data": {}, "message": "BreakLine deleted successfully"}, indent=2)
+            return json.dumps(
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "BreakLine deleted successfully",
+                },
+                indent=2,
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

@@ -58,21 +58,27 @@ def main():
 
     # 打印几何测试结果
     for test_name, passed in geometry_results.items():
-        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(
+            f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}"
+        )
         all_passed = all_passed and passed
 
     print("=" * 60)
 
     # 打印数据块测试结果
     for test_name, passed in block_results.items():
-        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(
+            f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}"
+        )
         all_passed = all_passed and passed
 
     print("=" * 60)
 
     # 打印完整文件测试结果
     for test_name, passed in full_file_results.items():
-        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(
+            f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}"
+        )
         all_passed = all_passed and passed
 
     print("=" * 60)
@@ -117,12 +123,16 @@ def main():
 
     # 打印StorageArea测试结果
     for test_name, passed in storage_area_results.items():
-        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(
+            f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}"
+        )
         all_passed = all_passed and passed
 
     # 打印Connection测试结果
     for test_name, passed in connection_results.items():
-        print(f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}")
+        print(
+            f"{'✅' if passed else '❌'} {test_name} test: {'PASSED' if passed else 'FAILED'}"
+        )
         all_passed = all_passed and passed
 
     print("=" * 80)

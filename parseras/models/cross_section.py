@@ -49,13 +49,26 @@ class CrossSectionModel:
                                     elevations.append(elev)
                             # 转置格式，Station一个表，elevation一个表
                             result = {"stations": stations, "elevations": elevations}
-                            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+                            return json.dumps(
+                                {"status": "success", "data": result, "message": ""},
+                                indent=2,
+                            )
             return json.dumps(
-                {"status": "success", "data": {"stations": [], "elevations": []}, "message": ""}, indent=2
+                {
+                    "status": "success",
+                    "data": {"stations": [], "elevations": []},
+                    "message": "",
+                },
+                indent=2,
             )
         except Exception as e:
             return json.dumps(
-                {"status": "error", "data": {"stations": [], "elevations": []}, "message": str(e)}, indent=2
+                {
+                    "status": "error",
+                    "data": {"stations": [], "elevations": []},
+                    "message": str(e),
+                },
+                indent=2,
             )
 
     def get_mann_values(self, station) -> str:
@@ -93,10 +106,27 @@ class CrossSectionModel:
                                     stations.append(sta)
                                     mannings.append(mann)
                             result = {"Station": stations, "Manning": mannings}
-                            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
-            return json.dumps({"status": "success", "data": {"Station": [], "Manning": []}, "message": ""}, indent=2)
+                            return json.dumps(
+                                {"status": "success", "data": result, "message": ""},
+                                indent=2,
+                            )
+            return json.dumps(
+                {
+                    "status": "success",
+                    "data": {"Station": [], "Manning": []},
+                    "message": "",
+                },
+                indent=2,
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {"Station": [], "Manning": []}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {
+                    "status": "error",
+                    "data": {"Station": [], "Manning": []},
+                    "message": str(e),
+                },
+                indent=2,
+            )
 
     def get_bank_stations(self, station) -> str:
         """返回特定断面的Bank Sta值
@@ -121,17 +151,26 @@ class CrossSectionModel:
                         if xs_station == str(station).strip():
                             # 提取Bank Sta值
                             bank_sta = xs["Bank Sta"].value
-                            values: list[Optional[float]] = [float(item.value) for item in bank_sta if item.value]
+                            values: list[Optional[float]] = [
+                                float(item.value) for item in bank_sta if item.value
+                            ]
                             # 确保只返回前两个值，分别对应左岸和右岸
                             if len(values) > 2:
                                 values = values[:2]
                             # 如果不足两个值，用None填充
                             elif len(values) < 2:
                                 values.extend([None] * (2 - len(values)))
-                            return json.dumps({"status": "success", "data": values, "message": ""}, indent=2)
-            return json.dumps({"status": "success", "data": [None, None], "message": ""}, indent=2)
+                            return json.dumps(
+                                {"status": "success", "data": values, "message": ""},
+                                indent=2,
+                            )
+            return json.dumps(
+                {"status": "success", "data": [None, None], "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": [None, None], "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": [None, None], "message": str(e)}, indent=2
+            )
 
     def get_bank_station_coordinates(self, station) -> str:
         """返回特定断面河岸的x,y坐标
@@ -148,7 +187,11 @@ class CrossSectionModel:
         """
         try:
             for xs in self.cross_sections:
-                if "Type RM Length L Ch R " in xs and "Bank Sta" in xs and "XS GIS Cut Line" in xs:
+                if (
+                    "Type RM Length L Ch R " in xs
+                    and "Bank Sta" in xs
+                    and "XS GIS Cut Line" in xs
+                ):
                     # 提取断面在河流上的Station
                     type_rm = xs["Type RM Length L Ch R "].value
                     if len(type_rm) >= 2:
@@ -156,9 +199,18 @@ class CrossSectionModel:
                         if xs_station == str(station).strip():
                             # 提取Bank Sta值
                             bank_sta = xs["Bank Sta"].value
-                            values = [float(item.value) for item in bank_sta if item.value]
+                            values = [
+                                float(item.value) for item in bank_sta if item.value
+                            ]
                             if len(values) < 2:
-                                return json.dumps({"status": "success", "data": [None, None], "message": ""}, indent=2)
+                                return json.dumps(
+                                    {
+                                        "status": "success",
+                                        "data": [None, None],
+                                        "message": "",
+                                    },
+                                    indent=2,
+                                )
 
                             left_bank_sta = values[0]
                             right_bank_sta = values[1]
@@ -174,7 +226,14 @@ class CrossSectionModel:
                                     points.append([x, y])
 
                             if not points:
-                                return json.dumps({"status": "success", "data": [None, None], "message": ""}, indent=2)
+                                return json.dumps(
+                                    {
+                                        "status": "success",
+                                        "data": [None, None],
+                                        "message": "",
+                                    },
+                                    indent=2,
+                                )
 
                             # 计算折线总长度
                             total_length = calculate_total_length(points)
@@ -183,18 +242,35 @@ class CrossSectionModel:
                             right_point = None
 
                             # 获取左岸坐标
-                            if left_bank_sta is not None and 0 <= left_bank_sta <= total_length:
-                                left_point = get_point_at_distance(points, left_bank_sta)
+                            if (
+                                left_bank_sta is not None
+                                and 0 <= left_bank_sta <= total_length
+                            ):
+                                left_point = get_point_at_distance(
+                                    points, left_bank_sta
+                                )
 
                             # 获取右岸坐标
-                            if right_bank_sta is not None and 0 <= right_bank_sta <= total_length:
-                                right_point = get_point_at_distance(points, right_bank_sta)
+                            if (
+                                right_bank_sta is not None
+                                and 0 <= right_bank_sta <= total_length
+                            ):
+                                right_point = get_point_at_distance(
+                                    points, right_bank_sta
+                                )
 
                             result = [left_point, right_point]
-                            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
-            return json.dumps({"status": "success", "data": [None, None], "message": ""}, indent=2)
+                            return json.dumps(
+                                {"status": "success", "data": result, "message": ""},
+                                indent=2,
+                            )
+            return json.dumps(
+                {"status": "success", "data": [None, None], "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": [None, None], "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": [None, None], "message": str(e)}, indent=2
+            )
 
     def update_mann_values(self, input_json: str) -> str:
         """更新特定断面的曼宁值
@@ -221,11 +297,22 @@ class CrossSectionModel:
             mannings = input_data.get("Manning", [])
 
             if xs_station is None or not stations or not mannings:
-                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+                return json.dumps(
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required fields",
+                    },
+                    indent=2,
+                )
 
             if len(stations) != len(mannings):
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "Station and Manning lists must have the same length"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Station and Manning lists must have the same length",
+                    },
                     indent=2,
                 )
 
@@ -242,7 +329,11 @@ class CrossSectionModel:
 
             if not target_xs:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Cross section with station {xs_station} not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Cross section with station {xs_station} not found",
+                    },
                     indent=2,
                 )
 
@@ -253,22 +344,39 @@ class CrossSectionModel:
 
             mann_data = []
             for station, manning in zip(stations, mannings):
-                mann_data.extend([FloatValue(str(station)), FloatValue(str(manning)), FloatValue("0")])
+                mann_data.extend(
+                    [
+                        FloatValue(str(station)),
+                        FloatValue(str(manning)),
+                        FloatValue("0"),
+                    ]
+                )
 
             # 创建并更新DataBlockValue
             from parseras.core.values import DataBlockValue, DataValue
 
             count = len(stations)
-            mann_block = DataBlockValue(value_width=8, values_per_line=9, items_per_value=3)
-            mann_block_value = DataValue(tuple(mann_data), 8, 9, 3, (str(count), "-1", "0"), count)
+            mann_block = DataBlockValue(
+                value_width=8, values_per_line=9, items_per_value=3
+            )
+            mann_block_value = DataValue(
+                tuple(mann_data), 8, 9, 3, (str(count), "-1", "0"), count
+            )
             mann_block.value = mann_block_value
             target_xs["#Mann"] = mann_block
 
             return json.dumps(
-                {"status": "success", "data": {}, "message": "Mann values updated successfully"}, indent=2
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "Mann values updated successfully",
+                },
+                indent=2,
             )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def update_bank_stations(self, input_json: str) -> str:
         """更新特定断面的Bank Sta值
@@ -293,11 +401,23 @@ class CrossSectionModel:
             bank_sta = input_data.get("Bank Sta", [])
 
             if xs_station is None or not bank_sta:
-                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+                return json.dumps(
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required fields",
+                    },
+                    indent=2,
+                )
 
             if len(bank_sta) < 2:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "Bank Sta must have at least two values"}, indent=2
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Bank Sta must have at least two values",
+                    },
+                    indent=2,
                 )
 
             # 查找对应的断面
@@ -313,7 +433,11 @@ class CrossSectionModel:
 
             if not target_xs:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Cross section with station {xs_station} not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Cross section with station {xs_station} not found",
+                    },
                     indent=2,
                 )
 
@@ -325,12 +449,21 @@ class CrossSectionModel:
             target_xs["Bank Sta"] = bank_sta_value
 
             return json.dumps(
-                {"status": "success", "data": {}, "message": "Bank Sta values updated successfully"}, indent=2
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "Bank Sta values updated successfully",
+                },
+                indent=2,
             )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
-    def update_or_create_cross_section(self, input_json: str, tif_path: str | None = None) -> str:
+    def update_or_create_cross_section(
+        self, input_json: str, tif_path: str | None = None
+    ) -> str:
         """更新或创建断面的基本信息和折线数据，并同步更新Sta/Elev
 
         输入格式：
@@ -357,7 +490,14 @@ class CrossSectionModel:
             xs_gis_cut_line = input_data.get("XS GIS Cut Line", [])
 
             if station is None or not xs_gis_cut_line:
-                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+                return json.dumps(
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required fields",
+                    },
+                    indent=2,
+                )
 
             # 查找对应的断面
             target_xs = None
@@ -393,7 +533,10 @@ class CrossSectionModel:
                     type_rm = xs["Type RM Length L Ch R"].value
                     if len(type_rm) >= 2:
                         current_station = float(type_rm[1].value)
-                        if current_station > station_float and current_station < next_station:
+                        if (
+                            current_station > station_float
+                            and current_station < next_station
+                        ):
                             next_station = current_station
                             next_xs = xs
 
@@ -415,7 +558,8 @@ class CrossSectionModel:
                 import math
 
                 distance = math.sqrt(
-                    (next_centroid[0] - current_centroid[0]) ** 2 + (next_centroid[1] - current_centroid[1]) ** 2
+                    (next_centroid[0] - current_centroid[0]) ** 2
+                    + (next_centroid[1] - current_centroid[1]) ** 2
                 )
 
             # 更新Type RM Length L Ch R
@@ -439,11 +583,17 @@ class CrossSectionModel:
 
             cut_line_data = []
             for point in xs_gis_cut_line:
-                cut_line_data.extend([FloatValue(str(point[0])), FloatValue(str(point[1]))])
+                cut_line_data.extend(
+                    [FloatValue(str(point[0])), FloatValue(str(point[1]))]
+                )
 
             count = len(xs_gis_cut_line)
-            cut_line_block = DataBlockValue(value_width=16, values_per_line=4, items_per_value=2)
-            cut_line_value = DataValue(tuple(cut_line_data), 16, 4, 2, (str(count),), count)
+            cut_line_block = DataBlockValue(
+                value_width=16, values_per_line=4, items_per_value=2
+            )
+            cut_line_value = DataValue(
+                tuple(cut_line_data), 16, 4, 2, (str(count),), count
+            )
             cut_line_block.value = cut_line_value
             target_xs["XS GIS Cut Line"] = cut_line_block
 
@@ -477,8 +627,12 @@ class CrossSectionModel:
 
                 # 创建并更新DataBlockValue
                 count = len(stations)
-                sta_elev_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
-                sta_elev_value = DataValue(tuple(sta_elev_data), 8, 10, 2, (str(count),), count)
+                sta_elev_block = DataBlockValue(
+                    value_width=8, values_per_line=10, items_per_value=2
+                )
+                sta_elev_value = DataValue(
+                    tuple(sta_elev_data), 8, 10, 2, (str(count),), count
+                )
                 sta_elev_block.value = sta_elev_value
                 target_xs["#Sta/Elev"] = sta_elev_block
             else:
@@ -486,9 +640,13 @@ class CrossSectionModel:
                 if "#Sta/Elev" in target_xs:
                     del target_xs["#Sta/Elev"]
 
-            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": {}, "message": message}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def delete_cross_section(self, input_json: str) -> str:
         """删除指定断面的Station
@@ -510,7 +668,14 @@ class CrossSectionModel:
             station = input_data.get("Station")
 
             if station is None:
-                return json.dumps({"status": "error", "data": {}, "message": "Missing required field 'Station'"}, indent=2)
+                return json.dumps(
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required field 'Station'",
+                    },
+                    indent=2,
+                )
 
             xs_index = None
             for i, xs in enumerate(self.geometry_file._blocks):
@@ -524,7 +689,11 @@ class CrossSectionModel:
 
             if xs_index is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Cross section at station {station} not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Cross section at station {station} not found",
+                    },
                     indent=2,
                 )
 
@@ -532,7 +701,14 @@ class CrossSectionModel:
             self.cross_sections = self.geometry_file.get_blocks_by_type(CrossSection)
 
             return json.dumps(
-                {"status": "success", "data": {}, "message": "Cross section deleted successfully"}, indent=2
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "Cross section deleted successfully",
+                },
+                indent=2,
             )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

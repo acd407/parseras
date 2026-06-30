@@ -33,7 +33,7 @@ class ConnectionModel:
             return []
         se_value = conn["Conn Weir SE"].value
         result = []
-        if hasattr(se_value, 'data'):
+        if hasattr(se_value, "data"):
             data = se_value.data
             for i in range(0, len(data), 2):
                 if i + 1 < len(data):
@@ -47,7 +47,7 @@ class ConnectionModel:
             return []
         line_value = conn["Connection Line"].value
         result = []
-        if hasattr(line_value, 'data'):
+        if hasattr(line_value, "data"):
             data = line_value.data
             for i in range(0, len(data), 2):
                 if i + 1 < len(data):
@@ -89,9 +89,13 @@ class ConnectionModel:
 
                 result[name] = conn_info
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def get_connection_info(self, name: str) -> str:
         """返回特定连接的完整属性信息
@@ -119,7 +123,11 @@ class ConnectionModel:
 
             if not target_conn:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Connection with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Connection with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -143,11 +151,17 @@ class ConnectionModel:
                 se_data = self._parse_conn_weir_se(target_conn)
                 result["Conn Weir SE"] = [[s, e] for s, e in se_data]
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
-    def update_or_create_connection(self, input_json: str, tif_path: str | None = None) -> str:
+    def update_or_create_connection(
+        self, input_json: str, tif_path: str | None = None
+    ) -> str:
         """更新或创建连接
 
         输入格式：
@@ -176,7 +190,11 @@ class ConnectionModel:
 
             if not name:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "Connection Name is required"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Connection Name is required",
+                    },
                     indent=2,
                 )
 
@@ -204,7 +222,11 @@ class ConnectionModel:
 
                 if missing_fields:
                     return json.dumps(
-                        {"status": "error", "data": {}, "message": f"Missing required fields for creation: {', '.join(missing_fields)}"},
+                        {
+                            "status": "error",
+                            "data": {},
+                            "message": f"Missing required fields for creation: {', '.join(missing_fields)}",
+                        },
                         indent=2,
                     )
 
@@ -216,29 +238,44 @@ class ConnectionModel:
                 conn_line = input_data.get("Connection Line")
                 message = "Connection updated successfully"
 
-            target_conn["Connection"] = CommaSeparatedValue(f"{name},0,0", element_type=StringValue)
+            target_conn["Connection"] = CommaSeparatedValue(
+                f"{name},0,0", element_type=StringValue
+            )
 
             if conn_line:
                 cl_data = []
                 for point in conn_line:
-                    cl_data.extend([FloatValue(str(point[0])), FloatValue(str(point[1]))])
+                    cl_data.extend(
+                        [FloatValue(str(point[0])), FloatValue(str(point[1]))]
+                    )
                 count = len(conn_line)
-                cl_block = DataBlockValue(value_width=16, values_per_line=4, items_per_value=2)
+                cl_block = DataBlockValue(
+                    value_width=16, values_per_line=4, items_per_value=2
+                )
                 cl_value = DataValue(tuple(cl_data), 16, 4, 2, (str(count),), count)
                 cl_block.value = cl_value
                 target_conn["Connection Line"] = cl_block
 
             if "Connection Up SA" in input_data:
-                target_conn["Connection Up SA"] = StringValue(input_data["Connection Up SA"])
+                target_conn["Connection Up SA"] = StringValue(
+                    input_data["Connection Up SA"]
+                )
 
             if "Connection Dn SA" in input_data:
-                target_conn["Connection Dn SA"] = StringValue(input_data["Connection Dn SA"])
+                target_conn["Connection Dn SA"] = StringValue(
+                    input_data["Connection Dn SA"]
+                )
 
             if "Conn Weir WD" in input_data:
                 target_conn["Conn Weir WD"] = IntValue(str(input_data["Conn Weir WD"]))
 
             if tif_path and conn_line:
-                from parseras.utils import calculate_total_length, get_point_at_distance, get_elevation_from_tif
+                from parseras.utils import (
+                    calculate_total_length,
+                    get_point_at_distance,
+                    get_elevation_from_tif,
+                )
+
                 points = [(p[0], p[1]) for p in conn_line]
                 total_length = calculate_total_length(points)
                 num_points = 101
@@ -260,14 +297,20 @@ class ConnectionModel:
                     se_data.extend([FloatValue(str(s)), FloatValue(str(e))])
 
                 count = len(stations)
-                se_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
+                se_block = DataBlockValue(
+                    value_width=8, values_per_line=10, items_per_value=2
+                )
                 se_value = DataValue(tuple(se_data), 8, 10, 2, (str(count),), count)
                 se_block.value = se_value
                 target_conn["Conn Weir SE"] = se_block
 
-            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": {}, "message": message}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def delete_connection(self, name: str) -> str:
         """删除连接
@@ -288,7 +331,11 @@ class ConnectionModel:
 
             if target_index is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Connection with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Connection with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -296,13 +343,25 @@ class ConnectionModel:
 
             block_index = None
             for i, block in enumerate(self.geometry_file._blocks):
-                if isinstance(block, Connection) and self._get_connection_name(block) == name:
+                if (
+                    isinstance(block, Connection)
+                    and self._get_connection_name(block) == name
+                ):
                     block_index = i
                     break
 
             if block_index is not None:
                 self.geometry_file._blocks.pop(block_index)
 
-            return json.dumps({"status": "success", "data": {}, "message": "Connection deleted successfully"}, indent=2)
+            return json.dumps(
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "Connection deleted successfully",
+                },
+                indent=2,
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

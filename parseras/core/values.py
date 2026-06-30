@@ -73,10 +73,14 @@ class FloatValue(Value):
 
 
 class CommaSeparatedValue(Value):
-    def __init__(self, value_str: Optional[str] = None, element_type: Type[Value] = StringValue):
+    def __init__(
+        self, value_str: Optional[str] = None, element_type: Type[Value] = StringValue
+    ):
         self._element_type = element_type
         if value_str:
-            self._value = tuple(element_type(part.strip()) for part in value_str.split(","))
+            self._value = tuple(
+                element_type(part.strip()) for part in value_str.split(",")
+            )
         else:
             self._value = tuple()
 
@@ -93,10 +97,14 @@ class CommaSeparatedValue(Value):
 
 
 class SpaceSeparatedValue(Value):
-    def __init__(self, value_str: Optional[str] = None, element_type: Type[Value] = StringValue):
+    def __init__(
+        self, value_str: Optional[str] = None, element_type: Type[Value] = StringValue
+    ):
         self._element_type = element_type
         if value_str:
-            self._value = tuple(element_type(part.strip()) for part in value_str.split())
+            self._value = tuple(
+                element_type(part.strip()) for part in value_str.split()
+            )
         else:
             self._value = tuple()
 
@@ -144,6 +152,7 @@ class BreachGeomValue:
         formation_time: Time (hrs)
         breach_weir_coef: Breach weir coefficient
     """
+
     centerline: float
     final_bottom_width: float
     final_bottom_elev: float
@@ -228,6 +237,7 @@ class BreachGeomFieldValue(Value):
 # Breach Start 字段值（3种模式）
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class BreachStartValue:
     """Breach Start 解析结果（3种模式）
@@ -237,6 +247,7 @@ class BreachStartValue:
       - "water_level_duration": [0]=False, [4]=True，关注 elevation/water_level/duration/accumulated（[1]/[5]/[6]/[7]）
       - "specific_time": [0]=False, [4]=False，关注 day/time（[3]/[4]）
     """
+
     mode: str  # "elevation_only" | "water_level_duration" | "specific_time"
     elevation: Optional[float]
     water_level: Optional[float]
@@ -350,7 +361,11 @@ class DataValue:
 
 class DataBlockValue(Value):
     def __init__(
-        self, value_str: Optional[str] = None, value_width: int = 0, values_per_line: int = 0, items_per_value: int = 0
+        self,
+        value_str: Optional[str] = None,
+        value_width: int = 0,
+        values_per_line: int = 0,
+        items_per_value: int = 0,
     ):
         if value_str:
             lines = value_str.split("\n")
@@ -373,16 +388,28 @@ class DataBlockValue(Value):
 
             data = tuple(result)
 
-            self._value = DataValue(data, value_width, values_per_line, items_per_value, header_values, count)
+            self._value = DataValue(
+                data,
+                value_width,
+                values_per_line,
+                items_per_value,
+                header_values,
+                count,
+            )
         else:
             # 创建空的DataBlockValue
-            self._value = DataValue(tuple(), value_width, values_per_line, items_per_value, ("0",), 0)
+            self._value = DataValue(
+                tuple(), value_width, values_per_line, items_per_value, ("0",), 0
+            )
 
     def __str__(self) -> str:
         data_lines = []
         for i in range(0, len(self._value.data), self._value.values_per_line):
             chunk = self._value.data[i : i + self._value.values_per_line]
-            line = "".join(str(v).rjust(self._value.value_width)[:self._value.value_width] for v in chunk)
+            line = "".join(
+                str(v).rjust(self._value.value_width)[: self._value.value_width]
+                for v in chunk
+            )
             data_lines.append(line)
 
         return "\n".join([",".join(self._value.header_values)] + data_lines)

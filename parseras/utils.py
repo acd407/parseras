@@ -52,7 +52,9 @@ def calculate_total_length(points: List[List[float]]) -> float:
     return total_length
 
 
-def get_point_at_distance(points: List[List[float]], distance: float) -> Tuple[float, float]:
+def get_point_at_distance(
+    points: List[List[float]], distance: float
+) -> Tuple[float, float]:
     """在折线上根据距离获取点
 
     Args:
@@ -84,7 +86,9 @@ def get_point_at_distance(points: List[List[float]], distance: float) -> Tuple[f
     return (points[-1][0], points[-1][1])
 
 
-def get_elevation_from_tif(xs: List[float], ys: List[float], tif_path: str) -> List[float]:
+def get_elevation_from_tif(
+    xs: List[float], ys: List[float], tif_path: str
+) -> List[float]:
     """从DEM栅格文件获取点的高程
 
     Args:
@@ -137,9 +141,7 @@ def get_elevation_from_tif(xs: List[float], ys: List[float], tif_path: str) -> L
 
 
 def generate_se_from_centerline(
-    centerline: List[List[float]],
-    tif_path: Optional[str] = None,
-    num_points: int = 101
+    centerline: List[List[float]], tif_path: Optional[str] = None, num_points: int = 101
 ) -> List[List[float]]:
     """从中心线生成SE（Station-Elevation）表
 
@@ -162,7 +164,9 @@ def generate_se_from_centerline(
     points = []
     for i in range(num_points):
         # 计算当前距离
-        current_distance = (i / (num_points - 1)) * total_length if num_points > 1 else 0.0
+        current_distance = (
+            (i / (num_points - 1)) * total_length if num_points > 1 else 0.0
+        )
         distances.append(current_distance)
 
         # 获取对应点的坐标

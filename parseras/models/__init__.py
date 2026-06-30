@@ -6,4 +6,12 @@ from .storage_area import StorageAreaModel
 from .bcline import BCLineModel
 from .connection import ConnectionModel
 
-__all__ = ["CrossSectionModel", "RiverModel", "LateralWeirModel", "BreakLineModel", "StorageAreaModel", "BCLineModel", "ConnectionModel"]
+__all__ = [
+    "CrossSectionModel",
+    "RiverModel",
+    "LateralWeirModel",
+    "BreakLineModel",
+    "StorageAreaModel",
+    "BCLineModel",
+    "ConnectionModel",
+]

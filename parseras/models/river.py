@@ -2,7 +2,13 @@ from typing import Dict, List, Tuple
 import json
 from parseras.core.file import GeometryFile
 from parseras.core.structures import River
-from parseras.core.values import CommaSeparatedValue, DataBlockValue, SpaceSeparatedValue, IntValue, StringValue
+from parseras.core.values import (
+    CommaSeparatedValue,
+    DataBlockValue,
+    SpaceSeparatedValue,
+    IntValue,
+    StringValue,
+)
 
 
 class RiverModel:
@@ -53,9 +59,13 @@ class RiverModel:
                         if river_name not in result:
                             result[river_name] = {}
                         result[river_name][reach_name] = points
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def update_or_create_river_reach(self, input_json: str) -> str:
         """修改或创建河段
@@ -82,7 +92,14 @@ class RiverModel:
             reach_xy = input_data.get("Reach XY", [])
 
             if not river_name or not reach_name or not reach_xy:
-                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+                return json.dumps(
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required fields",
+                    },
+                    indent=2,
+                )
 
             # 计算中间点作为Rch Text X Y
             if len(reach_xy) > 0:
@@ -106,7 +123,10 @@ class RiverModel:
                 if isinstance(block, River) and "River Reach" in block:
                     river_reach = block["River Reach"].value
                     if len(river_reach) >= 2:
-                        if river_reach[0].value == river_name and river_reach[1].value == reach_name:
+                        if (
+                            river_reach[0].value == river_name
+                            and river_reach[1].value == reach_name
+                        ):
                             old_river_index = i
                             break
 
@@ -116,7 +136,9 @@ class RiverModel:
             # 创建新河段
             new_river = River([])
             new_river["River Reach"] = CommaSeparatedValue(f"{river_name},{reach_name}")
-            new_river["Reach XY"] = DataBlockValue(reach_xy_str, value_width=16, values_per_line=4, items_per_value=2)
+            new_river["Reach XY"] = DataBlockValue(
+                reach_xy_str, value_width=16, values_per_line=4, items_per_value=2
+            )
             new_river["Rch Text X Y"] = CommaSeparatedValue(
                 f"{middle_point[0]},{middle_point[1]}", element_type=StringValue
             )
@@ -129,10 +151,17 @@ class RiverModel:
             self.rivers = self.geometry_file.get_blocks_by_type(River)
 
             return json.dumps(
-                {"status": "success", "data": {}, "message": "River reach updated/created successfully"}, indent=2
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "River reach updated/created successfully",
+                },
+                indent=2,
             )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def delete_river_reach(self, input_json: str) -> str:
         """删除河段
@@ -156,20 +185,34 @@ class RiverModel:
             reach_name = input_data.get("Reach")
 
             if not river_name or not reach_name:
-                return json.dumps({"status": "error", "data": {}, "message": "Missing required fields"}, indent=2)
+                return json.dumps(
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required fields",
+                    },
+                    indent=2,
+                )
 
             river_index = None
             for i, block in enumerate(self.geometry_file._blocks):
                 if isinstance(block, River) and "River Reach" in block:
                     river_reach = block["River Reach"].value
                     if len(river_reach) >= 2:
-                        if river_reach[0].value == river_name and river_reach[1].value == reach_name:
+                        if (
+                            river_reach[0].value == river_name
+                            and river_reach[1].value == reach_name
+                        ):
                             river_index = i
                             break
 
             if river_index is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"River reach {river_name}/{reach_name} not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"River reach {river_name}/{reach_name} not found",
+                    },
                     indent=2,
                 )
 
@@ -177,7 +220,14 @@ class RiverModel:
             self.rivers = self.geometry_file.get_blocks_by_type(River)
 
             return json.dumps(
-                {"status": "success", "data": {}, "message": "River reach deleted successfully"}, indent=2
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "River reach deleted successfully",
+                },
+                indent=2,
             )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

@@ -4,11 +4,22 @@ from parseras import RASStructure, DataBlockValue
 
 
 class Block(RASStructure):
-    def __init__(self, lines: List[str], key: str, value_width: int, values_per_line: int, items_per_value: int):
+    def __init__(
+        self,
+        lines: List[str],
+        key: str,
+        value_width: int,
+        values_per_line: int,
+        items_per_value: int,
+    ):
         self._key_value_types = {
             key: (
                 DataBlockValue,
-                {"value_width": value_width, "values_per_line": values_per_line, "items_per_value": items_per_value},
+                {
+                    "value_width": value_width,
+                    "values_per_line": values_per_line,
+                    "items_per_value": items_per_value,
+                },
             ),
         }
         super().__init__(lines)

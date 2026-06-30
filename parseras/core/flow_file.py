@@ -24,7 +24,7 @@ class FlowFile:
         self._blocks: List[RASStructure] = []
 
         if file_path:
-            with open(file_path, "r", encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 lines = f.readlines()
             self._parse_lines(lines)
         elif lines is not None:
@@ -116,7 +116,9 @@ class FlowFile:
     def generate(self) -> List[str]:
         """重新生成 flow 文件内容"""
         result = []
-        sorted_blocks = sorted(self._blocks, key=lambda block: getattr(block, "order", 100.0))
+        sorted_blocks = sorted(
+            self._blocks, key=lambda block: getattr(block, "order", 100.0)
+        )
 
         for i, block in enumerate(sorted_blocks):
             block_lines = block.generate()

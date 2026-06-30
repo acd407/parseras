@@ -25,7 +25,10 @@ class InitialStorageElev(RASStructure):
 
     def __init__(self, lines: List[str]):
         self._key_value_types = {
-            "Initial Storage Elev": (CommaSeparatedValue, {"element_type": StringValue}),
+            "Initial Storage Elev": (
+                CommaSeparatedValue,
+                {"element_type": StringValue},
+            ),
         }
         super().__init__(lines)
 
@@ -79,7 +82,7 @@ class UnsteadyFlowFile:
         self._blocks: List[RASStructure] = []
 
         if file_path:
-            with open(file_path, "r", encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 lines = f.readlines()
             self._parse_lines(lines)
         elif lines is not None:
@@ -129,7 +132,9 @@ class UnsteadyFlowFile:
 
     def generate(self) -> List[str]:
         result = []
-        sorted_blocks = sorted(self._blocks, key=lambda block: getattr(block, "order", 100.0))
+        sorted_blocks = sorted(
+            self._blocks, key=lambda block: getattr(block, "order", 100.0)
+        )
         for i, block in enumerate(sorted_blocks):
             block_lines = block.generate()
             result.extend(block_lines)
@@ -186,28 +191,40 @@ class UnsteadyFlowFile:
         # Flow Hydrograph
         if "Flow Hydrograph" in bc:
             hv = bc["Flow Hydrograph"].value
-            if hasattr(hv, 'data') and hv.data:
+            if hasattr(hv, "data") and hv.data:
                 result["values"] = [float(d.value) for d in hv.data]
-            result["slope"] = bc["Flow Hydrograph Slope"].value if "Flow Hydrograph Slope" in bc else None
-            result["initial_ws"] = float(bc["Flow Hydrograph Inital WS"].value) if "Flow Hydrograph Inital WS" in bc else None
+            result["slope"] = (
+                bc["Flow Hydrograph Slope"].value
+                if "Flow Hydrograph Slope" in bc
+                else None
+            )
+            result["initial_ws"] = (
+                float(bc["Flow Hydrograph Inital WS"].value)
+                if "Flow Hydrograph Inital WS" in bc
+                else None
+            )
 
         # Stage Hydrograph
         elif "Stage Hydrograph" in bc:
             hv = bc["Stage Hydrograph"].value
-            if hasattr(hv, 'data') and hv.data:
+            if hasattr(hv, "data") and hv.data:
                 result["values"] = [float(d.value) for d in hv.data]
-            result["use_initial_stage"] = int(bc["Stage Hydrograph Use Initial Stage"].value) if "Stage Hydrograph Use Initial Stage" in bc else None
+            result["use_initial_stage"] = (
+                int(bc["Stage Hydrograph Use Initial Stage"].value)
+                if "Stage Hydrograph Use Initial Stage" in bc
+                else None
+            )
 
         # Stage and Flow Hydrograph（2 items per value: stage, flow）
         elif "Stage and Flow Hydrograph" in bc:
             hv = bc["Stage and Flow Hydrograph"].value
-            if hasattr(hv, 'data') and hv.data:
+            if hasattr(hv, "data") and hv.data:
                 result["paired_values"] = [float(d.value) for d in hv.data]
 
         # Rating Curve（2 items per value: stage, flow）
         elif "Rating Curve" in bc:
             hv = bc["Rating Curve"].value
-            if hasattr(hv, 'data') and hv.data:
+            if hasattr(hv, "data") and hv.data:
                 result["paired_values"] = [float(d.value) for d in hv.data]
 
         # Friction Slope（逗号分隔的两个值）
@@ -220,8 +237,11 @@ class UnsteadyFlowFile:
 
     def find_bc_by_location(
         self,
-        river: str = None, reach: str = None, station: str = None,
-        storage_area: str = None, bc_line: str = None,
+        river: str = None,
+        reach: str = None,
+        station: str = None,
+        storage_area: str = None,
+        bc_line: str = None,
     ) -> BoundaryCondition | None:
         """根据位置信息查找BC块
 
@@ -233,9 +253,15 @@ class UnsteadyFlowFile:
             if not loc:
                 continue
 
-            def f(i): return loc[i].value if i < len(loc) and loc[i].value else None
+            def f(i):
+                return loc[i].value if i < len(loc) and loc[i].value else None
 
-            if river is not None and f(0) == river and f(1) == reach and f(2) == station:
+            if (
+                river is not None
+                and f(0) == river
+                and f(1) == reach
+                and f(2) == station
+            ):
                 return bc
             if storage_area is not None and f(5) == storage_area and f(7) == bc_line:
                 return bc

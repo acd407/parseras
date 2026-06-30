@@ -1,6 +1,5 @@
 from parseras import GeometryFile
 
-
 FULL_FILE_TESTS = [
     {
         "test_name": "all.g01",
@@ -48,5 +47,7 @@ def test_full_file(file_path: str) -> bool:
 def run_full_file_tests():
     full_file_results = {}
     for test_config in FULL_FILE_TESTS:
-        full_file_results[test_config["test_name"]] = test_full_file(test_config["file_path"])
+        full_file_results[test_config["test_name"]] = test_full_file(
+            test_config["file_path"]
+        )
     return full_file_results

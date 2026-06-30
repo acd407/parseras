@@ -7,7 +7,7 @@ from .values import (
     SpaceSeparatedValue,
     LinesValue,
     DataBlockValue,
-    DataValue
+    DataValue,
 )
 
 from .structures import (

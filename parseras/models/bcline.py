@@ -54,9 +54,13 @@ class BCLineModel:
                             y = data[i + 1].value
                             points.append([x, y])
                     result[name] = points
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def get_bc_line_info(self, name: str) -> str:
         """返回特定BC Line的完整属性信息
@@ -81,7 +85,11 @@ class BCLineModel:
 
             if not target_item:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"BC Line with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"BC Line with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -91,7 +99,9 @@ class BCLineModel:
                 result["BC Line Name"] = target_item["BC Line Name"].value
 
             if "BC Line Storage Area" in target_item:
-                result["BC Line Storage Area"] = target_item["BC Line Storage Area"].value
+                result["BC Line Storage Area"] = target_item[
+                    "BC Line Storage Area"
+                ].value
 
             if "BC Line Arc" in target_item:
                 arc = target_item["BC Line Arc"].value
@@ -104,9 +114,13 @@ class BCLineModel:
                         points.append([x, y])
                 result["BC Line Arc"] = points
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def update_or_create_bc_line(self, input_json: str) -> str:
         """更新或创建BC Line
@@ -134,7 +148,11 @@ class BCLineModel:
 
             if not name:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "BC Line Name is required"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "BC Line Name is required",
+                    },
                     indent=2,
                 )
 
@@ -143,15 +161,25 @@ class BCLineModel:
             for bc_line in self.bc_lines:
                 for item in bc_line._value:
                     if isinstance(item, SingleBCLine):
-                        if "BC Line Name" in item and item["BC Line Name"].value == name:
+                        if (
+                            "BC Line Name" in item
+                            and item["BC Line Name"].value == name
+                        ):
                             target_item = item
                             target_bc_line = bc_line
                             break
 
             if target_item is None:
-                if "BC Line Storage Area" not in input_data or "BC Line Arc" not in input_data:
+                if (
+                    "BC Line Storage Area" not in input_data
+                    or "BC Line Arc" not in input_data
+                ):
                     return json.dumps(
-                        {"status": "error", "data": {}, "message": "BC Line Storage Area and BC Line Arc are required for creation"},
+                        {
+                            "status": "error",
+                            "data": {},
+                            "message": "BC Line Storage Area and BC Line Arc are required for creation",
+                        },
                         indent=2,
                     )
                 target_item = SingleBCLine([])
@@ -167,23 +195,33 @@ class BCLineModel:
             target_item["BC Line Name"] = StringValue(name)
 
             if "BC Line Storage Area" in input_data:
-                target_item["BC Line Storage Area"] = StringValue(input_data["BC Line Storage Area"])
+                target_item["BC Line Storage Area"] = StringValue(
+                    input_data["BC Line Storage Area"]
+                )
 
             if "BC Line Arc" in input_data:
                 arc_points = input_data["BC Line Arc"]
                 arc_data = []
                 for point in arc_points:
-                    arc_data.extend([FloatValue(str(point[0])), FloatValue(str(point[1]))])
+                    arc_data.extend(
+                        [FloatValue(str(point[0])), FloatValue(str(point[1]))]
+                    )
 
                 count = len(arc_points)
-                arc_block = DataBlockValue(value_width=16, values_per_line=4, items_per_value=2)
+                arc_block = DataBlockValue(
+                    value_width=16, values_per_line=4, items_per_value=2
+                )
                 arc_value = DataValue(tuple(arc_data), 16, 4, 2, (str(count),), count)
                 arc_block.value = arc_value
                 target_item["BC Line Arc"] = arc_block
 
-            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": {}, "message": message}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def delete_bc_line(self, name: str) -> str:
         """删除BC Line
@@ -203,7 +241,10 @@ class BCLineModel:
             for bc_line in self.bc_lines:
                 for i, item in enumerate(bc_line._value):
                     if isinstance(item, SingleBCLine):
-                        if "BC Line Name" in item and item["BC Line Name"].value == name:
+                        if (
+                            "BC Line Name" in item
+                            and item["BC Line Name"].value == name
+                        ):
                             target_item = item
                             target_bc_line = bc_line
                             item_index = i
@@ -211,7 +252,11 @@ class BCLineModel:
 
             if target_item is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"BC Line with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"BC Line with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -233,6 +278,15 @@ class BCLineModel:
                 if bc_line_list_index is not None:
                     self.bc_lines.pop(bc_line_list_index)
 
-            return json.dumps({"status": "success", "data": {}, "message": "BC Line deleted successfully"}, indent=2)
+            return json.dumps(
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "BC Line deleted successfully",
+                },
+                indent=2,
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

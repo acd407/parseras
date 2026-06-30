@@ -50,9 +50,13 @@ class LateralWeirModel:
                             y = data[i + 1].value
                             points.append([x, y])
                     result[node_name] = points
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def get_lateral_weir_info(self, node_name: str) -> str:
         """返回特定侧堰的所有属性信息
@@ -85,7 +89,11 @@ class LateralWeirModel:
 
             if not target_lw:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Lateral weir with node name '{node_name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Lateral weir with node name '{node_name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -105,7 +113,9 @@ class LateralWeirModel:
                 result["Lateral Weir End"] = [item.value for item in lw_end]
 
             if "Lateral Weir Distance" in target_lw:
-                result["Lateral Weir Distance"] = target_lw["Lateral Weir Distance"].value
+                result["Lateral Weir Distance"] = target_lw[
+                    "Lateral Weir Distance"
+                ].value
 
             if "Lateral Weir WD" in target_lw:
                 result["Lateral Weir WD"] = target_lw["Lateral Weir WD"].value
@@ -159,16 +169,20 @@ class LateralWeirModel:
                     else:
                         result[key] = value.value
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def _get_surface_line_coords(self, storage_area: StorageArea) -> Optional[list]:
         """从StorageArea块提取Storage Area Surface Line坐标列表，并确保闭合"""
         if "Storage Area Surface Line" not in storage_area:
             return None
         surface_line = storage_area["Storage Area Surface Line"].value
-        if not hasattr(surface_line, 'data') or not surface_line.data:
+        if not hasattr(surface_line, "data") or not surface_line.data:
             return None
         coords = []
         data = surface_line.data
@@ -182,7 +196,13 @@ class LateralWeirModel:
             coords = coords + [coords[0]]
         return coords
 
-    def _find_perimeter_intersection(self, endpoint: tuple, centerline_segment_start: tuple, centerline_segment_end: tuple, perimeter_coords: list) -> tuple:
+    def _find_perimeter_intersection(
+        self,
+        endpoint: tuple,
+        centerline_segment_start: tuple,
+        centerline_segment_end: tuple,
+        perimeter_coords: list,
+    ) -> tuple:
         """从centerline端点，向perimeter做最近点投影，返回投影点坐标
 
         Args:
@@ -200,7 +220,9 @@ class LateralWeirModel:
         np_pt = nearest_points(Point(endpoint), perimeter_line)[1]
         return (np_pt.x, np_pt.y)
 
-    def _extract_polyline_xy(self, perimeter_coords: list, pt_x: tuple, pt_y: tuple, centerline: list) -> list:
+    def _extract_polyline_xy(
+        self, perimeter_coords: list, pt_x: tuple, pt_y: tuple, centerline: list
+    ) -> list:
         """从闭合的 perimeter 折线中提取 X 到 Y 之间的部分
 
         Perimeter 被 X、Y 切成两段，计算每段所有点到 centerline 的平均距离，
@@ -254,7 +276,9 @@ class LateralWeirModel:
                 break
 
         if idx_x is None or idx_y is None:
-            raise ValueError(f"X or Y not on perimeter edge (idx_x={idx_x}, idx_y={idx_y})")
+            raise ValueError(
+                f"X or Y not on perimeter edge (idx_x={idx_x}, idx_y={idx_y})"
+            )
 
         # 构建路径：将 X、Y 作为插值端点插入到顶点列表中
         # 处理闭合折线的去重（末尾=首点）
@@ -265,10 +289,14 @@ class LateralWeirModel:
         seg_y_s, seg_y_e = unique_coords[idx_y], unique_coords[(idx_y + 1) % n_u]
         tx = proj_t(pt_x, seg_x_s, seg_x_e)
         ty = proj_t(pt_y, seg_y_s, seg_y_e)
-        x_interp = (seg_x_s[0] + tx * (seg_x_e[0] - seg_x_s[0]),
-                     seg_x_s[1] + tx * (seg_x_e[1] - seg_x_s[1]))
-        y_interp = (seg_y_s[0] + ty * (seg_y_e[0] - seg_y_s[0]),
-                     seg_y_s[1] + ty * (seg_y_e[1] - seg_y_s[1]))
+        x_interp = (
+            seg_x_s[0] + tx * (seg_x_e[0] - seg_x_s[0]),
+            seg_x_s[1] + tx * (seg_x_e[1] - seg_x_s[1]),
+        )
+        y_interp = (
+            seg_y_s[0] + ty * (seg_y_e[0] - seg_y_s[0]),
+            seg_y_s[1] + ty * (seg_y_e[1] - seg_y_s[1]),
+        )
 
         def build_path(start_i, end_i, start_pt, end_pt):
             """沿折线从 start_i 边前进到 end_i 边（含两端插值点）。"""
@@ -286,10 +314,14 @@ class LateralWeirModel:
         if idx_x == idx_y:
             # 同一条边：X→Y 沿该边的短路径 vs 绕 perimeter 的长路径
             t1, t2 = min(tx, ty), max(tx, ty)
-            pt1 = (seg_x_s[0] + t1 * (seg_x_e[0] - seg_x_s[0]),
-                   seg_x_s[1] + t1 * (seg_x_e[1] - seg_x_s[1]))
-            pt2 = (seg_x_s[0] + t2 * (seg_x_e[0] - seg_x_s[0]),
-                   seg_x_s[1] + t2 * (seg_x_e[1] - seg_x_s[1]))
+            pt1 = (
+                seg_x_s[0] + t1 * (seg_x_e[0] - seg_x_s[0]),
+                seg_x_s[1] + t1 * (seg_x_e[1] - seg_x_s[1]),
+            )
+            pt2 = (
+                seg_x_s[0] + t2 * (seg_x_e[0] - seg_x_s[0]),
+                seg_x_s[1] + t2 * (seg_x_e[1] - seg_x_s[1]),
+            )
             # 短路径：同一边上 X↔Y 直连（保证以 X 为起点）
             if x_interp == pt1:
                 path1 = [pt1, pt2]
@@ -312,7 +344,9 @@ class LateralWeirModel:
 
         return path1 if avg_dist(path1) <= avg_dist(path2) else path2
 
-    def update_or_create_lateral_weir(self, input_json: str, tif_path: Optional[str] = None) -> str:
+    def update_or_create_lateral_weir(
+        self, input_json: str, tif_path: Optional[str] = None
+    ) -> str:
         """更新或创建侧堰
 
         输入格式：
@@ -342,7 +376,11 @@ class LateralWeirModel:
 
             if not node_name:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "Missing required field 'Node Name'"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Missing required field 'Node Name'",
+                    },
                     indent=2,
                 )
 
@@ -375,7 +413,11 @@ class LateralWeirModel:
 
                 if missing_fields:
                     return json.dumps(
-                        {"status": "error", "data": {}, "message": f"Missing required fields for create: {missing_fields}"},
+                        {
+                            "status": "error",
+                            "data": {},
+                            "message": f"Missing required fields for create: {missing_fields}",
+                        },
                         indent=2,
                     )
 
@@ -385,7 +427,9 @@ class LateralWeirModel:
 
             if station is not None:
                 type_rm_str = f"6,{station},,,"
-                target_lw["Type RM Length L Ch R "] = CommaSeparatedValue(type_rm_str, element_type=StringValue)
+                target_lw["Type RM Length L Ch R "] = CommaSeparatedValue(
+                    type_rm_str, element_type=StringValue
+                )
                 if station > 0:
                     target_lw.order = 30 + 1 / station
 
@@ -394,7 +438,9 @@ class LateralWeirModel:
 
             if lw_end_param is not None:
                 lw_end_str = f",,,{lw_end_param}"
-                target_lw["Lateral Weir End"] = CommaSeparatedValue(lw_end_str, element_type=StringValue)
+                target_lw["Lateral Weir End"] = CommaSeparatedValue(
+                    lw_end_str, element_type=StringValue
+                )
 
             if lw_distance is not None:
                 target_lw["Lateral Weir Distance"] = FloatValue(str(lw_distance))
@@ -405,11 +451,17 @@ class LateralWeirModel:
             if lw_centerline:
                 centerline_data = []
                 for point in lw_centerline:
-                    centerline_data.extend([FloatValue(str(point[0])), FloatValue(str(point[1]))])
+                    centerline_data.extend(
+                        [FloatValue(str(point[0])), FloatValue(str(point[1]))]
+                    )
 
                 count = len(lw_centerline)
-                centerline_block = DataBlockValue(value_width=16, values_per_line=4, items_per_value=2)
-                centerline_value = DataValue(tuple(centerline_data), 16, 4, 2, (str(count),), count)
+                centerline_block = DataBlockValue(
+                    value_width=16, values_per_line=4, items_per_value=2
+                )
+                centerline_value = DataValue(
+                    tuple(centerline_data), 16, 4, 2, (str(count),), count
+                )
                 centerline_block.value = centerline_value
                 target_lw["Lateral Weir Centerline"] = centerline_block
 
@@ -422,26 +474,42 @@ class LateralWeirModel:
                     for sa in self.geometry_file.get_blocks_by_type(StorageArea):
                         if "Storage Area" in sa:
                             sa_value = sa["Storage Area"].value
-                            if sa_value and len(sa_value) > 0 and sa_value[0].value == lw_end_param:
+                            if (
+                                sa_value
+                                and len(sa_value) > 0
+                                and sa_value[0].value == lw_end_param
+                            ):
                                 target_sa = sa
                                 break
 
                     if target_sa is None:
                         return json.dumps(
-                            {"status": "error", "data": {}, "message": f"Storage area '{lw_end_param}' not found for Lateral Weir End Parameter"},
+                            {
+                                "status": "error",
+                                "data": {},
+                                "message": f"Storage area '{lw_end_param}' not found for Lateral Weir End Parameter",
+                            },
                             indent=2,
                         )
 
                     perimeter_coords = self._get_surface_line_coords(target_sa)
                     if not perimeter_coords:
                         return json.dumps(
-                            {"status": "error", "data": {}, "message": f"Storage area '{lw_end_param}' has no valid Surface Line"},
+                            {
+                                "status": "error",
+                                "data": {},
+                                "message": f"Storage area '{lw_end_param}' has no valid Surface Line",
+                            },
                             indent=2,
                         )
 
                     if len(lw_centerline) < 2:
                         return json.dumps(
-                            {"status": "error", "data": {}, "message": "Lateral Weir Centerline must have at least 2 points"},
+                            {
+                                "status": "error",
+                                "data": {},
+                                "message": "Lateral Weir Centerline must have at least 2 points",
+                            },
                             indent=2,
                         )
 
@@ -450,16 +518,25 @@ class LateralWeirModel:
                     # 点A所在的线段：第一个点与其下一个点
                     seg_a_start = pt_a
                     seg_a_end = (float(lw_centerline[1][0]), float(lw_centerline[1][1]))
-                    pt_x = self._find_perimeter_intersection(pt_a, seg_a_start, seg_a_end, perimeter_coords)
+                    pt_x = self._find_perimeter_intersection(
+                        pt_a, seg_a_start, seg_a_end, perimeter_coords
+                    )
 
                     # 点B：lw_centerline另一个端点
                     pt_b = (float(lw_centerline[-1][0]), float(lw_centerline[-1][1]))
-                    seg_b_start = (float(lw_centerline[-2][0]), float(lw_centerline[-2][1]))
+                    seg_b_start = (
+                        float(lw_centerline[-2][0]),
+                        float(lw_centerline[-2][1]),
+                    )
                     seg_b_end = pt_b
-                    pt_y = self._find_perimeter_intersection(pt_b, seg_b_start, seg_b_end, perimeter_coords)
+                    pt_y = self._find_perimeter_intersection(
+                        pt_b, seg_b_start, seg_b_end, perimeter_coords
+                    )
 
                     # 从perimeter折线提取点X、Y之间的部分
-                    se_input_coords = self._extract_polyline_xy(perimeter_coords, pt_x, pt_y, lw_centerline)
+                    se_input_coords = self._extract_polyline_xy(
+                        perimeter_coords, pt_x, pt_y, lw_centerline
+                    )
 
                 se_table = generate_se_from_centerline(se_input_coords, tif_path)
 
@@ -476,17 +553,34 @@ class LateralWeirModel:
                     se_data.extend([FloatValue(str(dist)), FloatValue(str(elev))])
 
                 count = len(se_table)
-                se_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
+                se_block = DataBlockValue(
+                    value_width=8, values_per_line=10, items_per_value=2
+                )
                 se_value = DataValue(tuple(se_data), 8, 10, 2, (str(count),), count)
                 se_block.value = se_value
                 target_lw["Lateral Weir SE"] = se_block
 
-            message = "Lateral weir created successfully" if is_create else "Lateral weir updated successfully"
-            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
+            message = (
+                "Lateral weir created successfully"
+                if is_create
+                else "Lateral weir updated successfully"
+            )
+            return json.dumps(
+                {"status": "success", "data": {}, "message": message}, indent=2
+            )
 
         except Exception as e:
             import traceback
-            return json.dumps({"status": "error", "data": {}, "message": str(e), "trace": traceback.format_exc()}, indent=2)
+
+            return json.dumps(
+                {
+                    "status": "error",
+                    "data": {},
+                    "message": str(e),
+                    "trace": traceback.format_exc(),
+                },
+                indent=2,
+            )
 
     def delete_lateral_weir(self, node_name: str) -> str:
         """删除侧堰
@@ -507,7 +601,11 @@ class LateralWeirModel:
 
             if target_index is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Lateral weir with node name '{node_name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Lateral weir with node name '{node_name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -523,6 +621,15 @@ class LateralWeirModel:
             if block_index is not None:
                 self.geometry_file._blocks.pop(block_index)
 
-            return json.dumps({"status": "success", "data": {}, "message": "Lateral weir deleted successfully"}, indent=2)
+            return json.dumps(
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "Lateral weir deleted successfully",
+                },
+                indent=2,
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

@@ -67,15 +67,19 @@ class StorageAreaModel:
 
                 if "Storage Area Surface Line" in sa:
                     surface_line = sa["Storage Area Surface Line"].value
-                    if hasattr(surface_line, 'data') and len(surface_line.data) > 0:
+                    if hasattr(surface_line, "data") and len(surface_line.data) > 0:
                         point_count = len(surface_line.data) // 2
                         area_info["point_count"] = point_count
 
                 result[name] = area_info
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def get_storage_area_info(self, name: str) -> str:
         """返回特定存储区的完整属性信息
@@ -104,7 +108,11 @@ class StorageAreaModel:
 
             if not target_sa:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Storage area with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Storage area with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -121,7 +129,7 @@ class StorageAreaModel:
             if "Storage Area Surface Line" in target_sa:
                 surface_line = target_sa["Storage Area Surface Line"].value
                 points = []
-                if hasattr(surface_line, 'data'):
+                if hasattr(surface_line, "data"):
                     data = surface_line.data
                     for i in range(0, len(data), 2):
                         if i + 1 < len(data):
@@ -133,7 +141,7 @@ class StorageAreaModel:
             if "Storage Area Vol Elev" in target_sa:
                 vol_elev = target_sa["Storage Area Vol Elev"].value
                 pairs = []
-                if hasattr(vol_elev, 'data'):
+                if hasattr(vol_elev, "data"):
                     data = vol_elev.data
                     for i in range(0, len(data), 2):
                         if i + 1 < len(data):
@@ -144,13 +152,16 @@ class StorageAreaModel:
 
             if "Storage Area Point Generation Data" in target_sa:
                 pg_data = target_sa["Storage Area Point Generation Data"].value
-                if hasattr(pg_data, '__iter__'):
-                    result["Point Generation Data"] = [item.value if hasattr(item, 'value') else item for item in pg_data]
+                if hasattr(pg_data, "__iter__"):
+                    result["Point Generation Data"] = [
+                        item.value if hasattr(item, "value") else item
+                        for item in pg_data
+                    ]
 
             if "Storage Area 2D Points" in target_sa:
                 points_2d = target_sa["Storage Area 2D Points"].value
                 points = []
-                if hasattr(points_2d, 'data'):
+                if hasattr(points_2d, "data"):
                     data = points_2d.data
                     for i in range(0, len(data), 2):
                         if i + 1 < len(data):
@@ -159,9 +170,13 @@ class StorageAreaModel:
                             points.append([x, y])
                 result["2D Points"] = points
 
-            return json.dumps({"status": "success", "data": result, "message": ""}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": result, "message": ""}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def update_or_create_storage_area(self, input_json: str) -> str:
         """更新或创建存储区
@@ -193,7 +208,11 @@ class StorageAreaModel:
 
             if not name:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": "Storage Area Name is required"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": "Storage Area Name is required",
+                    },
                     indent=2,
                 )
 
@@ -223,7 +242,11 @@ class StorageAreaModel:
 
                 if missing_fields:
                     return json.dumps(
-                        {"status": "error", "data": {}, "message": f"Missing required fields for creation: {', '.join(missing_fields)}"},
+                        {
+                            "status": "error",
+                            "data": {},
+                            "message": f"Missing required fields for creation: {', '.join(missing_fields)}",
+                        },
                         indent=2,
                     )
 
@@ -235,21 +258,29 @@ class StorageAreaModel:
                 surface_line = input_data.get("Surface Line")
                 message = "Storage area updated successfully"
 
-            storage_area_value = CommaSeparatedValue(f"{name},,", element_type=StringValue)
+            storage_area_value = CommaSeparatedValue(
+                f"{name},,", element_type=StringValue
+            )
             target_sa["Storage Area"] = storage_area_value
 
             if "Is2D" in input_data:
                 target_sa["Storage Area Is2D"] = IntValue(str(input_data["Is2D"]))
 
             if "Mannings" in input_data:
-                target_sa["Storage Area Mannings"] = FloatValue(str(input_data["Mannings"]))
+                target_sa["Storage Area Mannings"] = FloatValue(
+                    str(input_data["Mannings"])
+                )
 
             if surface_line:
                 sl_data = []
                 for point in surface_line:
-                    sl_data.extend([FloatValue(str(point[0])), FloatValue(str(point[1]))])
+                    sl_data.extend(
+                        [FloatValue(str(point[0])), FloatValue(str(point[1]))]
+                    )
                 count = len(surface_line)
-                sl_block = DataBlockValue(value_width=16, values_per_line=2, items_per_value=2)
+                sl_block = DataBlockValue(
+                    value_width=16, values_per_line=2, items_per_value=2
+                )
                 sl_value = DataValue(tuple(sl_data), 16, 2, 2, (str(count),), count)
                 sl_block.value = sl_value
                 target_sa["Storage Area Surface Line"] = sl_block
@@ -259,7 +290,9 @@ class StorageAreaModel:
                 for pair in input_data["Vol Elev"]:
                     ve_data.extend([FloatValue(str(pair[0])), FloatValue(str(pair[1]))])
                 count = len(input_data["Vol Elev"])
-                ve_block = DataBlockValue(value_width=8, values_per_line=10, items_per_value=2)
+                ve_block = DataBlockValue(
+                    value_width=8, values_per_line=10, items_per_value=2
+                )
                 ve_value = DataValue(tuple(ve_data), 8, 10, 2, (str(count),), count)
                 ve_block.value = ve_value
                 target_sa["Storage Area Vol Elev"] = ve_block
@@ -267,13 +300,17 @@ class StorageAreaModel:
             if "Point Generation Data" in input_data:
                 pg_value = CommaSeparatedValue(
                     ",".join(str(x) for x in input_data["Point Generation Data"]),
-                    element_type=StringValue
+                    element_type=StringValue,
                 )
                 target_sa["Storage Area Point Generation Data"] = pg_value
 
-            return json.dumps({"status": "success", "data": {}, "message": message}, indent=2)
+            return json.dumps(
+                {"status": "success", "data": {}, "message": message}, indent=2
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )
 
     def delete_storage_area(self, name: str) -> str:
         """删除存储区
@@ -294,7 +331,11 @@ class StorageAreaModel:
 
             if target_index is None:
                 return json.dumps(
-                    {"status": "error", "data": {}, "message": f"Storage area with name '{name}' not found"},
+                    {
+                        "status": "error",
+                        "data": {},
+                        "message": f"Storage area with name '{name}' not found",
+                    },
                     indent=2,
                 )
 
@@ -302,13 +343,25 @@ class StorageAreaModel:
 
             block_index = None
             for i, block in enumerate(self.geometry_file._blocks):
-                if isinstance(block, StorageArea) and self._get_area_name(block) == name:
+                if (
+                    isinstance(block, StorageArea)
+                    and self._get_area_name(block) == name
+                ):
                     block_index = i
                     break
 
             if block_index is not None:
                 self.geometry_file._blocks.pop(block_index)
 
-            return json.dumps({"status": "success", "data": {}, "message": "Storage area deleted successfully"}, indent=2)
+            return json.dumps(
+                {
+                    "status": "success",
+                    "data": {},
+                    "message": "Storage area deleted successfully",
+                },
+                indent=2,
+            )
         except Exception as e:
-            return json.dumps({"status": "error", "data": {}, "message": str(e)}, indent=2)
+            return json.dumps(
+                {"status": "error", "data": {}, "message": str(e)}, indent=2
+            )

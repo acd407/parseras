@@ -26,8 +26,14 @@ def test_bcline_read_write():
     original_data = []
     for bc_item in bc_items:
         bc_data = {
-            "name": bc_item["BC Line Name"].value if "BC Line Name" in bc_item else None,
-            "storage_area": bc_item["BC Line Storage Area"].value if "BC Line Storage Area" in bc_item else None,
+            "name": (
+                bc_item["BC Line Name"].value if "BC Line Name" in bc_item else None
+            ),
+            "storage_area": (
+                bc_item["BC Line Storage Area"].value
+                if "BC Line Storage Area" in bc_item
+                else None
+            ),
         }
         if "BC Line Arc" in bc_item:
             arc_data = bc_item["BC Line Arc"].value
@@ -58,13 +64,17 @@ def test_bcline_read_write():
     updated_bc_items = updated_bc_lines[0].value
 
     if len(original_data) != len(updated_bc_items):
-        print(f"BCLineItem数量不匹配: 原始={len(original_data)}, 更新后={len(updated_bc_items)}")
+        print(
+            f"BCLineItem数量不匹配: 原始={len(original_data)}, 更新后={len(updated_bc_items)}"
+        )
         return False
 
     for i, orig_bc in enumerate(original_data):
         updated_bc = updated_bc_items[i]
         if orig_bc["name"] != updated_bc["BC Line Name"].value:
-            print(f"BCLine名称不匹配: {orig_bc['name']} != {updated_bc['BC Line Name'].value}")
+            print(
+                f"BCLine名称不匹配: {orig_bc['name']} != {updated_bc['BC Line Name'].value}"
+            )
             return False
         if orig_bc["storage_area"] != updated_bc["BC Line Storage Area"].value:
             return False

@@ -16,14 +16,14 @@ class ProjectFile:
         self._key_values: Dict[str, str] = {}  # {key: value}
         self._key_order: List[str] = []  # 保持 key 的原始顺序
         self._multi_keys: Dict[str, List[str]] = {
-            'Geom File': [],
-            'Flow File': [],
-            'Unsteady File': [],
-            'Plan File': [],
+            "Geom File": [],
+            "Flow File": [],
+            "Unsteady File": [],
+            "Plan File": [],
         }  # 支持多个值的 key
 
         if file_path:
-            with open(file_path, "r", encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 lines = f.readlines()
             self._parse_lines(lines)
         elif lines is not None:
@@ -32,12 +32,12 @@ class ProjectFile:
     def _parse_lines(self, lines: List[str]):
         """解析文件内容"""
         for line in lines:
-            line = line.rstrip('\n')
+            line = line.rstrip("\n")
             if not line.strip():
                 continue
 
-            if '=' in line:
-                key, value = line.split('=', 1)
+            if "=" in line:
+                key, value = line.split("=", 1)
                 key = key.strip()
                 value = value.strip()
 
@@ -72,27 +72,27 @@ class ProjectFile:
 
     def add_geom_file(self, filename: str):
         """添加几何文件"""
-        if 'Geom File' not in self._key_order:
-            self._key_order.append('Geom File')
-        self._multi_keys['Geom File'].append(filename)
+        if "Geom File" not in self._key_order:
+            self._key_order.append("Geom File")
+        self._multi_keys["Geom File"].append(filename)
 
     def add_flow_file(self, filename: str):
         """添加流量文件"""
-        if 'Flow File' not in self._key_order:
-            self._key_order.append('Flow File')
-        self._multi_keys['Flow File'].append(filename)
+        if "Flow File" not in self._key_order:
+            self._key_order.append("Flow File")
+        self._multi_keys["Flow File"].append(filename)
 
     def add_plan_file(self, filename: str):
         """添加计划文件"""
-        if 'Plan File' not in self._key_order:
-            self._key_order.append('Plan File')
-        self._multi_keys['Plan File'].append(filename)
+        if "Plan File" not in self._key_order:
+            self._key_order.append("Plan File")
+        self._multi_keys["Plan File"].append(filename)
 
     def add_unsteady_file(self, filename: str):
         """添加非恒定流文件"""
-        if 'Unsteady File' not in self._key_order:
-            self._key_order.append('Unsteady File')
-        self._multi_keys['Unsteady File'].append(filename)
+        if "Unsteady File" not in self._key_order:
+            self._key_order.append("Unsteady File")
+        self._multi_keys["Unsteady File"].append(filename)
 
     def keys(self) -> List[str]:
         """获取所有 key（按原始顺序）"""
@@ -115,17 +115,17 @@ class ProjectFile:
     @property
     def geom_files(self) -> List[str]:
         """获取所有几何文件"""
-        return self.get_multi('Geom File')
+        return self.get_multi("Geom File")
 
     @property
     def flow_files(self) -> List[str]:
         """获取所有流量文件（Flow File 和 Unsteady File）"""
-        return self.get_multi('Flow File') + self.get_multi('Unsteady File')
+        return self.get_multi("Flow File") + self.get_multi("Unsteady File")
 
     @property
     def plan_files(self) -> List[str]:
         """获取所有计划文件"""
-        return self.get_multi('Plan File')
+        return self.get_multi("Plan File")
 
     def generate(self) -> List[str]:
         """重新生成 prj 文件内容"""

@@ -21,6 +21,7 @@ class FlowHead(RASStructure):
     包含: Flow Title, Program Version, Number of Profiles, Profile Names
     可能包含内联数据行（如 River Rch & RM 后面的数值）
     """
+
     order = 0.0
 
     def __init__(self, lines: List[str]):
@@ -55,7 +56,9 @@ class FlowHead(RASStructure):
                 if isinstance(value_type_info, tuple) and len(value_type_info) == 2:
                     value_type, kwargs = value_type_info
                     value = value_type(value_str, **kwargs)
-                elif isinstance(value_type_info, type) and issubclass(value_type_info, Value):
+                elif isinstance(value_type_info, type) and issubclass(
+                    value_type_info, Value
+                ):
                     value = value_type_info(value_str)
                 else:
                     value = StringValue(value_str)
@@ -73,6 +76,7 @@ class FlowProfile(RASStructure):
 
     包含: Boundary for River Rch & Prof#, Up Type, Dn Type, Dn Known WS
     """
+
     order = 10.0
 
     def __init__(self, lines: List[str]):
@@ -90,6 +94,7 @@ class ObservedWS(RASStructure):
 
     包含: Observed WS 数据行
     """
+
     order = 20.0
 
     def __init__(self, lines: List[str]):
@@ -104,6 +109,7 @@ class DSSImport(RASStructure):
 
     包含: DSS Import StartDate, StartTime, EndDate, EndTime, GetInterval, Interval, GetPeak, FillOption
     """
+
     order = 30.0
 
     def __init__(self, lines: List[str]):

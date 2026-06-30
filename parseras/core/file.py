@@ -102,7 +102,9 @@ class GeometryFile:
 
     def generate(self) -> List[str]:
         result = []
-        sorted_blocks = sorted(self._blocks, key=lambda block: getattr(block, "order", 100.0))
+        sorted_blocks = sorted(
+            self._blocks, key=lambda block: getattr(block, "order", 100.0)
+        )
         for i, block in enumerate(sorted_blocks):
             block_lines = block.generate()
             result.extend(block_lines)

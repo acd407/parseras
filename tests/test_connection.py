@@ -7,7 +7,9 @@ from parseras import GeometryFile, ConnectionModel
 def test_connection_read_write():
     """测试Connection的读写功能"""
     test_file = os.path.join(os.path.dirname(__file__), "data", "conn.g01")
-    output_file = os.path.join(os.path.dirname(__file__), "data", "conn.model.output.g01")
+    output_file = os.path.join(
+        os.path.dirname(__file__), "data", "conn.model.output.g01"
+    )
 
     if not os.path.exists(test_file):
         print(f"测试文件不存在: {test_file}")
@@ -63,34 +65,40 @@ def test_connection_create_validation():
     geometry_file = GeometryFile()
     conn_model = ConnectionModel(geometry_file)
 
-    input_missing_line = json.dumps({
-        "Connection Name": "Test Conn",
-        "Connection Up SA": "SA1",
-        "Connection Dn SA": "SA2",
-        "Conn Weir WD": 100
-    })
+    input_missing_line = json.dumps(
+        {
+            "Connection Name": "Test Conn",
+            "Connection Up SA": "SA1",
+            "Connection Dn SA": "SA2",
+            "Conn Weir WD": 100,
+        }
+    )
     result = json.loads(conn_model.update_or_create_connection(input_missing_line))
     if result["status"] != "error" or "Connection Line" not in result["message"]:
         print("应该检测到缺少Connection Line")
         return False
 
-    input_missing_up_sa = json.dumps({
-        "Connection Name": "Test Conn",
-        "Connection Line": [[0, 0], [100, 100]],
-        "Connection Dn SA": "SA2",
-        "Conn Weir WD": 100
-    })
+    input_missing_up_sa = json.dumps(
+        {
+            "Connection Name": "Test Conn",
+            "Connection Line": [[0, 0], [100, 100]],
+            "Connection Dn SA": "SA2",
+            "Conn Weir WD": 100,
+        }
+    )
     result = json.loads(conn_model.update_or_create_connection(input_missing_up_sa))
     if result["status"] != "error" or "Connection Up SA" not in result["message"]:
         print("应该检测到缺少Connection Up SA")
         return False
 
-    input_missing_weir_wd = json.dumps({
-        "Connection Name": "Test Conn",
-        "Connection Line": [[0, 0], [100, 100]],
-        "Connection Up SA": "SA1",
-        "Connection Dn SA": "SA2"
-    })
+    input_missing_weir_wd = json.dumps(
+        {
+            "Connection Name": "Test Conn",
+            "Connection Line": [[0, 0], [100, 100]],
+            "Connection Up SA": "SA1",
+            "Connection Dn SA": "SA2",
+        }
+    )
     result = json.loads(conn_model.update_or_create_connection(input_missing_weir_wd))
     if result["status"] != "error" or "Conn Weir WD" not in result["message"]:
         print("应该检测到缺少Conn Weir WD")
@@ -116,10 +124,9 @@ def test_connection_update():
         print("原始Conn Weir WD值不正确")
         return False
 
-    update_input = json.dumps({
-        "Connection Name": "Storage Area 1 T",
-        "Conn Weir WD": 300
-    })
+    update_input = json.dumps(
+        {"Connection Name": "Storage Area 1 T", "Conn Weir WD": 300}
+    )
     result = json.loads(conn_model.update_or_create_connection(update_input))
     if result["status"] != "success":
         print(f"更新失败: {result['message']}")
