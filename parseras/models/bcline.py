@@ -5,7 +5,7 @@ BCLineModel 类 - 提供BC Line的业务逻辑封装
 import json
 from typing import List
 from parseras.core.file import GeometryFile
-from parseras.core.structures import BCLine, SingleBCLine
+from parseras.core.structures import BCLine, SingleBCLine, StorageArea
 from parseras.core.values import (
     DataBlockValue,
     DataValue,
@@ -99,9 +99,18 @@ class BCLineModel:
                 result["BC Line Name"] = target_item["BC Line Name"].value
 
             if "BC Line Storage Area" in target_item:
-                result["BC Line Storage Area"] = target_item[
-                    "BC Line Storage Area"
-                ].value
+                area_name = target_item["BC Line Storage Area"].value
+                result["BC Line Storage Area"] = area_name
+
+                # 判断关联的存储区是否为 2D 流区（决定 BC 类型限制）
+                for sa_block in self.geometry_file.get_blocks_by_type(StorageArea):
+                    if "Storage Area" in sa_block:
+                        sa_value = sa_block["Storage Area"].value
+                        if sa_value and len(sa_value) > 0 and sa_value[0].value == area_name:
+                            if "Storage Area Is2D" in sa_block:
+                                is_2d = sa_block["Storage Area Is2D"].value
+                                result["StorageAreaType"] = "2D Flow Area" if is_2d == -1 else "StorageArea"
+                            break
 
             if "BC Line Arc" in target_item:
                 arc = target_item["BC Line Arc"].value
