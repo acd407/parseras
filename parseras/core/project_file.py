@@ -128,7 +128,7 @@ class ProjectFile:
         return self.get_multi("Plan File")
 
     def generate(self) -> List[str]:
-        """重新生成 prj 文件内容"""
+        """重新生成 prj 文件内容。若未显式设置单位，默认使用 SI。"""
         result = []
 
         for key in self._key_order:
@@ -143,5 +143,9 @@ class ProjectFile:
                     result.append(f"{key}={value}")
                 else:
                     result.append(key)
+
+        # 若调用方未显式设置单位，默认 SI
+        if "SI Units" not in self._key_values and "English Units" not in self._key_values:
+            result.append("SI Units")
 
         return result
