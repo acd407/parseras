@@ -263,7 +263,7 @@ class BreachStartFieldValue(Value):
     根据 [0] 和 [4] 的组合确定模式：
       - [0]=True, [4]=False  -> elevation_only，字段 [1] 有意义，[7] 总为 0
       - [0]=False, [4]=True  -> water_level_duration，字段 [1]/[5]/[6]/[7] 有意义
-      - [0]=False, [4]=False -> specific_time，字段 [3]/[4] 有意义，[7] 总为 0
+      - [0]=False, [4]=False -> specific_time，字段 [2]/[3] 有意义（time/day），[7] 总为 0
     """
 
     def __init__(self, value_str: Optional[str] = None):
@@ -311,7 +311,7 @@ class BreachStartFieldValue(Value):
         else:
             mode = "specific_time"
             day = int(parts[3]) if parts[3] else None
-            time = parts[4] if parts[4] else None
+            time = parts[2] if parts[2] else None
             self._value = BreachStartValue(
                 mode=mode,
                 elevation=None,
@@ -334,11 +334,11 @@ class BreachStartFieldValue(Value):
             water_level = str(v.water_level) if v.water_level is not None else ""
             duration = str(v.duration_hours) if v.duration_hours is not None else ""
             acc = "-1" if v.accumulated else "0"
-            return f"False,{elevation},,{water_level},True,{duration},{acc}"
+            return f"False,{elevation},,,True,{water_level},{duration},{acc}"
         else:
             day = str(v.day) if v.day is not None else ""
             time = v.time if v.time is not None else ""
-            return f"False,,1,{day},False,,,0"
+            return f"False,,{time},{day},False,,,0"
 
     @property
     def value(self) -> Optional[BreachStartValue]:
