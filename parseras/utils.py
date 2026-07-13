@@ -91,6 +91,9 @@ def get_elevation_from_tif(
 ) -> List[float]:
     """从DEM栅格文件获取点的高程
 
+    NoData / 越界点通过线性插值填补，确保返回连续的地形剖面。
+    （调用方无需额外处理 NaN）
+
     Args:
         xs: x坐标列表
         ys: y坐标列表
@@ -113,30 +116,35 @@ def get_elevation_from_tif(
             # 过滤有效像素
             valid = (rows >= 0) & (rows < src.height) & (cols >= 0) & (cols < src.width)
 
-            elevations = np.full_like(xs, 0.0, dtype=np.float32)
+            # 初始化为 NaN，仅成功读取的像素才获得有效高程
+            elevations = np.full(len(xs), np.nan, dtype=np.float32)
 
-            if not np.any(valid):
-                return elevations.tolist()
+            if np.any(valid):
+                # 计算包围窗口
+                row_min, row_max = rows[valid].min(), rows[valid].max()
+                col_min, col_max = cols[valid].min(), cols[valid].max()
 
-            # 计算包围窗口
-            row_min, row_max = rows[valid].min(), rows[valid].max()
-            col_min, col_max = cols[valid].min(), cols[valid].max()
+                # 用 masked=True 自动处理 src.nodata 和内部掩膜
+                window = ((row_min, row_max + 1), (col_min, col_max + 1))
+                data = src.read(1, window=window, masked=True)
 
-            # 读取窗口
-            window = ((row_min, row_max + 1), (col_min, col_max + 1))
-            data = src.read(1, window=window)
+                # 提取值（被 mask 的像素 → NaN）
+                local_rows = rows[valid] - row_min
+                local_cols = cols[valid] - col_min
+                elevations[valid] = data[local_rows, local_cols]
 
-            # 提取值
-            local_rows = rows[valid] - row_min
-            local_cols = cols[valid] - col_min
-            elevations[valid] = data[local_rows, local_cols]
-
-            # 处理可能的空值
-            elevations = np.nan_to_num(elevations, nan=0.0)
+            # 线性插值填补 NaN 空洞
+            nan_mask = np.isnan(elevations)
+            if np.all(nan_mask):
+                # 全部无效 → 兜底返回 0
+                return [0.0] * len(xs)
+            if np.any(nan_mask):
+                x = np.arange(len(elevations))
+                good = ~nan_mask
+                elevations[nan_mask] = np.interp(x[nan_mask], x[good], elevations[good])
 
             return elevations.tolist()
     except Exception:
-        # 如果无法读取DEM，返回0高程
         return [0.0] * len(xs)
 
 
