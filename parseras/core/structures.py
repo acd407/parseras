@@ -109,7 +109,18 @@ class RASStructure(ABC):
                     self[matched_key] = value
                     i += 1
             else:
+                # 未知键 — 保留为 LinesValue（含多行体块）
+                body_lines = []
                 i += 1
+                while i < len(lines):
+                    nxt = lines[i]
+                    if "=" in nxt or not nxt.strip():
+                        break
+                    body_lines.append(nxt.rstrip("\n"))
+                    i += 1
+                body = value_str + "\n" + "\n".join(body_lines) if body_lines else value_str
+                self._key_value_pairs[key] = LinesValue(body)
+                continue
 
         return self
 

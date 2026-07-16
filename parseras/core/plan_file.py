@@ -11,9 +11,11 @@ PlanFile 类 - 用于解析和生成 HEC-RAS 计划文件 (p01)
 
 from typing import Dict, List, Optional, Tuple, Type
 
+from parseras.core.structures import RASStructure
 from parseras.core.values import (
     Value,
     StringValue,
+    LinesValue,
     CommaSeparatedValue,
 )
 
@@ -200,15 +202,20 @@ class PlanRunOptions:
         del self._kv[key]
 
 
-class PlanBreach:
-    """溃坝结构块：Breach Loc / Breach Method / Breach Geom / Breach Start 等
+class PlanBreach(RASStructure):
+    """溃坝结构块：Breach Loc / Breach Geom / Breach Start 等
 
-    Breach Loc 格式（逗号分隔）：
-        river, reach, station, is_active(bool), structure
-    若前3个字段非空，以此定位；若为空则以 structure 字段匹配。
+    继承自 RASStructure，使用 _key_value_pairs 统一管理所有键：
+      — 已知键（Breach Loc/Geom/Start）解析为 CommaSeparatedValue
+      — 未知键（如 Breach Progression 等多行块）保留为 LinesValue
     """
 
     order = 30.0
+    _key_value_types: Dict[str, type] = {
+        "Breach Loc": CommaSeparatedValue,
+        "Breach Geom": CommaSeparatedValue,
+        "Breach Start": CommaSeparatedValue,
+    }
 
     LOC_RIVER = 0
     LOC_REACH = 1
@@ -217,63 +224,55 @@ class PlanBreach:
     LOC_STRUCTURE = 4
 
     def __init__(self, lines: List[str] | None = None):
-        self._loc: Optional[CommaSeparatedValue] = None
-        self._geom: Optional[CommaSeparatedValue] = None
-        self._start: Optional[CommaSeparatedValue] = None
-        self._other_lines: List[str] = []
+        self._key_value_pairs: Dict[str, Value] = {}
         if lines:
             self._parse_lines(lines)
 
-    def _parse_lines(self, lines: List[str]):
-        for line in lines:
-            line = line.rstrip("\n")
-            if "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            key, value = key.strip(), value.strip()
-            if key == "Breach Loc":
-                self._loc = CommaSeparatedValue(value)
-            elif key == "Breach Geom":
-                self._geom = CommaSeparatedValue(value)
-            elif key == "Breach Start":
-                self._start = CommaSeparatedValue(value)
-            else:
-                self._other_lines.append(line)
+    # -----------------------------------------------------------------------
+    # 已知键属性访问
+    # -----------------------------------------------------------------------
 
-    def generate(self) -> List[str]:
-        result = []
-        if self._loc is not None:
-            result.append(f"Breach Loc={self._loc}")
-        result.extend(self._other_lines)
-        if self._geom is not None:
-            result.append(f"Breach Geom={self._geom}")
-        if self._start is not None:
-            result.append(f"Breach Start={self._start}")
-        return result
+    @property
+    def loc(self) -> Optional[CommaSeparatedValue]:
+        v = self._key_value_pairs.get("Breach Loc")
+        return v if isinstance(v, CommaSeparatedValue) else None
+
+    @property
+    def geom(self) -> Optional[CommaSeparatedValue]:
+        v = self._key_value_pairs.get("Breach Geom")
+        return v if isinstance(v, CommaSeparatedValue) else None
+
+    @property
+    def start(self) -> Optional[CommaSeparatedValue]:
+        v = self._key_value_pairs.get("Breach Start")
+        return v if isinstance(v, CommaSeparatedValue) else None
 
     @property
     def river(self) -> str:
-        if self._loc is None:
+        loc = self.loc
+        if loc is None:
             return ""
-        parts = self._loc.value
+        parts = loc.value
         return (
             parts[self.LOC_RIVER].value.strip() if len(parts) > self.LOC_RIVER else ""
         )
 
     @property
     def reach(self) -> str:
-        if self._loc is None:
+        loc = self.loc
+        if loc is None:
             return ""
-        parts = self._loc.value
+        parts = loc.value
         return (
             parts[self.LOC_REACH].value.strip() if len(parts) > self.LOC_REACH else ""
         )
 
     @property
     def station(self) -> str:
-        if self._loc is None:
+        loc = self.loc
+        if loc is None:
             return ""
-        parts = self._loc.value
+        parts = loc.value
         return (
             parts[self.LOC_STATION].value.strip()
             if len(parts) > self.LOC_STATION
@@ -282,35 +281,29 @@ class PlanBreach:
 
     @property
     def is_active(self) -> bool:
-        if self._loc is None:
+        loc = self.loc
+        if loc is None:
             return False
-        parts = self._loc.value
+        parts = loc.value
         if len(parts) > self.LOC_IS_ACTIVE:
             return parts[self.LOC_IS_ACTIVE].value.strip().lower() == "true"
         return False
 
     @property
     def structure_name(self) -> str:
-        if self._loc is None:
+        loc = self.loc
+        if loc is None:
             return ""
-        parts = self._loc.value
+        parts = loc.value
         return (
             parts[self.LOC_STRUCTURE].value.strip()
             if len(parts) > self.LOC_STRUCTURE
             else ""
         )
 
-    @property
-    def loc(self) -> Optional[CommaSeparatedValue]:
-        return self._loc
-
-    @property
-    def geom(self) -> Optional[CommaSeparatedValue]:
-        return self._geom
-
-    @property
-    def start(self) -> Optional[CommaSeparatedValue]:
-        return self._start
+    # -----------------------------------------------------------------------
+    # 修改器
+    # -----------------------------------------------------------------------
 
     def set_loc(
         self,
@@ -320,17 +313,17 @@ class PlanBreach:
         is_active: bool = True,
         structure: str = "",
     ):
-        self._loc = CommaSeparatedValue(
+        self._key_value_pairs["Breach Loc"] = CommaSeparatedValue(
             f"{river},{reach},{station},{is_active},{structure}"
         )
 
     def set_geom(self, values: Tuple):
-        self._geom = CommaSeparatedValue(
+        self._key_value_pairs["Breach Geom"] = CommaSeparatedValue(
             ",".join(str(v) if v is not None else "" for v in values)
         )
 
     def set_start(self, values: Tuple):
-        self._start = CommaSeparatedValue(
+        self._key_value_pairs["Breach Start"] = CommaSeparatedValue(
             ",".join(str(v) if v is not None else "" for v in values)
         )
 
@@ -340,7 +333,7 @@ class PlanBreach:
 
         field = BreachGeomFieldValue()
         field.value = gv
-        self._geom = CommaSeparatedValue(str(field))
+        self._key_value_pairs["Breach Geom"] = CommaSeparatedValue(str(field))
 
     def apply_start(self, sv: "BreachStartValue") -> None:
         """用 BreachStartValue 设置 Breach Start（自动生成 CSV）"""
@@ -348,7 +341,7 @@ class PlanBreach:
 
         field = BreachStartFieldValue()
         field.value = sv
-        self._start = CommaSeparatedValue(str(field))
+        self._key_value_pairs["Breach Start"] = CommaSeparatedValue(str(field))
 
 
 # ---------------------------------------------------------------------------
@@ -600,7 +593,7 @@ class PlanFile:
         def _is_breach_start(line: str) -> bool:
             return line.strip().startswith("Breach Loc=")
 
-        for line in raw_lines:
+        for idx, line in enumerate(raw_lines):
             stripped = line.strip()
             if not stripped:
                 flush()
@@ -609,7 +602,7 @@ class PlanFile:
             if _is_breach_start(stripped):
                 flush()
                 block_lines = [line]
-                j = raw_lines.index(line) + 1
+                j = idx + 1
                 while j < len(raw_lines):
                     nxt = raw_lines[j].strip()
                     if not nxt or _is_breach_start(nxt):
